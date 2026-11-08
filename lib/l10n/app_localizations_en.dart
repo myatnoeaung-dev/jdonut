@@ -74,7 +74,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phoneTitle => 'Enter your phone number';
 
   @override
-  String get phoneHint => '9xxxxxxxxx';
+  String get phoneHint => '09xxxxxxxxx';
 
   @override
   String get phoneFieldLabel => 'Phone number';
@@ -121,6 +121,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yearHint => 'Year';
+
+  @override
+  String get phoneErrorEmpty => 'Enter your phone number.';
+
+  @override
+  String get phoneErrorInvalid =>
+      'Enter a valid Myanmar mobile number, e.g. 09 254 135 592.';
+
+  @override
+  String phoneNotRegistered(String register) {
+    return 'This number isn\'t registered yet. $register';
+  }
+
+  @override
+  String get phoneRegisterLink => 'Create an account';
+
+  @override
+  String otpWrongCode(int attemptsLeft) {
+    String _temp0 = intl.Intl.pluralLogic(
+      attemptsLeft,
+      locale: localeName,
+      other: 'Wrong code. $attemptsLeft tries left.',
+      one: 'Wrong code. 1 try left.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otpLocked =>
+      'Too many wrong codes. Request a new code to try again.';
+
+  @override
+  String get otpVerifying => 'Checking code…';
+
+  @override
+  String get nameErrorRequired => 'Enter your first name.';
+
+  @override
+  String nameErrorTooLong(int max) {
+    return 'Use $max characters or fewer.';
+  }
+
+  @override
+  String get nameErrorInvalid => 'Use letters and spaces only.';
+
+  @override
+  String get birthDateErrorInvalid => 'Enter a real date.';
+
+  @override
+  String get birthDateErrorFuture =>
+      'Your date of birth can\'t be in the future.';
+
+  @override
+  String birthDateErrorTooYoung(int age) {
+    return 'You must be at least $age years old.';
+  }
 
   @override
   String get welcomeTitle => 'Welcome to the world of J\'donuts';

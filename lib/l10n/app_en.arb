@@ -33,7 +33,7 @@
     "placeholders": { "step": { "type": "int" }, "total": { "type": "int" } }
   },
   "phoneTitle": "Enter your phone number",
-  "phoneHint": "9xxxxxxxxx",
+  "phoneHint": "09xxxxxxxxx",
   "phoneFieldLabel": "Phone number",
 
   "otpTitle": "Verify your number",
@@ -56,6 +56,27 @@
   "monthHint": "Month",
   "dayHint": "Day",
   "yearHint": "Year",
+
+  "phoneErrorEmpty": "Enter your phone number.",
+  "phoneErrorInvalid": "Enter a valid Myanmar mobile number, e.g. 09 254 135 592.",
+  "phoneNotRegistered": "This number isn't registered yet. {register}",
+  "@phoneNotRegistered": {
+    "description": "Log in with an unknown number; {register} is a tappable link",
+    "placeholders": { "register": { "type": "String" } }
+  },
+  "phoneRegisterLink": "Create an account",
+  "otpWrongCode": "{attemptsLeft, plural, =1{Wrong code. 1 try left.} other{Wrong code. {attemptsLeft} tries left.}}",
+  "@otpWrongCode": { "placeholders": { "attemptsLeft": { "type": "int" } } },
+  "otpLocked": "Too many wrong codes. Request a new code to try again.",
+  "otpVerifying": "Checking code…",
+  "nameErrorRequired": "Enter your first name.",
+  "nameErrorTooLong": "Use {max} characters or fewer.",
+  "@nameErrorTooLong": { "placeholders": { "max": { "type": "int" } } },
+  "nameErrorInvalid": "Use letters and spaces only.",
+  "birthDateErrorInvalid": "Enter a real date.",
+  "birthDateErrorFuture": "Your date of birth can't be in the future.",
+  "birthDateErrorTooYoung": "You must be at least {age} years old.",
+  "@birthDateErrorTooYoung": { "placeholders": { "age": { "type": "int" } } },
 
   "welcomeTitle": "Welcome to the world of J'donuts",
   "letsExplore": "Let's explore",

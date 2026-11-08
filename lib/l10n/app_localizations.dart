@@ -221,7 +221,7 @@ abstract class AppLocalizations {
   /// No description provided for @phoneHint.
   ///
   /// In en, this message translates to:
-  /// **'9xxxxxxxxx'**
+  /// **'09xxxxxxxxx'**
   String get phoneHint;
 
   /// No description provided for @phoneFieldLabel.
@@ -307,6 +307,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Year'**
   String get yearHint;
+
+  /// No description provided for @phoneErrorEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number.'**
+  String get phoneErrorEmpty;
+
+  /// No description provided for @phoneErrorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid Myanmar mobile number, e.g. 09 254 135 592.'**
+  String get phoneErrorInvalid;
+
+  /// Log in with an unknown number; {register} is a tappable link
+  ///
+  /// In en, this message translates to:
+  /// **'This number isn\'t registered yet. {register}'**
+  String phoneNotRegistered(String register);
+
+  /// No description provided for @phoneRegisterLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account'**
+  String get phoneRegisterLink;
+
+  /// No description provided for @otpWrongCode.
+  ///
+  /// In en, this message translates to:
+  /// **'{attemptsLeft, plural, =1{Wrong code. 1 try left.} other{Wrong code. {attemptsLeft} tries left.}}'**
+  String otpWrongCode(int attemptsLeft);
+
+  /// No description provided for @otpLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many wrong codes. Request a new code to try again.'**
+  String get otpLocked;
+
+  /// No description provided for @otpVerifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking code…'**
+  String get otpVerifying;
+
+  /// No description provided for @nameErrorRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your first name.'**
+  String get nameErrorRequired;
+
+  /// No description provided for @nameErrorTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {max} characters or fewer.'**
+  String nameErrorTooLong(int max);
+
+  /// No description provided for @nameErrorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Use letters and spaces only.'**
+  String get nameErrorInvalid;
+
+  /// No description provided for @birthDateErrorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a real date.'**
+  String get birthDateErrorInvalid;
+
+  /// No description provided for @birthDateErrorFuture.
+  ///
+  /// In en, this message translates to:
+  /// **'Your date of birth can\'t be in the future.'**
+  String get birthDateErrorFuture;
+
+  /// No description provided for @birthDateErrorTooYoung.
+  ///
+  /// In en, this message translates to:
+  /// **'You must be at least {age} years old.'**
+  String birthDateErrorTooYoung(int age);
 
   /// No description provided for @welcomeTitle.
   ///

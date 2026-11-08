@@ -23,7 +23,7 @@
 
   "registrationStep": "အဆင့် {step} / {total}",
   "phoneTitle": "သင့်ဖုန်းနံပါတ် ထည့်ပါ",
-  "phoneHint": "9xxxxxxxxx",
+  "phoneHint": "09xxxxxxxxx",
   "phoneFieldLabel": "ဖုန်းနံပါတ်",
 
   "otpTitle": "သင့်နံပါတ်ကို အတည်ပြုပါ",
@@ -41,6 +41,20 @@
   "monthHint": "လ",
   "dayHint": "ရက်",
   "yearHint": "နှစ်",
+
+  "phoneErrorEmpty": "သင့်ဖုန်းနံပါတ် ထည့်ပါ။",
+  "phoneErrorInvalid": "မှန်ကန်သော မြန်မာ ဖုန်းနံပါတ် ထည့်ပါ၊ ဥပမာ 09 254 135 592။",
+  "phoneNotRegistered": "ဤနံပါတ်ဖြင့် စာရင်း မသွင်းရသေးပါ။ {register}",
+  "phoneRegisterLink": "အကောင့် ဖွင့်မည်",
+  "otpWrongCode": "{attemptsLeft, plural, other{ကုဒ် မှားနေပါသည်။ {attemptsLeft} ကြိမ် ကျန်ပါသေးသည်။}}",
+  "otpLocked": "ကုဒ် မှားသည်မှာ များလွန်းပါသည်။ ကုဒ်အသစ် တောင်းပြီး ထပ်ကြိုးစားပါ။",
+  "otpVerifying": "ကုဒ် စစ်ဆေးနေသည်…",
+  "nameErrorRequired": "သင့်အမည် ထည့်ပါ။",
+  "nameErrorTooLong": "စာလုံး {max} လုံးထက် မပိုရပါ။",
+  "nameErrorInvalid": "စာလုံးနှင့် ကွက်လပ်သာ သုံးပါ။",
+  "birthDateErrorInvalid": "မှန်ကန်သော ရက်စွဲ ထည့်ပါ။",
+  "birthDateErrorFuture": "မွေးနေ့သည် အနာဂတ် ရက်စွဲ မဖြစ်ရပါ။",
+  "birthDateErrorTooYoung": "အသက် အနည်းဆုံး {age} နှစ် ပြည့်ရပါမည်။",
 
   "welcomeTitle": "J'donuts ကမ္ဘာမှ ကြိုဆိုပါသည်",
   "letsExplore": "စူးစမ်းကြည့်ရအောင်",

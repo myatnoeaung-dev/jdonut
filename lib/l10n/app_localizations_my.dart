@@ -75,7 +75,7 @@ class AppLocalizationsMy extends AppLocalizations {
   String get phoneTitle => 'သင့်ဖုန်းနံပါတ် ထည့်ပါ';
 
   @override
-  String get phoneHint => '9xxxxxxxxx';
+  String get phoneHint => '09xxxxxxxxx';
 
   @override
   String get phoneFieldLabel => 'ဖုန်းနံပါတ်';
@@ -122,6 +122,60 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get yearHint => 'နှစ်';
+
+  @override
+  String get phoneErrorEmpty => 'သင့်ဖုန်းနံပါတ် ထည့်ပါ။';
+
+  @override
+  String get phoneErrorInvalid =>
+      'မှန်ကန်သော မြန်မာ ဖုန်းနံပါတ် ထည့်ပါ၊ ဥပမာ 09 254 135 592။';
+
+  @override
+  String phoneNotRegistered(String register) {
+    return 'ဤနံပါတ်ဖြင့် စာရင်း မသွင်းရသေးပါ။ $register';
+  }
+
+  @override
+  String get phoneRegisterLink => 'အကောင့် ဖွင့်မည်';
+
+  @override
+  String otpWrongCode(int attemptsLeft) {
+    String _temp0 = intl.Intl.pluralLogic(
+      attemptsLeft,
+      locale: localeName,
+      other: 'ကုဒ် မှားနေပါသည်။ $attemptsLeft ကြိမ် ကျန်ပါသေးသည်။',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otpLocked =>
+      'ကုဒ် မှားသည်မှာ များလွန်းပါသည်။ ကုဒ်အသစ် တောင်းပြီး ထပ်ကြိုးစားပါ။';
+
+  @override
+  String get otpVerifying => 'ကုဒ် စစ်ဆေးနေသည်…';
+
+  @override
+  String get nameErrorRequired => 'သင့်အမည် ထည့်ပါ။';
+
+  @override
+  String nameErrorTooLong(int max) {
+    return 'စာလုံး $max လုံးထက် မပိုရပါ။';
+  }
+
+  @override
+  String get nameErrorInvalid => 'စာလုံးနှင့် ကွက်လပ်သာ သုံးပါ။';
+
+  @override
+  String get birthDateErrorInvalid => 'မှန်ကန်သော ရက်စွဲ ထည့်ပါ။';
+
+  @override
+  String get birthDateErrorFuture => 'မွေးနေ့သည် အနာဂတ် ရက်စွဲ မဖြစ်ရပါ။';
+
+  @override
+  String birthDateErrorTooYoung(int age) {
+    return 'အသက် အနည်းဆုံး $age နှစ် ပြည့်ရပါမည်။';
+  }
 
   @override
   String get welcomeTitle => 'J\'donuts ကမ္ဘာမှ ကြိုဆိုပါသည်';
