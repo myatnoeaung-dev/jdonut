@@ -5,13 +5,17 @@ import 'package:intl/intl.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import 'form_error_text.dart';
 
 /// Month / day / year fields. Tapping any of them opens the date picker.
 class BirthDateFields extends StatefulWidget {
-  const BirthDateFields({super.key, required this.value, required this.onChanged});
+  const BirthDateFields({super.key, required this.value, required this.onChanged, this.errorText});
 
   final DateTime? value;
   final ValueChanged<DateTime> onChanged;
+
+  /// Inline message under the fields (e.g. too young); null hides it.
+  final String? errorText;
 
   static const int _oldestYear = 1900;
   static const int _defaultAgeYears = 20;
@@ -75,6 +79,10 @@ class _BirthDateFieldsState extends State<BirthDateFields> {
         _field(_day, l10n.dayHint),
         const SizedBox(height: AppSpacing.lg),
         _field(_year, l10n.yearHint),
+        if (widget.errorText case final message?) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Align(alignment: AlignmentDirectional.centerStart, child: FormErrorText(message)),
+        ],
       ],
     );
   }

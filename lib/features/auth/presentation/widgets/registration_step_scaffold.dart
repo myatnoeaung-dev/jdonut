@@ -19,6 +19,8 @@ class RegistrationStepScaffold extends StatelessWidget {
     required this.children,
     this.onContinue,
     this.showContinue = true,
+    this.isContinueEnabled = true,
+    this.isLoading = false,
   });
 
   static const int totalSteps = 4;
@@ -28,6 +30,12 @@ class RegistrationStepScaffold extends StatelessWidget {
   final List<Widget> children;
   final VoidCallback? onContinue;
   final bool showContinue;
+
+  /// False greys out CONTINUE (e.g. while the phone number is invalid).
+  final bool isContinueEnabled;
+
+  /// Spinner on CONTINUE during the fake network call.
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +81,12 @@ class RegistrationStepScaffold extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: AppSpacing.xxl),
-        if (showContinue) AppPrimaryButton(label: context.l10n.continueLabel, onPressed: onContinue),
+        if (showContinue)
+          AppPrimaryButton(
+            label: context.l10n.continueLabel,
+            isLoading: isLoading,
+            onPressed: isContinueEnabled || isLoading ? onContinue : null,
+          ),
         const SizedBox(height: AppSpacing.xxl),
         const TermsNotice(),
       ],

@@ -29,6 +29,8 @@ abstract final class AppSpacing {
 /// Fixed component sizes from the design.
 abstract final class AppSizes {
   static const double buttonHeight = 52;
+  static const double buttonSpinner = 22;
+  static const double inlineSpinner = 20;
   static const double fieldHeight = 60;
   static const double backButton = 36;
   static const double backIcon = 20;

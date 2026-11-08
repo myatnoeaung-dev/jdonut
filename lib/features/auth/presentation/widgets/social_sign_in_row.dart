@@ -4,8 +4,10 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_svg_icon.dart';
+import '../../../../core/widgets/coming_soon_snack_bar.dart';
 
-/// Google / Apple / Facebook sign-in icons on the onboarding screen.
+/// Google / Apple / Facebook sign-in icons on the onboarding screen. No real
+/// integration yet: tapping shows a "Coming soon" placeholder.
 class SocialSignInRow extends StatelessWidget {
   const SocialSignInRow({super.key, this.onGoogle, this.onApple, this.onFacebook});
 
@@ -42,7 +44,7 @@ class _SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: onTap ?? () {},
+      onPressed: onTap ?? () => showComingSoon(context),
       tooltip: label,
       constraints: const BoxConstraints.tightFor(width: AppSizes.socialTapTarget, height: AppSizes.socialTapTarget),
       icon: AppSvgIcon(asset, size: AppSizes.socialIcon, currentColor: tint, semanticLabel: label),

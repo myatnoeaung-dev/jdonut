@@ -1,58 +1,25 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
+import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/highlighted_text.dart';
 
-/// "Didn't receive the code? resend in 4:58 min", counting down from 5:00.
-/// When it reaches zero it becomes a "Resend code" link.
-class ResendCountdown extends StatefulWidget {
-  const ResendCountdown({super.key, required this.onResend});
+/// "Didn't receive the code? resend in 4:58 min". At 0:00 it becomes a
+/// "Resend code" link. The time comes from the OTP bloc.
+class ResendCountdown extends StatelessWidget {
+  const ResendCountdown({
+    super.key,
+    required this.remaining,
+    required this.canResend,
+    required this.isResending,
+    required this.onResend,
+  });
 
-  static const Duration resendDelay = Duration(minutes: 5);
-
+  final Duration remaining;
+  final bool canResend;
+  final bool isResending;
   final VoidCallback onResend;
-
-  @override
-  State<ResendCountdown> createState() => _ResendCountdownState();
-}
-
-class _ResendCountdownState extends State<ResendCountdown> {
-  static const Duration _tick = Duration(seconds: 1);
-
-  Timer? _timer;
-  Duration _remaining = ResendCountdown.resendDelay;
-
-  @override
-  void initState() {
-    super.initState();
-    _start();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  void _start() {
-    _timer?.cancel();
-    setState(() => _remaining = ResendCountdown.resendDelay);
-    _timer = Timer.periodic(_tick, (_) => _onTick());
-  }
-
-  void _onTick() {
-    final next = _remaining - _tick;
-    setState(() => _remaining = next.isNegative ? Duration.zero : next);
-    if (_remaining == Duration.zero) _timer?.cancel();
-  }
-
-  void _resend() {
-    widget.onResend();
-    _start();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +30,17 @@ class _ResendCountdownState extends State<ResendCountdown> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l10n.otpNotReceived, style: textTheme.bodyMedium),
-        if (_remaining == Duration.zero)
+        if (isResending)
+          const _ResendingSpinner()
+        else if (canResend)
           TextButton(
-            onPressed: _resend,
+            onPressed: onResend,
             child: Text(l10n.otpResendNow, style: highlight),
           )
         else
           HighlightedText(
             message: l10n.otpResendIn(HighlightedText.token(0)),
-            highlights: [HighlightSpan(_format(_remaining))],
+            highlights: [HighlightSpan(_format(remaining))],
             style: textTheme.bodyMedium,
             highlightStyle: highlight,
           ),
@@ -79,9 +48,21 @@ class _ResendCountdownState extends State<ResendCountdown> {
     );
   }
 
+  /// m:ss, e.g. 4:58.
   static String _format(Duration duration) {
-    final minutes = duration.inMinutes;
     final seconds = duration.inSeconds.remainder(Duration.secondsPerMinute).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
+    return '${duration.inMinutes}:$seconds';
+  }
+}
+
+class _ResendingSpinner extends StatelessWidget {
+  const _ResendingSpinner();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+      child: SizedBox.square(dimension: AppSizes.inlineSpinner, child: CircularProgressIndicator()),
+    );
   }
 }

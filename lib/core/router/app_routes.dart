@@ -18,9 +18,6 @@ abstract final class AppRoutes {
   static String phoneFor(AuthFlow flow) =>
       Uri(path: phone, queryParameters: {AppRouteParams.flow: flow.name}).toString();
 
-  static String otpFor(AuthFlow flow, String phoneNumber) =>
-      Uri(path: otp, queryParameters: {AppRouteParams.flow: flow.name, AppRouteParams.phone: phoneNumber}).toString();
-
   /// Only reachable while signed out; a signed-in user is sent home.
   static const List<String> _signedOutOnlyPrefixes = [onboarding, '/auth'];
 
@@ -35,7 +32,6 @@ abstract final class AppRoutes {
 abstract final class AppRouteParams {
   static const String id = 'id';
   static const String flow = 'flow';
-  static const String phone = 'phone';
 }
 
 /// Whether the phone + OTP steps are creating an account or logging in.

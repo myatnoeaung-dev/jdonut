@@ -5,16 +5,29 @@ import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../domain/validators/phone_validator.dart';
 
-/// Myanmar phone number field with a fixed +95 prefix.
+/// Myanmar phone number field with a fixed +95 prefix. Digits, spaces and
+/// dashes may be typed; the validator normalises them.
 class PhoneNumberField extends StatelessWidget {
-  const PhoneNumberField({super.key, required this.controller, this.onSubmitted});
+  const PhoneNumberField({
+    super.key,
+    required this.initialValue,
+    required this.onChanged,
+    this.onFocusLost,
+    this.errorText,
+  });
 
-  static const String countryCode = '+95';
-  static const int _maxDigits = 11;
+  static const String countryCode = PhoneValidator.countryCode;
 
-  final TextEditingController controller;
-  final VoidCallback? onSubmitted;
+  /// Room for 11 digits plus a few separators.
+  static const int _maxInputLength = 15;
+  static final RegExp _allowedCharacters = RegExp(r'[0-9 \-]');
+
+  final String initialValue;
+  final ValueChanged<String> onChanged;
+  final VoidCallback? onFocusLost;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +36,19 @@ class PhoneNumberField extends StatelessWidget {
       label: l10n.phoneFieldLabel,
       textField: true,
       child: AppTextField(
-        controller: controller,
+        initialValue: initialValue,
         hintText: l10n.phoneHint,
+        errorText: errorText,
         keyboardType: TextInputType.phone,
         textInputAction: TextInputAction.done,
         autofillHints: const [AutofillHints.telephoneNumberNational],
         autofocus: true,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(_maxDigits)],
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(_allowedCharacters),
+          LengthLimitingTextInputFormatter(_maxInputLength),
+        ],
+        onChanged: onChanged,
+        onFocusLost: onFocusLost,
         prefix: const _CountryCodePrefix(),
       ),
     );

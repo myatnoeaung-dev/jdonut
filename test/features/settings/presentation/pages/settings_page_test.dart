@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:go_router/go_router.dart';
-
-import 'package:jdonut/app.dart';
 import 'package:jdonut/core/di/injection_container.dart';
-import 'package:jdonut/core/l10n/locale_controller.dart';
 import 'package:jdonut/core/router/app_routes.dart';
-import 'package:jdonut/core/session/auth_session.dart';
+import 'package:jdonut/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:jdonut/features/auth/presentation/pages/onboarding_page.dart';
 import 'package:jdonut/features/settings/presentation/pages/settings_page.dart';
 import 'package:jdonut/features/settings/presentation/widgets/settings_profile_header.dart';
 
-void main() {
-  late AuthSession session;
+import '../../../../helpers/test_app.dart';
 
-  setUp(() => session = getIt.registerSingleton(AuthSession()..signIn()));
+void main() {
   tearDown(getIt.reset);
 
   Future<void> openSettings(WidgetTester tester) async {
-    await tester.pumpWidget(JDonutApp(session: session, localeController: getIt.registerSingleton(LocaleController())));
-    await tester.pumpAndSettle();
-    GoRouter.of(tester.element(find.byType(Navigator).first)).go(AppRoutes.settings);
+    await pumpJDonutApp(tester, isSignedIn: true);
+    routerOf(tester).go(AppRoutes.settings);
     await tester.pumpAndSettle();
   }
 
@@ -71,7 +65,7 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'Log out'));
     await tester.pumpAndSettle();
 
-    expect(session.isSignedIn, isFalse);
+    expect(getIt<AuthBloc>().state, isA<Unauthenticated>());
     expect(find.byType(OnboardingPage), findsOneWidget);
   });
 
@@ -85,7 +79,7 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
     await tester.pumpAndSettle();
 
-    expect(session.isSignedIn, isTrue);
+    expect(getIt<AuthBloc>().state, isA<Authenticated>());
     expect(find.byType(SettingsPage), findsOneWidget);
   });
 }

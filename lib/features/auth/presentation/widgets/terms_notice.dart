@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_palette.dart';
+import '../../../../core/widgets/coming_soon_snack_bar.dart';
 import '../../../../core/widgets/highlighted_text.dart';
 
 /// "By continuing, you acknowledge… Terms of Use and Privacy Policy."
+/// The links show a "Coming soon" placeholder unless callbacks are given.
 class TermsNotice extends StatelessWidget {
   const TermsNotice({super.key, this.onTermsTap, this.onPrivacyTap});
 
@@ -19,8 +21,8 @@ class TermsNotice extends StatelessWidget {
     return HighlightedText(
       message: l10n.termsNotice(HighlightedText.token(0), HighlightedText.token(1)),
       highlights: [
-        HighlightSpan(l10n.termsOfUse, onTap: onTermsTap),
-        HighlightSpan(l10n.privacyPolicy, onTap: onPrivacyTap),
+        HighlightSpan(l10n.termsOfUse, onTap: onTermsTap ?? () => showComingSoon(context)),
+        HighlightSpan(l10n.privacyPolicy, onTap: onPrivacyTap ?? () => showComingSoon(context)),
       ],
       style: style,
       highlightStyle: TextStyle(color: palette.link),
