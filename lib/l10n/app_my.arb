@@ -1,0 +1,65 @@
+{
+  "@@locale": "my",
+  "appTitle": "J'Donuts",
+  "loading": "ဖွင့်နေသည်…",
+  "retry": "ထပ်ကြိုးစားပါ",
+  "errorGeneric": "တစ်ခုခု မှားယွင်းသွားပါသည်။",
+  "errorNoConnection": "အင်တာနက် ချိတ်ဆက်မှု မရှိပါ။ သိမ်းထားသော အချက်အလက်ကို ပြသနေသည်။",
+  "emptyGeneric": "ပြသရန် မရှိသေးပါ။",
+
+  "back": "နောက်သို့",
+  "continueLabel": "ဆက်လုပ်မည်",
+
+  "onboardingTitle": "စိတ်ကြိုက် အဝိုင်းလေးများ",
+  "getStarted": "စတင်လိုက်ရအောင်",
+  "alreadyHaveAccount": "အကောင့်ရှိပြီးသားလား?",
+  "logIn": "ဝင်ရောက်မည်",
+  "continueWithGoogle": "Google ဖြင့် ဆက်လုပ်မည်",
+  "continueWithApple": "Apple ဖြင့် ဆက်လုပ်မည်",
+  "continueWithFacebook": "Facebook ဖြင့် ဆက်လုပ်မည်",
+  "termsNotice": "ဆက်လုပ်ခြင်းဖြင့် ကျွန်ုပ်တို့၏ {terms} နှင့် {privacy} ကို ဖတ်ရှုပြီး သဘောတူကြောင်း အသိအမှတ်ပြုပါသည်။",
+  "termsOfUse": "အသုံးပြုမှု စည်းမျဉ်းများ",
+  "privacyPolicy": "ကိုယ်ရေးအချက်အလက် မူဝါဒ",
+
+  "registrationStep": "အဆင့် {step} / {total}",
+  "phoneTitle": "သင့်ဖုန်းနံပါတ် ထည့်ပါ",
+  "phoneHint": "9xxxxxxxxx",
+  "phoneFieldLabel": "ဖုန်းနံပါတ်",
+
+  "otpTitle": "သင့်နံပါတ်ကို အတည်ပြုပါ",
+  "otpSentTo": "{phone} သို့ ဂဏန်း ၆ လုံး OTP ပို့ထားပါသည်",
+  "otpFieldLabel": "ဂဏန်း ၆ လုံး ကုဒ်",
+  "otpNotReceived": "ကုဒ် မရရှိသေးဘူးလား?",
+  "otpResendIn": "{time} မိနစ်အတွင်း ပြန်ပို့ပါမည်",
+  "otpResendNow": "ကုဒ် ပြန်ပို့မည်",
+
+  "nameTitle": "သင့်အမည် ဘာလဲ?",
+  "firstNameHint": "အမည် (ရှေ့)",
+  "lastNameHint": "အမည် (နောက်)",
+
+  "birthDateTitle": "သင့်မွေးနေ့ ဘယ်နေ့လဲ?",
+  "monthHint": "လ",
+  "dayHint": "ရက်",
+  "yearHint": "နှစ်",
+
+  "welcomeTitle": "J'donuts ကမ္ဘာမှ ကြိုဆိုပါသည်",
+  "letsExplore": "စူးစမ်းကြည့်ရအောင်",
+
+  "navHome": "ပင်မ",
+  "navRewards": "ဆုလာဘ်များ",
+  "homeGreeting": "မင်္ဂလာပါ ဒိုးနတ်ချစ်သူ",
+  "homeMemberTier": "အဖွဲ့ဝင်",
+  "seasonalSpecials": "ရာသီအထူး",
+  "popular": "လူကြိုက်များ",
+  "orderAgain": "ထပ်မှာမည်",
+  "nearbyShops": "အနီးရှိ ဆိုင်များ",
+  "comingSoon": "ဒီဇိုင်း မကြာမီ လာပါမည်",
+
+  "productTitle": "ပစ္စည်း",
+  "productCode": "ပစ္စည်းကုဒ်: {code}",
+  "addToCart": "ခြင်းထဲထည့်မည်",
+
+  "rewardsTitle": "ဆုလာဘ်များ",
+  "eatMoreEarnMore": "များများစား များများရ",
+  "gift": "လက်ဆောင်"
+}
