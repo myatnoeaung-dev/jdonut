@@ -64,7 +64,10 @@ class _ResendCountdownState extends State<ResendCountdown> {
       children: [
         Text(l10n.otpNotReceived, style: textTheme.bodyMedium),
         if (_remaining == Duration.zero)
-          TextButton(onPressed: _resend, child: Text(l10n.otpResendNow, style: highlight))
+          TextButton(
+            onPressed: _resend,
+            child: Text(l10n.otpResendNow, style: highlight),
+          )
         else
           HighlightedText(
             message: l10n.otpResendIn(HighlightedText.token(0)),

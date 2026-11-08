@@ -41,11 +41,6 @@ class DonutCircle extends StatelessWidget {
     );
     final path = imagePath;
     if (path == null) return fallback;
-    return Image.asset(
-      path,
-      fit: BoxFit.contain,
-      semanticLabel: semanticLabel,
-      errorBuilder: (_, _, _) => fallback,
-    );
+    return Image.asset(path, fit: BoxFit.contain, semanticLabel: semanticLabel, errorBuilder: (_, _, _) => fallback);
   }
 }

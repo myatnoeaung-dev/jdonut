@@ -74,9 +74,7 @@ class _LogInPrompt extends StatelessWidget {
     final l10n = context.l10n;
     return HighlightedText(
       message: '${l10n.alreadyHaveAccount} ${HighlightedText.token(0)}',
-      highlights: [
-        HighlightSpan(l10n.logIn, onTap: () => context.push(AppRoutes.phoneFor(AuthFlow.login))),
-      ],
+      highlights: [HighlightSpan(l10n.logIn, onTap: () => context.push(AppRoutes.phoneFor(AuthFlow.login)))],
       style: Theme.of(context).textTheme.bodyMedium,
       highlightStyle: TextStyle(color: context.palette.link, fontWeight: FontWeight.w700),
       textAlign: TextAlign.center,

@@ -37,8 +37,7 @@ class NetworkInfoImpl implements NetworkInfo {
   }
 
   @override
-  Stream<bool> get onStatusChange =>
-      _connectivity.onConnectivityChanged.asyncMap((_) => isConnected).distinct();
+  Stream<bool> get onStatusChange => _connectivity.onConnectivityChanged.asyncMap((_) => isConnected).distinct();
 
   bool _hasNoInterface(List<ConnectivityResult> results) =>
       results.every((result) => result == ConnectivityResult.none);

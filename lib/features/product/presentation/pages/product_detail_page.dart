@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/app_images.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../../../core/widgets/app_back_button.dart';
-import '../../../../core/widgets/app_primary_button.dart';
-import '../../../../core/widgets/coming_soon_view.dart';
-import '../../../../core/widgets/donut_circle.dart';
-import '../../../../core/widgets/gradient_background.dart';
-import '../widgets/quantity_stepper.dart';
+import '../../domain/entities/product.dart';
+import '../sample/sample_products.dart';
+import '../widgets/add_to_cart_bar.dart';
+import '../widgets/product_description.dart';
+import '../widgets/product_hero_card.dart';
 
-/// `/product/:id`. Name, code and price arrive with the product bloc.
+/// `/product/:id`. Reads [SampleProducts] until the product bloc exists.
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key, required this.productId});
 
@@ -22,44 +22,66 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  static const double _imageWidthFactor = 0.7;
-
+  late final Product? _product = SampleProducts.byId(widget.productId);
   int _quantity = 1;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
+    final product = _product;
     return Scaffold(
-      body: GradientBackground(
-        child: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.screenH),
-            children: [
-              const Align(alignment: Alignment.centerLeft, child: AppBackButton()),
-              const SizedBox(height: AppSpacing.xxl),
-              _image(),
-              const SizedBox(height: AppSpacing.xxl),
-              Text(l10n.productTitle, style: Theme.of(context).textTheme.headlineMedium),
-              const ComingSoonView(),
-              Center(child: QuantityStepper(quantity: _quantity, onChanged: (value) => setState(() => _quantity = value))),
-              const SizedBox(height: AppSpacing.xxl),
-              AppPrimaryButton(label: l10n.addToCart, onPressed: () {}),
-            ],
-          ),
+      backgroundColor: context.palette.pageBackground,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: BackButton(onPressed: () => context.canPop() ? context.pop() : null),
+            ),
+            Expanded(child: product == null ? const _ProductNotFound() : _details(product)),
+          ],
         ),
       ),
     );
   }
 
-  Widget _image() {
-    return FractionallySizedBox(
-      widthFactor: _imageWidthFactor,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: DonutCircle(
-          backgroundColor: context.palette.decorativeAt(0),
-          imagePath: AppImages.product(widget.productId),
+  Widget _details(Product product) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+            children: [
+              ProductHeroCard(
+                product: product,
+                quantity: _quantity,
+                onQuantityChanged: (quantity) => setState(() => _quantity = quantity),
+              ),
+              const SizedBox(height: AppSpacing.xxl),
+              ProductDescription(description: product.description),
+              const SizedBox(height: AppSpacing.xxl),
+            ],
+          ),
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.sm, AppSpacing.xl, AppSpacing.lg),
+          child: AddToCartBar(totalMmk: product.finalPriceMmk * _quantity, onPressed: () {}),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProductNotFound extends StatelessWidget {
+  const _ProductNotFound();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xxl),
+        child: Text(context.l10n.productNotFound, textAlign: TextAlign.center),
       ),
     );
   }

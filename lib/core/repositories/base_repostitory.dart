@@ -47,6 +47,5 @@ abstract class BaseRepository {
     });
   }
 
-  Failure _toFailure(Object error) =>
-      error is Failure ? error : CacheFailure('Local data error', '$error');
+  Failure _toFailure(Object error) => error is Failure ? error : CacheFailure('Local data error', '$error');
 }

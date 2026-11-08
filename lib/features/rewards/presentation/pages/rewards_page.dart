@@ -27,7 +27,12 @@ class RewardsPage extends StatelessWidget {
                 child: Text(l10n.rewardsTitle, style: Theme.of(context).textTheme.headlineMedium),
               ),
               const ComingSoonView(),
-              TabBar(tabs: [Tab(text: l10n.eatMoreEarnMore), Tab(text: l10n.gift)]),
+              TabBar(
+                tabs: [
+                  Tab(text: l10n.eatMoreEarnMore),
+                  Tab(text: l10n.gift),
+                ],
+              ),
               const Expanded(child: TabBarView(children: [ComingSoonView(), ComingSoonView()])),
             ],
           ),

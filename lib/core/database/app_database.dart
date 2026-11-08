@@ -25,13 +25,13 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (migrator) => migrator.createAll(),
-        // From schema v2 on, use the generated `stepByStep(from1To2: ...)` here.
-        onUpgrade: (migrator, from, to) async {},
-        beforeOpen: (details) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-      );
+    onCreate: (migrator) => migrator.createAll(),
+    // From schema v2 on, use the generated `stepByStep(from1To2: ...)` here.
+    onUpgrade: (migrator, from, to) async {},
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 }
 
 @module

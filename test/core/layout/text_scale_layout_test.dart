@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:jdonut/app.dart';
 import 'package:jdonut/core/di/injection_container.dart';
+import 'package:jdonut/core/l10n/locale_controller.dart';
 import 'package:jdonut/core/router/app_routes.dart';
 import 'package:jdonut/core/session/auth_session.dart';
 
@@ -20,7 +21,15 @@ final _signedOutRoutes = [
   AppRoutes.birthDate,
 ];
 
-final _signedInRoutes = [AppRoutes.welcome, AppRoutes.home, AppRoutes.rewards, AppRoutes.productDetail('p_coconut')];
+final _signedInRoutes = [
+  AppRoutes.welcome,
+  AppRoutes.home,
+  AppRoutes.rewards,
+  AppRoutes.menu,
+  AppRoutes.wallet,
+  AppRoutes.settings,
+  AppRoutes.productDetail('p_coconut'),
+];
 
 void main() {
   tearDown(getIt.reset);
@@ -34,7 +43,7 @@ void main() {
 
     final session = getIt.registerSingleton(AuthSession());
     if (signedIn) session.signIn();
-    await tester.pumpWidget(JDonutApp(session: session));
+    await tester.pumpWidget(JDonutApp(session: session, localeController: getIt.registerSingleton(LocaleController())));
     GoRouter.of(tester.element(find.byType(Navigator).first)).go(route);
     await tester.pumpAndSettle();
 

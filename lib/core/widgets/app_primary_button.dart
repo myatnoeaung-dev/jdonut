@@ -14,11 +14,7 @@ class AppPrimaryButton extends StatelessWidget {
     final locale = Localizations.localeOf(context);
     return FilledButton(
       onPressed: onPressed,
-      child: Text(
-        label.toUpperCase(),
-        locale: locale,
-        textAlign: TextAlign.center,
-      ),
+      child: Text(label.toUpperCase(), locale: locale, textAlign: TextAlign.center),
     );
   }
 }

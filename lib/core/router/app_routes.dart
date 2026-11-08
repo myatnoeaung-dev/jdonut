@@ -8,16 +8,18 @@ abstract final class AppRoutes {
   static const String welcome = '/welcome';
   static const String home = '/home';
   static const String rewards = '/rewards';
+  static const String menu = '/menu';
+  static const String wallet = '/wallet';
+  static const String settings = '/settings';
   static const String product = '/product/:${AppRouteParams.id}';
 
   static String productDetail(String id) => '/product/$id';
 
-  static String phoneFor(AuthFlow flow) => Uri(path: phone, queryParameters: {AppRouteParams.flow: flow.name}).toString();
+  static String phoneFor(AuthFlow flow) =>
+      Uri(path: phone, queryParameters: {AppRouteParams.flow: flow.name}).toString();
 
-  static String otpFor(AuthFlow flow, String phoneNumber) => Uri(
-        path: otp,
-        queryParameters: {AppRouteParams.flow: flow.name, AppRouteParams.phone: phoneNumber},
-      ).toString();
+  static String otpFor(AuthFlow flow, String phoneNumber) =>
+      Uri(path: otp, queryParameters: {AppRouteParams.flow: flow.name, AppRouteParams.phone: phoneNumber}).toString();
 
   /// Only reachable while signed out; a signed-in user is sent home.
   static const List<String> _signedOutOnlyPrefixes = [onboarding, '/auth'];

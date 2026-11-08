@@ -27,12 +27,8 @@ class RegistrationProgressRing extends StatelessWidget {
   }
 
   Widget _ring(AppPalette palette) => CustomPaint(
-        painter: _RingPainter(
-          progress: step / totalSteps,
-          color: palette.progress,
-          trackColor: palette.progressTrack,
-        ),
-      );
+    painter: _RingPainter(progress: step / totalSteps, color: palette.progress, trackColor: palette.progressTrack),
+  );
 }
 
 class _CompletedMark extends StatelessWidget {

@@ -5,52 +5,72 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/widgets/coming_soon_view.dart';
-import '../../../../core/widgets/gradient_background.dart';
+import '../../../../core/theme/app_palette.dart';
+import '../../../../core/widgets/status_bar_strip.dart';
+import '../../../product/domain/entities/product.dart';
+import '../sample/home_sample_content.dart';
+import '../widgets/home_header_panel.dart';
 import '../widgets/home_section.dart';
-import '../widgets/member_header.dart';
-import '../widgets/product_preview_row.dart';
-import '../widgets/promo_banner.dart';
+import '../widgets/nearby_shops_banner.dart';
+import '../widgets/offer_card.dart';
+import '../widgets/product_tile_card.dart';
 
-/// Home layout. Product ids are temporary until the products come from the
-/// local database through a bloc.
+/// Home tab. Content comes from [HomeSampleContent] until the home bloc exists.
+///
+/// Scrolling: the header panel scrolls away, each section title sticks to the
+/// top while its row is visible, and a peach strip stays behind the status bar.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  static const List<String> _seasonalIds = ['p_coconut', 'p_matcha_cream', 'p_caramel_crunch'];
-  static const List<String> _popularIds = ['p_chocolate_glazed', 'p_strawberry_sprinkle', 'p_classic_sugar'];
-  static const List<String> _orderAgainIds = ['p_coconut', 'p_classic_sugar'];
+  /// Key of a product card, for tests.
+  static Key productCardKey(String productId) => ValueKey('homeProduct_$productId');
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    void openProduct(String id) => context.push(AppRoutes.productDetail(id));
+    void openProduct(Product product) => context.push(AppRoutes.productDetail(product.id));
+    ProductTileCard Function(Product, int) tiles(double aspectRatio) =>
+        (product, index) => ProductTileCard(
+          product: product,
+          colorIndex: index,
+          aspectRatio: aspectRatio,
+          onTap: () => openProduct(product),
+        );
 
-    return GradientBackground(
-      child: SafeArea(
-        bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.screenH),
-          children: [
-            const MemberHeader(),
-            const SizedBox(height: AppSpacing.xl),
-            const PromoBanner(),
-            HomeSection(
-              title: l10n.seasonalSpecials,
-              child: ProductPreviewRow(productIds: _seasonalIds, onProductTap: openProduct),
-            ),
-            HomeSection(
-              title: l10n.popular,
-              child: ProductPreviewRow(productIds: _popularIds, onProductTap: openProduct),
-            ),
-            HomeSection(
-              title: l10n.orderAgain,
-              child: ProductPreviewRow(productIds: _orderAgainIds, onProductTap: openProduct),
-            ),
-            HomeSection(title: l10n.nearbyShops, child: const ComingSoonView()),
-          ],
-        ),
+    return ColoredBox(
+      color: context.palette.pageBackground,
+      child: CustomScrollView(
+        slivers: [
+          const StatusBarStrip(),
+          const SliverToBoxAdapter(
+            child: HomeHeaderPanel(member: HomeSampleContent.member, banners: HomeSampleContent.banners),
+          ),
+          HomeSection(
+            title: l10n.seasonalSpecials,
+            children: _cards(HomeSampleContent.seasonalSpecials, (product, index) {
+              return OfferCard(product: product, colorIndex: index, onTap: () => openProduct(product));
+            }),
+          ),
+          HomeSection(
+            title: l10n.popular,
+            children: _cards(HomeSampleContent.popular, tiles(AppSizes.productTallAspectRatio)),
+          ),
+          HomeSection(
+            title: l10n.orderAgain,
+            children: _cards(HomeSampleContent.orderAgain, tiles(AppSizes.productSquareAspectRatio)),
+          ),
+          // Full width, touching the bottom: the background fills the end of the page.
+          const SliverPadding(
+            padding: EdgeInsets.only(top: AppSpacing.xxl),
+            sliver: SliverToBoxAdapter(child: NearbyShopsBanner(shops: HomeSampleContent.nearbyShops)),
+          ),
+        ],
       ),
     );
   }
+
+  List<Widget> _cards(List<Product> products, Widget Function(Product product, int index) buildCard) => [
+    for (var index = 0; index < products.length; index++)
+      KeyedSubtree(key: productCardKey(products[index].id), child: buildCard(products[index], index)),
+  ];
 }

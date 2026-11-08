@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 
+import '../constants/app_icons.dart';
 import '../extensions/l10n_extension.dart';
+import '../theme/app_palette.dart';
+import '../widgets/app_bottom_nav_bar.dart';
 
-/// Bottom navigation around the Home and Rewards tabs.
+/// Bottom navigation around the five main tabs. Order matches the shell
+/// branches in `app_router.dart`: Home, Rewards, Menu, Wallet, Settings.
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.navigationShell});
 
@@ -14,21 +18,19 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
+      // Shows behind the bar's rounded corners; matches the tab pages.
+      backgroundColor: context.palette.pageBackground,
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
+      extendBody: true, // so the bar's rounded corners show the page behind
+      bottomNavigationBar: AppBottomNavBar(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onTabSelected,
+        onSelected: _onTabSelected,
         destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home_rounded),
-            label: l10n.navHome,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.card_giftcard_outlined),
-            selectedIcon: const Icon(Icons.card_giftcard_rounded),
-            label: l10n.navRewards,
-          ),
+          AppNavDestination(icon: AppIcons.navHome, label: l10n.navHome),
+          AppNavDestination(icon: AppIcons.navRewards, label: l10n.navRewards),
+          AppNavDestination(icon: AppIcons.navMenu, label: l10n.navMenu),
+          AppNavDestination(icon: AppIcons.navWallet, label: l10n.navWallet),
+          AppNavDestination(icon: AppIcons.navSettings, label: l10n.navSettings),
         ],
       ),
     );

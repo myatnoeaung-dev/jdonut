@@ -332,17 +332,71 @@ abstract class AppLocalizations {
   /// **'Rewards'**
   String get navRewards;
 
-  /// No description provided for @homeGreeting.
+  /// No description provided for @navMenu.
   ///
   /// In en, this message translates to:
-  /// **'Hi, donut lover'**
-  String get homeGreeting;
+  /// **'Menu'**
+  String get navMenu;
 
-  /// No description provided for @homeMemberTier.
+  /// No description provided for @navWallet.
   ///
   /// In en, this message translates to:
-  /// **'Member'**
-  String get homeMemberTier;
+  /// **'Wallet'**
+  String get navWallet;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// No description provided for @tierBronze.
+  ///
+  /// In en, this message translates to:
+  /// **'Bronze'**
+  String get tierBronze;
+
+  /// No description provided for @tierSilver.
+  ///
+  /// In en, this message translates to:
+  /// **'Silver'**
+  String get tierSilver;
+
+  /// No description provided for @tierGold.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get tierGold;
+
+  /// Member tier under the name on Home, e.g. Bronze member
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} member'**
+  String memberTier(String tier);
+
+  /// No description provided for @pointsToNextTier.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} points left to become {tier} Member'**
+  String pointsToNextTier(int points, String tier);
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @unreadNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unread notification} other{{count} unread notifications}}'**
+  String unreadNotifications(int count);
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
 
   /// No description provided for @seasonalSpecials.
   ///
@@ -353,7 +407,7 @@ abstract class AppLocalizations {
   /// No description provided for @popular.
   ///
   /// In en, this message translates to:
-  /// **'Popular'**
+  /// **'Popular 🔥'**
   String get popular;
 
   /// No description provided for @orderAgain.
@@ -362,11 +416,29 @@ abstract class AppLocalizations {
   /// **'Order again'**
   String get orderAgain;
 
-  /// No description provided for @nearbyShops.
+  /// No description provided for @discountOff.
   ///
   /// In en, this message translates to:
-  /// **'Nearby shops'**
-  String get nearbyShops;
+  /// **'{percent}% off'**
+  String discountOff(int percent);
+
+  /// No description provided for @nearbyShopsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{There is 1 J\'Donut shop near you. 😋} other{There are {count} J\'Donut shops near you. 😋}}'**
+  String nearbyShopsCount(int count);
+
+  /// No description provided for @exploreNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore now'**
+  String get exploreNow;
+
+  /// No description provided for @orderOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Online'**
+  String get orderOnline;
 
   /// No description provided for @comingSoon.
   ///
@@ -374,23 +446,161 @@ abstract class AppLocalizations {
   /// **'Design coming soon'**
   String get comingSoon;
 
-  /// No description provided for @productTitle.
+  /// No description provided for @productNew.
   ///
   /// In en, this message translates to:
-  /// **'Product'**
-  String get productTitle;
+  /// **'New'**
+  String get productNew;
 
-  /// No description provided for @productCode.
+  /// Price in Myanmar kyat; {price} is already formatted with grouping
   ///
   /// In en, this message translates to:
-  /// **'Product code: {code}'**
-  String productCode(String code);
+  /// **'{price} MMK'**
+  String priceMmk(String price);
+
+  /// No description provided for @whatsThis.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s this?'**
+  String get whatsThis;
+
+  /// No description provided for @decreaseQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease quantity'**
+  String get decreaseQuantity;
+
+  /// No description provided for @increaseQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase quantity'**
+  String get increaseQuantity;
+
+  /// No description provided for @productNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find this donut.'**
+  String get productNotFound;
 
   /// No description provided for @addToCart.
   ///
   /// In en, this message translates to:
   /// **'Add to cart'**
   String get addToCart;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// No description provided for @settingsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccount;
+
+  /// No description provided for @myAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'My addresses'**
+  String get myAddresses;
+
+  /// No description provided for @paymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods'**
+  String get paymentMethods;
+
+  /// No description provided for @orderHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Order history'**
+  String get orderHistory;
+
+  /// No description provided for @settingsPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get settingsPreferences;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose language'**
+  String get chooseLanguage;
+
+  /// No description provided for @orderUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Order updates'**
+  String get orderUpdates;
+
+  /// No description provided for @promotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers & promotions'**
+  String get promotions;
+
+  /// No description provided for @settingsSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get settingsSupport;
+
+  /// No description provided for @helpCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Help center'**
+  String get helpCenter;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About J\'Donuts'**
+  String get aboutApp;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersion(String version);
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logOut;
+
+  /// No description provided for @logOutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out?'**
+  String get logOutConfirmTitle;
+
+  /// No description provided for @logOutConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll need to verify your phone number to log in again.'**
+  String get logOutConfirmMessage;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @featureComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get featureComingSoon;
 
   /// No description provided for @rewardsTitle.
   ///

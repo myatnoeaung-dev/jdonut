@@ -15,17 +15,15 @@ class ProductRepositoryImpl extends BaseRepository implements ProductRepository 
   final ProductSeedDatasource _seed;
 
   @override
-  Stream<Result<List<Product>>> watchProducts() => guardStream(
-        _local.watchProducts().map((models) => models.map((model) => model.toEntity()).toList()),
-      );
+  Stream<Result<List<Product>>> watchProducts() =>
+      guardStream(_local.watchProducts().map((models) => models.map((model) => model.toEntity()).toList()));
 
   @override
-  Future<Result<Product>> getProductById(String id) =>
-      guard(() async => (await _local.getProductById(id)).toEntity());
+  Future<Result<Product>> getProductById(String id) => guard(() async => (await _local.getProductById(id)).toEntity());
 
   @override
   Future<Result<void>> seedProductsIfEmpty() => guard(() async {
-        if (await _local.hasProducts()) return;
-        await _local.upsertProducts(await _seed.loadSeedProducts());
-      });
+    if (await _local.hasProducts()) return;
+    await _local.upsertProducts(await _seed.loadSeedProducts());
+  });
 }

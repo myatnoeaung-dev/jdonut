@@ -28,6 +28,16 @@ abstract final class AppColors {
   static const Color aqua = Color(0xFF3FD9EE);
   static const Color rose = Color(0xFFF7C6D6);
 
+  // Home & product
+  static const Color pageGray = Color(0xFFF2F2F4);
+  static const Color headerPeach = Color(0xFFFDE7D8);
+  static const Color orange = Color(0xFFFF8A1F);
+  static const Color green = Color(0xFF8BC34A);
+  static const Color purple = Color(0xFF5B4FD9);
+  static const Color tierStar = Color(0xFF8F8682);
+  static const Color tierBadgeFill = Color(0xFFF6D6C0);
+  static const Color orangeLight = Color(0xFFFFC08A);
+
   // Shadows
   static const Color shadow = Color(0x14000000);
 }

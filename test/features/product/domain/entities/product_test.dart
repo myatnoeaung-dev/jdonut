@@ -3,15 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jdonut/features/product/domain/entities/product.dart';
 
 Product _product({int priceMmk = 3200, int? discountPercent}) => Product(
-      id: 'p_coconut',
-      code: 'JD022123',
-      name: 'Coconut Donut',
-      priceMmk: priceMmk,
-      isNew: true,
-      discountPercent: discountPercent,
-      imageUrl: 'assets/images/products/p_coconut.png',
-      description: 'Enjoy our scrumptious donuts',
-    );
+  id: 'p_coconut',
+  code: 'JD022123',
+  name: 'Coconut Donut',
+  priceMmk: priceMmk,
+  isNew: true,
+  discountPercent: discountPercent,
+  imageUrl: 'assets/images/products/p_coconut.png',
+  description: 'Enjoy our scrumptious donuts',
+);
 
 void main() {
   group('Product.finalPriceMmk', () {

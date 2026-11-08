@@ -31,6 +31,7 @@ import '../../features/product/domain/usecases/seed_products_use_case.dart'
 import '../../features/product/domain/usecases/watch_products_use_case.dart'
     as _i153;
 import '../database/app_database.dart' as _i982;
+import '../l10n/locale_controller.dart' as _i984;
 import '../network/network_info.dart' as _i932;
 import '../session/auth_session.dart' as _i971;
 import '../shared/storage_util.dart' as _i109;
@@ -50,6 +51,7 @@ _i174.GetIt init(
     () => databaseModule.database,
     dispose: _i982.closeDatabase,
   );
+  gh.lazySingleton<_i984.LocaleController>(() => _i984.LocaleController());
   gh.lazySingleton<_i895.Connectivity>(() => connectivityModule.connectivity);
   gh.lazySingleton<_i971.AuthSession>(() => _i971.AuthSession());
   gh.lazySingleton<_i558.FlutterSecureStorage>(

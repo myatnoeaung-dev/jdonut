@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/pages/birth_date_page.dart';
@@ -9,7 +11,11 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/welcome_page.dart';
 import '../../features/product/presentation/pages/product_detail_page.dart';
 import '../../features/rewards/presentation/pages/rewards_page.dart';
+import '../../features/settings/presentation/pages/settings_page.dart';
+import '../../l10n/app_localizations.dart';
+import '../extensions/l10n_extension.dart';
 import '../session/auth_session.dart';
+import '../widgets/coming_soon_page.dart';
 import 'app_routes.dart';
 import 'app_shell.dart';
 
@@ -34,13 +40,14 @@ AuthFlow _flowOf(GoRouterState state) => AuthFlow.fromQuery(state.uri.queryParam
 
 final List<RouteBase> _authRoutes = [
   GoRoute(path: AppRoutes.onboarding, builder: (_, _) => const OnboardingPage()),
-  GoRoute(path: AppRoutes.phone, builder: (_, state) => PhoneNumberPage(flow: _flowOf(state))),
+  GoRoute(
+    path: AppRoutes.phone,
+    builder: (_, state) => PhoneNumberPage(flow: _flowOf(state)),
+  ),
   GoRoute(
     path: AppRoutes.otp,
-    builder: (_, state) => VerifyOtpPage(
-      flow: _flowOf(state),
-      phoneNumber: state.uri.queryParameters[AppRouteParams.phone] ?? '',
-    ),
+    builder: (_, state) =>
+        VerifyOtpPage(flow: _flowOf(state), phoneNumber: state.uri.queryParameters[AppRouteParams.phone] ?? ''),
   ),
 ];
 
@@ -53,10 +60,27 @@ final List<RouteBase> _registrationRoutes = [
 final RouteBase _shellRoute = StatefulShellRoute.indexedStack(
   builder: (_, _, navigationShell) => AppShell(navigationShell: navigationShell),
   branches: [
-    StatefulShellBranch(routes: [GoRoute(path: AppRoutes.home, builder: (_, _) => const HomePage())]),
-    StatefulShellBranch(routes: [GoRoute(path: AppRoutes.rewards, builder: (_, _) => const RewardsPage())]),
+    StatefulShellBranch(
+      routes: [GoRoute(path: AppRoutes.home, builder: (_, _) => const HomePage())],
+    ),
+    StatefulShellBranch(
+      routes: [GoRoute(path: AppRoutes.rewards, builder: (_, _) => const RewardsPage())],
+    ),
+    StatefulShellBranch(
+      routes: [GoRoute(path: AppRoutes.menu, builder: (context, _) => _placeholder(context, (l) => l.navMenu))],
+    ),
+    StatefulShellBranch(
+      routes: [GoRoute(path: AppRoutes.wallet, builder: (context, _) => _placeholder(context, (l) => l.navWallet))],
+    ),
+    StatefulShellBranch(
+      routes: [GoRoute(path: AppRoutes.settings, builder: (_, _) => const SettingsPage())],
+    ),
   ],
 );
+
+/// Tabs whose screens aren't designed yet.
+Widget _placeholder(BuildContext context, String Function(AppLocalizations l10n) title) =>
+    ComingSoonPage(title: title(context.l10n));
 
 final RouteBase _productRoute = GoRoute(
   path: AppRoutes.product,

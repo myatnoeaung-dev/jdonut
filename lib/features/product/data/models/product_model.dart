@@ -25,35 +25,35 @@ abstract class ProductModel with _$ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
   factory ProductModel.fromRow(ProductRow row) => ProductModel(
-        id: row.id,
-        code: row.code,
-        name: row.name,
-        priceMmk: row.priceMmk,
-        isNew: row.isNew,
-        discountPercent: row.discountPercent,
-        imageUrl: row.imageUrl,
-        description: row.description,
-      );
+    id: row.id,
+    code: row.code,
+    name: row.name,
+    priceMmk: row.priceMmk,
+    isNew: row.isNew,
+    discountPercent: row.discountPercent,
+    imageUrl: row.imageUrl,
+    description: row.description,
+  );
 
   ProductsCompanion toCompanion() => ProductsCompanion.insert(
-        id: id,
-        code: code,
-        name: name,
-        priceMmk: priceMmk,
-        isNew: Value(isNew),
-        discountPercent: Value(discountPercent),
-        imageUrl: imageUrl,
-        description: description,
-      );
+    id: id,
+    code: code,
+    name: name,
+    priceMmk: priceMmk,
+    isNew: Value(isNew),
+    discountPercent: Value(discountPercent),
+    imageUrl: imageUrl,
+    description: description,
+  );
 
   Product toEntity() => Product(
-        id: id,
-        code: code,
-        name: name,
-        priceMmk: priceMmk,
-        isNew: isNew,
-        discountPercent: discountPercent,
-        imageUrl: imageUrl,
-        description: description,
-      );
+    id: id,
+    code: code,
+    name: name,
+    priceMmk: priceMmk,
+    isNew: isNew,
+    discountPercent: discountPercent,
+    imageUrl: imageUrl,
+    description: description,
+  );
 }

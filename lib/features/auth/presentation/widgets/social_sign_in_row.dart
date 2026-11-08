@@ -44,10 +44,7 @@ class _SocialButton extends StatelessWidget {
     return IconButton(
       onPressed: onTap ?? () {},
       tooltip: label,
-      constraints: const BoxConstraints.tightFor(
-        width: AppSizes.socialTapTarget,
-        height: AppSizes.socialTapTarget,
-      ),
+      constraints: const BoxConstraints.tightFor(width: AppSizes.socialTapTarget, height: AppSizes.socialTapTarget),
       icon: AppSvgIcon(asset, size: AppSizes.socialIcon, currentColor: tint, semanticLabel: label),
     );
   }

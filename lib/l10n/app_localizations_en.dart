@@ -135,36 +135,170 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navRewards => 'Rewards';
 
   @override
-  String get homeGreeting => 'Hi, donut lover';
+  String get navMenu => 'Menu';
 
   @override
-  String get homeMemberTier => 'Member';
+  String get navWallet => 'Wallet';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get tierBronze => 'Bronze';
+
+  @override
+  String get tierSilver => 'Silver';
+
+  @override
+  String get tierGold => 'Gold';
+
+  @override
+  String memberTier(String tier) {
+    return '$tier member';
+  }
+
+  @override
+  String pointsToNextTier(int points, String tier) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString points left to become $tier Member';
+  }
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String unreadNotifications(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unread notifications',
+      one: '1 unread notification',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get seeAll => 'See all';
 
   @override
   String get seasonalSpecials => 'Seasonal specials';
 
   @override
-  String get popular => 'Popular';
+  String get popular => 'Popular 🔥';
 
   @override
   String get orderAgain => 'Order again';
 
   @override
-  String get nearbyShops => 'Nearby shops';
+  String discountOff(int percent) {
+    return '$percent% off';
+  }
+
+  @override
+  String nearbyShopsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'There are $count J\'Donut shops near you. 😋',
+      one: 'There is 1 J\'Donut shop near you. 😋',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exploreNow => 'Explore now';
+
+  @override
+  String get orderOnline => 'Order Online';
 
   @override
   String get comingSoon => 'Design coming soon';
 
   @override
-  String get productTitle => 'Product';
+  String get productNew => 'New';
 
   @override
-  String productCode(String code) {
-    return 'Product code: $code';
+  String priceMmk(String price) {
+    return '$price MMK';
   }
 
   @override
+  String get whatsThis => 'What\'s this?';
+
+  @override
+  String get decreaseQuantity => 'Decrease quantity';
+
+  @override
+  String get increaseQuantity => 'Increase quantity';
+
+  @override
+  String get productNotFound => 'We couldn\'t find this donut.';
+
+  @override
   String get addToCart => 'Add to cart';
+
+  @override
+  String get editProfile => 'Edit profile';
+
+  @override
+  String get settingsAccount => 'Account';
+
+  @override
+  String get myAddresses => 'My addresses';
+
+  @override
+  String get paymentMethods => 'Payment methods';
+
+  @override
+  String get orderHistory => 'Order history';
+
+  @override
+  String get settingsPreferences => 'Preferences';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get chooseLanguage => 'Choose language';
+
+  @override
+  String get orderUpdates => 'Order updates';
+
+  @override
+  String get promotions => 'Offers & promotions';
+
+  @override
+  String get settingsSupport => 'Support';
+
+  @override
+  String get helpCenter => 'Help center';
+
+  @override
+  String get aboutApp => 'About J\'Donuts';
+
+  @override
+  String appVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get logOut => 'Log out';
+
+  @override
+  String get logOutConfirmTitle => 'Log out?';
+
+  @override
+  String get logOutConfirmMessage =>
+      'You\'ll need to verify your phone number to log in again.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get featureComingSoon => 'Coming soon';
 
   @override
   String get rewardsTitle => 'Rewards';

@@ -136,36 +136,168 @@ class AppLocalizationsMy extends AppLocalizations {
   String get navRewards => 'ဆုလာဘ်များ';
 
   @override
-  String get homeGreeting => 'မင်္ဂလာပါ ဒိုးနတ်ချစ်သူ';
+  String get navMenu => 'မီနူး';
 
   @override
-  String get homeMemberTier => 'အဖွဲ့ဝင်';
+  String get navWallet => 'ပိုက်ဆံအိတ်';
+
+  @override
+  String get navSettings => 'ဆက်တင်များ';
+
+  @override
+  String get tierBronze => 'ကြေး';
+
+  @override
+  String get tierSilver => 'ငွေ';
+
+  @override
+  String get tierGold => 'ရွှေ';
+
+  @override
+  String memberTier(String tier) {
+    return '$tier အဖွဲ့ဝင်';
+  }
+
+  @override
+  String pointsToNextTier(int points, String tier) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$tier အဖွဲ့ဝင်ဖြစ်ရန် ပွိုင့် $pointsString ကျန်ပါသေးသည်';
+  }
+
+  @override
+  String get notifications => 'အသိပေးချက်များ';
+
+  @override
+  String unreadNotifications(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'မဖတ်ရသေးသော အသိပေးချက် $count ခု',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get seeAll => 'အားလုံးကြည့်မည်';
 
   @override
   String get seasonalSpecials => 'ရာသီအထူး';
 
   @override
-  String get popular => 'လူကြိုက်များ';
+  String get popular => 'လူကြိုက်များ 🔥';
 
   @override
   String get orderAgain => 'ထပ်မှာမည်';
 
   @override
-  String get nearbyShops => 'အနီးရှိ ဆိုင်များ';
+  String discountOff(int percent) {
+    return '$percent% လျှော့';
+  }
+
+  @override
+  String nearbyShopsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'သင့်အနီးတွင် J\'Donut ဆိုင် $count ဆိုင် ရှိပါသည်။ 😋',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exploreNow => 'ယခု ရှာဖွေမည်';
+
+  @override
+  String get orderOnline => 'အွန်လိုင်း မှာယူမည်';
 
   @override
   String get comingSoon => 'ဒီဇိုင်း မကြာမီ လာပါမည်';
 
   @override
-  String get productTitle => 'ပစ္စည်း';
+  String get productNew => 'အသစ်';
 
   @override
-  String productCode(String code) {
-    return 'ပစ္စည်းကုဒ်: $code';
+  String priceMmk(String price) {
+    return '$price ကျပ်';
   }
 
   @override
+  String get whatsThis => 'ဒါဘာလဲ?';
+
+  @override
+  String get decreaseQuantity => 'အရေအတွက် လျှော့မည်';
+
+  @override
+  String get increaseQuantity => 'အရေအတွက် တိုးမည်';
+
+  @override
+  String get productNotFound => 'ဤဒိုးနတ်ကို ရှာမတွေ့ပါ။';
+
+  @override
   String get addToCart => 'ခြင်းထဲထည့်မည်';
+
+  @override
+  String get editProfile => 'ပရိုဖိုင် ပြင်မည်';
+
+  @override
+  String get settingsAccount => 'အကောင့်';
+
+  @override
+  String get myAddresses => 'ကျွန်ုပ်၏ လိပ်စာများ';
+
+  @override
+  String get paymentMethods => 'ငွေပေးချေမှု နည်းလမ်းများ';
+
+  @override
+  String get orderHistory => 'မှာယူမှု မှတ်တမ်း';
+
+  @override
+  String get settingsPreferences => 'စိတ်ကြိုက် ရွေးချယ်မှုများ';
+
+  @override
+  String get language => 'ဘာသာစကား';
+
+  @override
+  String get chooseLanguage => 'ဘာသာစကား ရွေးပါ';
+
+  @override
+  String get orderUpdates => 'မှာယူမှု အခြေအနေ';
+
+  @override
+  String get promotions => 'ပရိုမိုးရှင်းများ';
+
+  @override
+  String get settingsSupport => 'အကူအညီ';
+
+  @override
+  String get helpCenter => 'အကူအညီ စင်တာ';
+
+  @override
+  String get aboutApp => 'J\'Donuts အကြောင်း';
+
+  @override
+  String appVersion(String version) {
+    return 'ဗားရှင်း $version';
+  }
+
+  @override
+  String get logOut => 'ထွက်မည်';
+
+  @override
+  String get logOutConfirmTitle => 'ထွက်မှာ သေချာလား?';
+
+  @override
+  String get logOutConfirmMessage =>
+      'ပြန်ဝင်ရန် သင့်ဖုန်းနံပါတ်ကို ထပ်မံ အတည်ပြုရပါမည်။';
+
+  @override
+  String get cancel => 'မလုပ်တော့ပါ';
+
+  @override
+  String get featureComingSoon => 'မကြာမီ လာပါမည်';
 
   @override
   String get rewardsTitle => 'ဆုလာဘ်များ';

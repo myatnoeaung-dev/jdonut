@@ -78,7 +78,10 @@ class _HighlightedTextState extends State<HighlightedText> {
 
   @override
   Widget build(BuildContext context) {
-    return Text.rich(TextSpan(style: widget.style, children: _buildSpans()), textAlign: widget.textAlign);
+    return Text.rich(
+      TextSpan(style: widget.style, children: _buildSpans()),
+      textAlign: widget.textAlign,
+    );
   }
 
   List<InlineSpan> _buildSpans() {
@@ -95,10 +98,6 @@ class _HighlightedTextState extends State<HighlightedText> {
 
   TextSpan _highlightSpan(int index) {
     if (index >= widget.highlights.length) return const TextSpan();
-    return TextSpan(
-      text: widget.highlights[index].text,
-      style: widget.highlightStyle,
-      recognizer: _recognizers[index],
-    );
+    return TextSpan(text: widget.highlights[index].text, style: widget.highlightStyle, recognizer: _recognizers[index]);
   }
 }

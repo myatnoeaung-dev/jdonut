@@ -34,10 +34,7 @@ abstract final class AppTheme {
   }
 
   static InputDecorationTheme _inputTheme(TextTheme textTheme) {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(AppRadii.xs),
-      borderSide: BorderSide.none,
-    );
+    final border = OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.xs), borderSide: BorderSide.none);
     return InputDecorationTheme(
       filled: true,
       fillColor: AppColors.white,

@@ -33,9 +33,7 @@ class _BirthDatePageState extends State<BirthDatePage> {
       step: BirthDatePage.step,
       title: context.l10n.birthDateTitle,
       onContinue: _finish,
-      children: [
-        BirthDateFields(value: _birthDate, onChanged: (date) => setState(() => _birthDate = date)),
-      ],
+      children: [BirthDateFields(value: _birthDate, onChanged: (date) => setState(() => _birthDate = date))],
     );
   }
 }

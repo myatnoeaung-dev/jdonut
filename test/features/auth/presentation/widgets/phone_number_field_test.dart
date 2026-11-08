@@ -13,7 +13,9 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // Column keeps the field at its natural height, like on the phone screen.
-        home: Scaffold(body: Column(children: [PhoneNumberField(controller: TextEditingController())])),
+        home: Scaffold(
+          body: Column(children: [PhoneNumberField(controller: TextEditingController())]),
+        ),
       ),
     );
 

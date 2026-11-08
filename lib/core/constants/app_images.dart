@@ -12,6 +12,15 @@ abstract final class AppImages {
   static final String donutSugar = product('p_classic_sugar');
   static final String donutCaramel = product('p_caramel_crunch');
 
+  /// Shop photo for the "New shop" banner on Home (placeholder until added).
+  static const String bannerNewShop = 'assets/images/banner_new_shop.png';
+
+  /// Sky-and-grass background behind the nearby shops section on Home.
+  static const String nearbyShopsBackground = 'assets/images/nearby_shops_bg.png';
+
+  /// Sample member photo on Home (falls back to the initial until added).
+  static const String avatarSample = 'assets/images/avatar_sample.png';
+
   // Transparent donut artwork for the onboarding hero.
   static const String _donuts = 'assets/images/donuts';
   static const String donutMarshmallow = '$_donuts/marshmallow.png';

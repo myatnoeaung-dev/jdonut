@@ -80,10 +80,7 @@ class _OtpBoxes extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         for (var index = 0; index < OtpCodeField.length; index++)
-          _OtpBox(
-            digit: index < code.length ? code[index] : '',
-            isActive: isFocused && index == code.length,
-          ),
+          _OtpBox(digit: index < code.length ? code[index] : '', isActive: isFocused && index == code.length),
       ],
     );
   }

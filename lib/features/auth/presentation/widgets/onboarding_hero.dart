@@ -22,23 +22,22 @@ class OnboardingHero extends StatelessWidget {
         stops: const [_fadeStart, 1],
         colors: [fadeColor, fadeColor.withValues(alpha: 0)],
       ).createShader(bounds),
-      child: ClipRect(child: Stack(fit: StackFit.expand, children: _circles(context.palette))),
+      child: ClipRect(
+        child: Stack(fit: StackFit.expand, children: _circles(context.palette)),
+      ),
     );
   }
 
   List<Widget> _circles(AppPalette palette) => [
-        for (final circle in _HeroCircle.layout)
-          Align(
-            alignment: circle.alignment,
-            child: FractionallySizedBox(
-              widthFactor: circle.widthFactor,
-              child: DonutCircle(
-                backgroundColor: palette.decorativeAt(circle.colorIndex),
-                imagePath: circle.imagePath,
-              ),
-            ),
-          ),
-      ];
+    for (final circle in _HeroCircle.layout)
+      Align(
+        alignment: circle.alignment,
+        child: FractionallySizedBox(
+          widthFactor: circle.widthFactor,
+          child: DonutCircle(backgroundColor: palette.decorativeAt(circle.colorIndex), imagePath: circle.imagePath),
+        ),
+      ),
+  ];
 }
 
 /// Position, size (as a fraction of the hero width) and colour of each circle.

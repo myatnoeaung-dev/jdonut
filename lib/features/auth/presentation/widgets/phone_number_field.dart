@@ -29,10 +29,7 @@ class PhoneNumberField extends StatelessWidget {
         textInputAction: TextInputAction.done,
         autofillHints: const [AutofillHints.telephoneNumberNational],
         autofocus: true,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(_maxDigits),
-        ],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(_maxDigits)],
         prefix: const _CountryCodePrefix(),
       ),
     );

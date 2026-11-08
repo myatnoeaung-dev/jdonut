@@ -19,24 +19,21 @@ class StoregeUtil {
   // Keys
   static const String _authSession = 'auth_session';
 
-
   Future<void> saveAuthSession(String session) async {
     await _secureStorage.write(key: _authSession, value: session);
   }
-
 
   Future<String?> getAuthSession() async {
     return await _secureStorage.read(key: _authSession);
   }
 
- 
-
   Future<void> deleteAuthSession() async {
     await _secureStorage.delete(key: _authSession);
   }
+
   /// Ends the active session (on logout) but keeps the last account.
   Future<void> clearSession() async {
-    await Future.wait([ deleteAuthSession()]);
+    await Future.wait([deleteAuthSession()]);
   }
 
   // Clear all, including the last account

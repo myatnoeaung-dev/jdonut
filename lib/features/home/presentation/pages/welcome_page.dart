@@ -8,7 +8,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../core/widgets/fill_viewport_scroll_view.dart';
 import '../../../../core/widgets/gradient_background.dart';
-import '../widgets/donut_tile_grid.dart';
+import '../widgets/welcome_collage.dart';
 
 /// Shown once after registration, then the user lands on Home.
 class WelcomePage extends StatelessWidget {
@@ -16,23 +16,34 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return Scaffold(
       body: GradientBackground(
-        child: SafeArea(
-          child: FillViewportScrollView(
-            padding: const EdgeInsets.all(AppSpacing.screenH),
-            top: const DonutTileGrid(),
-            bottom: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: AppSpacing.xxl),
-                Text(l10n.welcomeTitle, style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
-                const SizedBox(height: AppSpacing.xxxl),
-                AppPrimaryButton(label: l10n.letsExplore, onPressed: () => context.go(AppRoutes.home)),
-              ],
-            ),
-          ),
+        child: FillViewportScrollView(
+          top: const WelcomeCollage(),
+          bottom: const SafeArea(top: false, child: Center(child: _WelcomeActions())),
+        ),
+      ),
+    );
+  }
+}
+
+class _WelcomeActions extends StatelessWidget {
+  const _WelcomeActions();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: AppSizes.contentMaxWidth),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.lg, AppSpacing.screenH, AppSpacing.huge),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.welcomeTitle, style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
+            const SizedBox(height: AppSpacing.xxxl),
+            AppPrimaryButton(label: l10n.letsExplore, onPressed: () => context.go(AppRoutes.home)),
+          ],
         ),
       ),
     );

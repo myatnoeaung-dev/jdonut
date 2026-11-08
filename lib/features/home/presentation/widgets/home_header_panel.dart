@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_palette.dart';
+import '../sample/home_sample_content.dart';
+import 'home_banner_carousel.dart';
+import 'member_header.dart';
+import 'notification_button.dart';
+import 'tier_hexagon_badge.dart';
+
+/// Peach panel at the top of Home: member header, the tier hexagon behind it,
+/// the bell tab on the right edge and the banners, whose lower edge the
+/// panel's rounded bottom corners clip.
+class HomeHeaderPanel extends StatelessWidget {
+  const HomeHeaderPanel({super.key, required this.member, required this.banners, this.onNotificationsTap});
+
+  final HomeMember member;
+  final List<HomeBanner> banners;
+  final VoidCallback? onNotificationsTap;
+
+  /// How far the hexagon hangs off the right edge.
+  static const double _hexagonOverhang = 14;
+
+  /// Width kept free beside the name for the bell tab.
+  static const double _bellReservedWidth = 72;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(AppSizes.homePanelRadius)),
+      child: ColoredBox(
+        color: context.palette.headerBackground,
+        child: Stack(
+          children: [
+            const Positioned(top: AppSpacing.lg, right: -_hexagonOverhang, child: TierHexagonBadge()),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.homeH, AppSpacing.xl, AppSpacing.homeH, 0),
+                  // Only the name row keeps clear of the bell; the points pill may run under the hexagon.
+                  child: MemberHeader(member: member, nameRowEndSpace: _bellReservedWidth),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                HomeBannerCarousel(banners: banners),
+              ],
+            ),
+            Positioned(
+              top: AppSpacing.xl + AppSpacing.md,
+              right: 0,
+              child: NotificationButton(count: member.unreadNotifications, onTap: onNotificationsTap),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

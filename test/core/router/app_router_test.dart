@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:jdonut/app.dart';
 import 'package:jdonut/core/di/injection_container.dart';
+import 'package:jdonut/core/l10n/locale_controller.dart';
 import 'package:jdonut/core/session/auth_session.dart';
+import 'package:jdonut/core/widgets/app_bottom_nav_bar.dart';
+import 'package:jdonut/core/widgets/coming_soon_page.dart';
 import 'package:jdonut/features/auth/presentation/pages/birth_date_page.dart';
 import 'package:jdonut/features/auth/presentation/pages/name_page.dart';
 import 'package:jdonut/features/auth/presentation/pages/onboarding_page.dart';
@@ -14,7 +17,6 @@ import 'package:jdonut/features/auth/presentation/pages/verify_otp_page.dart';
 import 'package:jdonut/features/auth/presentation/widgets/otp_code_field.dart';
 import 'package:jdonut/features/home/presentation/pages/home_page.dart';
 import 'package:jdonut/features/home/presentation/pages/welcome_page.dart';
-import 'package:jdonut/features/home/presentation/widgets/product_preview_row.dart';
 import 'package:jdonut/features/product/presentation/pages/product_detail_page.dart';
 
 void main() {
@@ -24,7 +26,7 @@ void main() {
   tearDown(getIt.reset);
 
   Future<void> pumpApp(WidgetTester tester) async {
-    await tester.pumpWidget(JDonutApp(session: session));
+    await tester.pumpWidget(JDonutApp(session: session, localeController: getIt.registerSingleton(LocaleController())));
     await tester.pumpAndSettle();
   }
 
@@ -106,11 +108,31 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
   });
 
+  testWidgets('bottom nav switches tabs and shows placeholders for undesigned ones', (tester) async {
+    session.signIn();
+    await pumpApp(tester);
+
+    // Guards against the bar stretching to fill the screen and hiding the page.
+    expect(tester.getSize(find.byType(AppBottomNavBar)).height, lessThan(120));
+
+    await tester.tap(find.bySemanticsLabel('Wallet'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ComingSoonPage), findsOneWidget);
+    expect(find.text('Wallet'), findsWidgets);
+
+    await tester.tap(find.bySemanticsLabel('Home'));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomePage), findsOneWidget);
+  });
+
   testWidgets('tapping a product on home opens /product/:id', (tester) async {
     session.signIn();
     await pumpApp(tester);
 
-    final coconutTile = find.byKey(ProductPreviewRow.tileKey('p_coconut')).first;
+    // "Order again" is below the fold of a lazily built list, so scroll until it exists.
+    final coconutTile = find.byKey(HomePage.productCardKey('p_coconut'));
+    final homeList = find.descendant(of: find.byType(HomePage), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(coconutTile, 200, scrollable: homeList);
     await tester.ensureVisible(coconutTile);
     await tester.pumpAndSettle();
     await tester.tap(coconutTile);

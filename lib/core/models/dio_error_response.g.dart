@@ -22,9 +22,7 @@ Map<String, dynamic> _$ErrorDataToJson(ErrorData instance) => <String, dynamic>{
 
 Errors _$ErrorsFromJson(Map<String, dynamic> json) => Errors(
   message: json['message'] as String?,
-  data: json['data'] == null
-      ? null
-      : ErrorData.fromJson(json['data'] as Map<String, dynamic>),
+  data: json['data'] == null ? null : ErrorData.fromJson(json['data'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ErrorsToJson(Errors instance) => <String, dynamic>{
@@ -32,18 +30,14 @@ Map<String, dynamic> _$ErrorsToJson(Errors instance) => <String, dynamic>{
   'data': instance.data?.toJson(),
 };
 
-DioErrorResponse _$DioErrorResponseFromJson(Map<String, dynamic> json) =>
-    DioErrorResponse(
-      success: json['success'] as bool?,
-      message: json['message'] as String?,
-      error: json['errors'] == null
-          ? null
-          : Errors.fromJson(json['errors'] as Map<String, dynamic>),
-    );
+DioErrorResponse _$DioErrorResponseFromJson(Map<String, dynamic> json) => DioErrorResponse(
+  success: json['success'] as bool?,
+  message: json['message'] as String?,
+  error: json['errors'] == null ? null : Errors.fromJson(json['errors'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$DioErrorResponseToJson(DioErrorResponse instance) =>
-    <String, dynamic>{
-      'success': instance.success,
-      'message': instance.message,
-      'errors': instance.error?.toJson(),
-    };
+Map<String, dynamic> _$DioErrorResponseToJson(DioErrorResponse instance) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'errors': instance.error?.toJson(),
+};
