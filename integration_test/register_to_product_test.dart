@@ -9,6 +9,7 @@ import 'package:jdonut/features/home/presentation/pages/welcome_page.dart';
 import 'package:jdonut/features/product/presentation/pages/product_detail_page.dart';
 
 import '../test/helpers/auth_flow_actions.dart';
+import '../test/helpers/pump_until.dart';
 import '../test/helpers/test_app.dart';
 
 /// End to end on a device: sign up with a new number, land on Home and open a
@@ -29,9 +30,11 @@ void main() {
     await tester.tapLabel('CONTINUE');
     await tester.pickDefaultBirthDate();
     await tester.tapLabel('CONTINUE');
+    await tester.pumpUntilFound(find.byType(WelcomePage));
     expect(find.byType(WelcomePage), findsOneWidget);
 
     await tester.tapLabel("LET'S EXPLORE");
+    await tester.pumpUntilFound(find.byType(HomePage));
     expect(find.byType(HomePage), findsOneWidget);
 
     final coconutTile = find.byKey(HomePage.productCardKey('p_coconut'));

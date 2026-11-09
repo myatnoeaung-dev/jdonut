@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:integration_test/integration_test_driver.dart';
 
 /// Host side of integration_test/perf_test.dart. Saves the frame timing
-/// summary to build/onboarding_to_rewards_perf.timeline_summary.json and fails
+/// summary to build/onboarding_to_rewards_perf.json and fails
 /// when the 90th-percentile frame misses the 60 fps budget (16 ms) on either
 /// the UI (build) or raster thread.
 Future<void> main() => integrationDriver(responseDataCallback: _checkFrameBudget);

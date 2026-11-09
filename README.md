@@ -147,14 +147,17 @@ Run on a mid-range Android phone in **profile** mode (debug mode is much slower 
 representative):
 
 ```bash
-flutter drive --profile \
+flutter drive --profile --no-dds \
   --driver=test_driver/perf_driver.dart \
   --target=integration_test/perf_test.dart
 ```
 
+`--no-dds` is required: the test connects to the app's VM service itself to record timings,
+and DDS would otherwise hold that connection ("Failed to connect to VM Service").
+
 The test walks Onboarding → Registration → Welcome → Home → Rewards (switching tabs and
 scrolling) while recording frame timings. The driver prints the summary, saves it to
-`build/onboarding_to_rewards_perf.timeline_summary.json` and **fails if the 90th-percentile
+`build/onboarding_to_rewards_perf.json` and **fails if the 90th-percentile
 build or raster time is over 16 ms**. For a closer look, use `flutter run --profile` with
 DevTools → Performance.
 

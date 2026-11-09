@@ -9,12 +9,14 @@ import 'package:jdonut/features/home/presentation/pages/home_page.dart';
 import 'package:jdonut/features/rewards/presentation/pages/rewards_page.dart';
 
 import '../test/helpers/auth_flow_actions.dart';
+import '../test/helpers/pump_until.dart';
 import '../test/helpers/test_app.dart';
 
 /// Frame timings for the animated path from the first screen to Rewards.
 ///
 /// Run on a real mid-range Android phone in profile mode (see README):
-///   flutter drive --profile --driver=test_driver/perf_driver.dart --target=integration_test/perf_test.dart
+///   flutter drive --profile --no-dds --driver=test_driver/perf_driver.dart --target=integration_test/perf_test.dart
+/// (`--no-dds` lets the test connect to the VM service to record the timeline.)
 /// The driver writes the summary to build/ and fails if frames miss the 60 fps budget.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +47,7 @@ Future<void> _register(WidgetTester tester) async {
   await tester.pickDefaultBirthDate();
   await tester.tapLabel('CONTINUE');
   await tester.tapLabel("LET'S EXPLORE");
+  await tester.pumpUntilFound(find.byType(HomePage));
   expect(find.byType(HomePage), findsOneWidget);
 }
 
@@ -60,7 +63,7 @@ Future<void> _browseHome(WidgetTester tester) async {
 /// Opens Rewards (ring, ladder, cards), switches tabs and back, and scrolls.
 Future<void> _browseRewards(WidgetTester tester) async {
   await tester.tap(find.bySemanticsLabel('Rewards').last);
-  await tester.pumpAndSettle();
+  await tester.pumpUntilFound(find.byType(RewardsPage));
   expect(find.byType(RewardsPage), findsOneWidget);
 
   await tester.tap(find.byKey(PillTabBar.tabKey(1)));
