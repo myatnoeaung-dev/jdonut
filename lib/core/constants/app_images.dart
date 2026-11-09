@@ -30,4 +30,7 @@ abstract final class AppImages {
   static const String donutMarshmallow = '$_donuts/marshmallow.png';
   static const String donutVanillaCaramel = '$_donuts/vanilla_caramel.png';
   static const String donutChocolateBiscoff = '$_donuts/chocolate_biscoff.png';
+  static const String donutHoneyLemon = '$_donuts/honey_lemon.png';
+  static const String donutCreamyMilkFilling = '$_donuts/creamy_milk_filling.png';
+  static const String donutTiramisuPanna = '$_donuts/tiramisu_panna.png';
 }

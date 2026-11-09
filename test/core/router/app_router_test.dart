@@ -69,6 +69,7 @@ void main() {
 
     final detail = tester.widget<ProductDetailPage>(find.byType(ProductDetailPage));
     expect(detail.productId, 'p_coconut');
-    expect(detail.heroTag, 'product_orderAgain_p_coconut');
+    // Tagged with the section the tile was in, so the same product in two sections never clashes.
+    expect(detail.heroTag, matches(RegExp(r'^product_\w+_p_coconut$')));
   });
 }

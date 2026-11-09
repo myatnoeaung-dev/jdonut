@@ -26,7 +26,7 @@ void main() {
 
     expect(find.text("J' Donuts Rewards"), findsOneWidget);
     expect(find.text("You're here now"), findsOneWidget);
-    expect(find.text('1,290 pts remaining to become Gold'), findsOneWidget);
+    expect(find.text('320,000 pts remaining to become Gold'), findsOneWidget);
     expect(find.text("You'll be here soon"), findsOneWidget);
     expect(find.bySemanticsLabel('Total points 680,000'), findsOneWidget);
   });

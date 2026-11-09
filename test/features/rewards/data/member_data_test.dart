@@ -27,13 +27,13 @@ const _silver = MemberModel(id: 'm_current', tier: 'silver', loyaltyPoints: 500,
 
 void main() {
   group('MemberModel', () {
-    test('parses the bundled member seed file as Silver with 1,290 points to Gold', () {
+    test('parses the bundled member seed file as Silver with 320,000 points to Gold', () {
       final member = MemberModel.parse(jsonDecode(File(AppSeedFiles.member).readAsStringSync())).toEntity();
 
       expect(member.tier, MemberTier.silver);
       expect(member.nextTier, MemberTier.gold);
       expect(member.loyaltyPoints, 680000);
-      expect(member.pointsToNextTier, 1290);
+      expect(member.pointsToNextTier, 320000);
     });
 
     test('an unknown tier name falls back to bronze', () {

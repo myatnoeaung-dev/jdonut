@@ -108,5 +108,35 @@
     "discountPercent": 30,
     "imageUrl": "assets/images/donuts/chocolate_biscoff.png",
     "description": "Chocolate biscoff donuts with cookie crumble."
+  },
+  {
+    "id": "p_honey_lemon",
+    "code": "JD022134",
+    "name": "Honey Lemon Donut",
+    "priceMmk": 3400,
+    "isNew": true,
+    "discountPercent": null,
+    "imageUrl": "assets/images/donuts/honey_lemon.png",
+    "description": "A glossy lemon glaze sweetened with golden honey, bright and zesty in every bite."
+  },
+  {
+    "id": "p_creamy_milk_filling",
+    "code": "JD022135",
+    "name": "Creamy Milk Filling Donut",
+    "priceMmk": 3600,
+    "isNew": true,
+    "discountPercent": null,
+    "imageUrl": "assets/images/donuts/creamy_milk_filling.png",
+    "description": "A pillowy filled donut dusted with powdered sugar and piped full of sweet milk cream."
+  },
+  {
+    "id": "p_tiramisu_panna",
+    "code": "JD022136",
+    "name": "Tiramisu Panna Donut",
+    "priceMmk": 3900,
+    "isNew": false,
+    "discountPercent": 15,
+    "imageUrl": "assets/images/donuts/tiramisu_panna.png",
+    "description": "Soft golden dough layered with mascarpone cream and a light dusting of cocoa."
   }
 ]
