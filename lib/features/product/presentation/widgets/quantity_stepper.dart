@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/widgets/animated_count.dart';
+import '../../../../core/widgets/press_scale.dart';
 
 /// White pill with cyan – and + buttons around the quantity.
 class QuantityStepper extends StatelessWidget {
@@ -34,7 +36,7 @@ class QuantityStepper extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              child: Text('$quantity', style: theme.textTheme.titleMedium),
+              child: AnimatedCount(value: quantity, style: theme.textTheme.titleMedium),
             ),
             _StepButton(
               icon: Icons.add_rounded,
@@ -58,19 +60,22 @@ class _StepButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return IconButton.filled(
-      onPressed: onPressed,
-      tooltip: tooltip,
-      iconSize: AppSizes.stepperIcon,
-      style: IconButton.styleFrom(
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-        minimumSize: const Size.square(AppSizes.stepperButton),
-        fixedSize: const Size.square(AppSizes.stepperButton),
-        padding: EdgeInsets.zero,
-        tapTargetSize: MaterialTapTargetSize.padded,
+    return PressScale(
+      enabled: onPressed != null,
+      child: IconButton.filled(
+        onPressed: onPressed,
+        tooltip: tooltip,
+        iconSize: AppSizes.stepperIcon,
+        style: IconButton.styleFrom(
+          backgroundColor: colors.primary,
+          foregroundColor: colors.onPrimary,
+          minimumSize: const Size.square(AppSizes.stepperButton),
+          fixedSize: const Size.square(AppSizes.stepperButton),
+          padding: EdgeInsets.zero,
+          tapTargetSize: MaterialTapTargetSize.padded,
+        ),
+        icon: Icon(icon),
       ),
-      icon: Icon(icon),
     );
   }
 }

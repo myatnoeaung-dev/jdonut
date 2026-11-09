@@ -7,6 +7,7 @@ import 'app_typography.dart';
 
 abstract final class AppTheme {
   static const double _navIndicatorAlpha = 0.18;
+  static const double _focusedBorderWidth = 1.5;
 
   static ThemeData get light {
     const colorScheme = ColorScheme.light(
@@ -27,14 +28,18 @@ abstract final class AppTheme {
       textTheme: textTheme,
       scaffoldBackgroundColor: AppColors.blushBottom,
       extensions: const [AppPalette.light],
-      inputDecorationTheme: _inputTheme(textTheme),
+      inputDecorationTheme: _inputTheme(colorScheme, textTheme),
       filledButtonTheme: _filledButtonTheme(colorScheme, textTheme),
       navigationBarTheme: _navigationBarTheme(colorScheme),
     );
   }
 
-  static InputDecorationTheme _inputTheme(TextTheme textTheme) {
+  static InputDecorationTheme _inputTheme(ColorScheme colors, TextTheme textTheme) {
     final border = OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.xs), borderSide: BorderSide.none);
+    // The decorator animates between these, so focus and errors fade in.
+    OutlineInputBorder outlined(Color color) => border.copyWith(
+      borderSide: BorderSide(color: color, width: _focusedBorderWidth),
+    );
     return InputDecorationTheme(
       filled: true,
       fillColor: AppColors.white,
@@ -42,7 +47,9 @@ abstract final class AppTheme {
       contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xl),
       border: border,
       enabledBorder: border,
-      focusedBorder: border,
+      focusedBorder: outlined(colors.primary),
+      errorBorder: outlined(colors.error),
+      focusedErrorBorder: outlined(colors.error),
     );
   }
 

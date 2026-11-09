@@ -17,6 +17,7 @@ import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../l10n/app_localizations.dart';
 import '../extensions/l10n_extension.dart';
 import '../widgets/coming_soon_page.dart';
+import 'app_page_transitions.dart';
 import 'app_routes.dart';
 import 'app_shell.dart';
 
@@ -27,7 +28,10 @@ GoRouter createAppRouter({required AuthBloc authBloc, required Listenable refres
     refreshListenable: refresh,
     redirect: (context, state) => _authGuard(authBloc.state, state),
     routes: [
-      GoRoute(path: AppRoutes.onboarding, builder: (_, _) => const OnboardingPage()),
+      GoRoute(
+        path: AppRoutes.onboarding,
+        pageBuilder: (_, state) => AppPageTransitions.sharedAxis(state, const OnboardingPage()),
+      ),
       _authFlowRoute,
       _welcomeRoute,
       _tabsRoute,
@@ -48,17 +52,23 @@ String? _authGuard(AuthState auth, GoRouterState state) {
 /// Phone → OTP → name → date of birth share one [AuthFlowScope], so the step
 /// blocs (and what was typed) survive Back until the flow ends.
 final RouteBase _authFlowRoute = ShellRoute(
-  builder: (_, state, child) =>
-      AuthFlowScope(initialFlow: AuthFlow.fromQuery(state.uri.queryParameters[AppRouteParams.flow]), child: child),
+  pageBuilder: (_, state, child) => AppPageTransitions.sharedAxis(
+    state,
+    AuthFlowScope(initialFlow: AuthFlow.fromQuery(state.uri.queryParameters[AppRouteParams.flow]), child: child),
+  ),
   routes: [
-    GoRoute(path: AppRoutes.phone, builder: (_, _) => const PhoneNumberPage()),
-    GoRoute(path: AppRoutes.otp, builder: (_, _) => const VerifyOtpPage()),
-    GoRoute(path: AppRoutes.name, builder: (_, _) => const NamePage()),
-    GoRoute(path: AppRoutes.birthDate, builder: (_, _) => const BirthDatePage()),
+    _stepRoute(AppRoutes.phone, const PhoneNumberPage()),
+    _stepRoute(AppRoutes.otp, const VerifyOtpPage()),
+    _stepRoute(AppRoutes.name, const NamePage()),
+    _stepRoute(AppRoutes.birthDate, const BirthDatePage()),
   ],
 );
 
-final RouteBase _welcomeRoute = GoRoute(path: AppRoutes.welcome, builder: (_, _) => const WelcomePage());
+/// A registration step: slides along the flow's axis.
+GoRoute _stepRoute(String path, Widget page) =>
+    GoRoute(path: path, pageBuilder: (_, state) => AppPageTransitions.sharedAxis(state, page));
+
+final RouteBase _welcomeRoute = _stepRoute(AppRoutes.welcome, const WelcomePage());
 
 final RouteBase _tabsRoute = StatefulShellRoute.indexedStack(
   builder: (_, _, navigationShell) => AppShell(navigationShell: navigationShell),
@@ -81,5 +91,11 @@ Widget _placeholder(BuildContext context, String Function(AppLocalizations l10n)
 
 final RouteBase _productRoute = GoRoute(
   path: AppRoutes.product,
-  builder: (_, state) => ProductDetailPage(productId: state.pathParameters[AppRouteParams.id] ?? ''),
+  pageBuilder: (_, state) => AppPageTransitions.fadeScale(
+    state,
+    ProductDetailPage(
+      productId: state.pathParameters[AppRouteParams.id] ?? '',
+      heroTag: state.uri.queryParameters[AppRouteParams.hero],
+    ),
+  ),
 );

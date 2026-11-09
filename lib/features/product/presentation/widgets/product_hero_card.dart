@@ -6,15 +6,25 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/widgets/app_badge.dart';
+import '../../../../core/widgets/hero_wrap.dart';
 import '../../domain/entities/product.dart';
 import 'quantity_stepper.dart';
 
 /// White card with code, New badge, name, price and photo. The quantity
 /// stepper sits across its bottom edge.
 class ProductHeroCard extends StatelessWidget {
-  const ProductHeroCard({super.key, required this.product, required this.quantity, required this.onQuantityChanged});
+  const ProductHeroCard({
+    super.key,
+    required this.product,
+    required this.quantity,
+    required this.onQuantityChanged,
+    this.heroTag,
+  });
 
   final Product product;
+
+  /// Tag shared with the Home image the photo flies from.
+  final String? heroTag;
   final int quantity;
   final ValueChanged<int> onQuantityChanged;
 
@@ -27,7 +37,7 @@ class ProductHeroCard extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: _stepperOverhang),
-          child: _CardBody(product: product),
+          child: _CardBody(product: product, heroTag: heroTag),
         ),
         Positioned(
           left: 0,
@@ -43,9 +53,10 @@ class ProductHeroCard extends StatelessWidget {
 }
 
 class _CardBody extends StatelessWidget {
-  const _CardBody({required this.product});
+  const _CardBody({required this.product, this.heroTag});
 
   final Product product;
+  final String? heroTag;
 
   static const double _imageAspectRatio = 1.3;
 
@@ -76,7 +87,7 @@ class _CardBody extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           AspectRatio(
             aspectRatio: _imageAspectRatio,
-            child: AppNetworkImage(path: product.imageUrl, semanticLabel: product.name),
+            child: heroWrap(heroTag, AppNetworkImage(path: product.imageUrl, semanticLabel: product.name)),
           ),
         ],
       ),

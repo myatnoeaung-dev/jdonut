@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/entrance_animation.dart';
+
 import '../../../../core/theme/app_dimens.dart';
 import '../../domain/entities/product.dart';
 import 'add_to_cart_bar.dart';
@@ -15,6 +17,7 @@ class ProductDetailsView extends StatelessWidget {
     required this.totalMmk,
     required this.onQuantityChanged,
     required this.onAddToCart,
+    this.heroTag,
   });
 
   final Product product;
@@ -22,6 +25,13 @@ class ProductDetailsView extends StatelessWidget {
   final int totalMmk;
   final ValueChanged<int> onQuantityChanged;
   final VoidCallback onAddToCart;
+  final String? heroTag;
+
+  /// Waits for the page transition before the rest enters.
+  static const Duration _detailsDelay = Duration(milliseconds: 250);
+
+  /// The bar rises from the bottom edge.
+  static const Offset _barOffset = Offset(0, 0.6);
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +41,29 @@ class ProductDetailsView extends StatelessWidget {
         Expanded(
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+            // The card arrives with the hero image; the description follows.
             children: [
-              ProductHeroCard(product: product, quantity: quantity, onQuantityChanged: onQuantityChanged),
-              const SizedBox(height: AppSpacing.xxl),
-              ProductDescription(description: product.description),
+              ProductHeroCard(
+                product: product,
+                heroTag: heroTag,
+                quantity: quantity,
+                onQuantityChanged: onQuantityChanged,
+              ),
+              ...EntranceAnimation.staggered(delay: _detailsDelay, [
+                const SizedBox(height: AppSpacing.xxl),
+                ProductDescription(description: product.description),
+              ]),
               const SizedBox(height: AppSpacing.xxl),
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.sm, AppSpacing.xl, AppSpacing.lg),
-          child: AddToCartBar(totalMmk: totalMmk, onPressed: onAddToCart),
+          child: EntranceAnimation(
+            delay: _detailsDelay,
+            offset: _barOffset,
+            child: AddToCartBar(totalMmk: totalMmk, onPressed: onAddToCart),
+          ),
         ),
       ],
     );

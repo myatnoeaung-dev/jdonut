@@ -7,16 +7,21 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/widgets/app_badge.dart';
+import '../../../../core/widgets/hero_wrap.dart';
+import '../../../../core/widgets/press_scale.dart';
 import '../../../product/domain/entities/product.dart';
 
 /// Big 3:2 photo card with an optional discount badge (Seasonal specials).
 /// About 62% of the screen width, so the next card peeks in.
 class OfferCard extends StatelessWidget {
-  const OfferCard({super.key, required this.product, required this.onTap, this.colorIndex = 0});
+  const OfferCard({super.key, required this.product, required this.onTap, this.colorIndex = 0, this.heroTag});
 
   final Product product;
   final VoidCallback onTap;
   final int colorIndex;
+
+  /// Tag the detail page's photo flies from; null for no hero.
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +31,18 @@ class OfferCard extends StatelessWidget {
     );
     return SizedBox(
       width: width,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadii.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(aspectRatio: AppSizes.offerImageAspectRatio, child: _photo(context)),
-            const SizedBox(height: AppSpacing.md),
-            Text(product.name, style: Theme.of(context).textTheme.titleSmall, maxLines: 2),
-          ],
+      child: PressScale(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppRadii.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(aspectRatio: AppSizes.offerImageAspectRatio, child: _photo(context)),
+              const SizedBox(height: AppSpacing.md),
+              Text(product.name, style: Theme.of(context).textTheme.titleSmall, maxLines: 2),
+            ],
+          ),
         ),
       ),
     );
@@ -45,12 +52,15 @@ class OfferCard extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        AppNetworkImage(
-          path: product.imageUrl,
-          borderRadius: BorderRadius.circular(AppRadii.md),
-          placeholderColorIndex: colorIndex,
-          backgroundColor: context.palette.decorativeAt(colorIndex),
-          padding: const EdgeInsets.all(AppSpacing.md),
+        heroWrap(
+          heroTag,
+          AppNetworkImage(
+            path: product.imageUrl,
+            borderRadius: BorderRadius.circular(AppRadii.md),
+            placeholderColorIndex: colorIndex,
+            backgroundColor: context.palette.decorativeAt(colorIndex),
+            padding: const EdgeInsets.all(AppSpacing.md),
+          ),
         ),
         if (product.hasDiscount)
           Positioned(

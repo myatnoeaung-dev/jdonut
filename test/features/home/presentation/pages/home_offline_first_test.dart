@@ -23,7 +23,7 @@ void main() {
     expect(find.byKey(OfflineBanner.bannerKey), findsOneWidget);
     expect(find.text('Hania'), findsOneWidget);
     expect(find.text('Silver member'), findsOneWidget);
-    expect(find.text('500 points left to become Gold Member'), findsOneWidget);
+    expect(find.text('1,290 points left to become Gold Member'), findsOneWidget);
     expect(find.text('Seasonal specials'), findsOneWidget);
     expect(find.byKey(HomePage.productCardKey('p_mistletoe_box')), findsOneWidget);
   });
@@ -37,8 +37,8 @@ void main() {
 
     expect(find.text("You're here now"), findsOneWidget);
     expect(find.text('Silver'), findsOneWidget);
-    expect(find.text('500 pts remaining to become Gold'), findsOneWidget);
-    expect(find.bySemanticsLabel('Total points 500'), findsOneWidget);
+    expect(find.text('1,290 pts remaining to become Gold'), findsOneWidget);
+    expect(find.bySemanticsLabel('Total points 680,000'), findsOneWidget);
   });
 
   testWidgets('the offline banner goes away when the connection returns', (tester) async {

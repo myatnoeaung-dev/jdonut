@@ -4,6 +4,7 @@ import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_back_button.dart';
 import '../../../../core/widgets/app_primary_button.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 import '../../../../core/widgets/fill_viewport_scroll_view.dart';
 import '../../../../core/widgets/gradient_background.dart';
 import 'registration_progress_ring.dart';
@@ -24,6 +25,8 @@ class RegistrationStepScaffold extends StatelessWidget {
   });
 
   static const int totalSteps = 4;
+
+  static const Duration _contentDelay = Duration(milliseconds: 150);
 
   final int step;
   final String title;
@@ -69,9 +72,12 @@ class RegistrationStepScaffold extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.xxxl),
-        Text(title, style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: AppSpacing.xxl),
-        ...children,
+        // Title, then the step's fields, enter just after the page slides in.
+        ...EntranceAnimation.staggered(delay: _contentDelay, [
+          Text(title, style: Theme.of(context).textTheme.headlineMedium),
+          const SizedBox(height: AppSpacing.xxl),
+          ...children,
+        ]),
       ],
     );
   }

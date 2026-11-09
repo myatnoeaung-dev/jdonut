@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/theme/app_palette.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 
 /// "J' Donuts Rewards" title with the orange "Rewards [count]" pill touching
 /// the right edge of the screen.
@@ -12,6 +14,9 @@ class RewardsHeader extends StatelessWidget {
   /// Rewards the member can claim now.
   final int readyCount;
   final VoidCallback onRewardsTap;
+
+  /// The pill slides in from the screen edge it touches.
+  static const Offset _slideFromEdge = Offset(0.5, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,10 @@ class RewardsHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.md),
-          _ReadyRewardsPill(count: readyCount, onTap: onRewardsTap),
+          EntranceAnimation(
+            offset: _slideFromEdge,
+            child: _ReadyRewardsPill(count: readyCount, onTap: onRewardsTap),
+          ),
         ],
       ),
     );
@@ -83,13 +91,30 @@ class _ReadyRewardsPill extends StatelessWidget {
   }
 }
 
+/// White dot with the count; pops in after the pill arrives, and again
+/// whenever the count changes.
 class _CountDot extends StatelessWidget {
   const _CountDot({required this.count});
 
   final int count;
 
+  static const Duration _popDelay = Duration(milliseconds: 350);
+  static const Duration _popDuration = Duration(milliseconds: 700);
+
   @override
   Widget build(BuildContext context) {
+    return EntranceAnimation(
+      key: ValueKey(count),
+      delay: _popDelay,
+      duration: _popDuration,
+      offset: Offset.zero,
+      scaleFrom: 0,
+      curve: AppCurves.bounce,
+      child: _dot(context),
+    );
+  }
+
+  Widget _dot(BuildContext context) {
     final palette = context.palette;
     return Container(
       constraints: const BoxConstraints(minWidth: AppSizes.rewardsCount, minHeight: AppSizes.rewardsCount),

@@ -26,9 +26,9 @@ void main() {
 
     expect(find.text("J' Donuts Rewards"), findsOneWidget);
     expect(find.text("You're here now"), findsOneWidget);
-    expect(find.text('500 pts remaining to become Gold'), findsOneWidget);
+    expect(find.text('1,290 pts remaining to become Gold'), findsOneWidget);
     expect(find.text("You'll be here soon"), findsOneWidget);
-    expect(find.bySemanticsLabel('Total points 500'), findsOneWidget);
+    expect(find.bySemanticsLabel('Total points 680,000'), findsOneWidget);
   });
 
   testWidgets('EARN is enabled only for completed challenges', (tester) async {

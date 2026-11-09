@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import '../../../../core/bloc/submission_status.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/widgets/shake_on_trigger.dart';
 import '../auth_error_messages.dart';
 import '../bloc/otp/otp_bloc.dart';
@@ -24,9 +26,18 @@ class VerifyOtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OtpBloc, OtpState>(
-      listenWhen: (previous, current) => previous.status != current.status,
-      listener: _onStatusChanged,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<OtpBloc, OtpState>(
+          listenWhen: (previous, current) => previous.status != current.status,
+          listener: _onStatusChanged,
+        ),
+        // A wrong code buzzes as the boxes shake.
+        BlocListener<OtpBloc, OtpState>(
+          listenWhen: (previous, current) => current.rejectedCodes > previous.rejectedCodes,
+          listener: (_, _) => HapticFeedback.heavyImpact(),
+        ),
+      ],
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) => RegistrationStepScaffold(
           step: step,
@@ -75,7 +86,13 @@ class _OtpForm extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        _OtpStatusLine(state: state),
+        // Grows smoothly as the status or error line appears.
+        AnimatedSize(
+          duration: AppDurations.short,
+          curve: AppCurves.emphasized,
+          alignment: Alignment.topLeft,
+          child: _OtpStatusLine(state: state),
+        ),
         const SizedBox(height: AppSpacing.xl),
         ResendCountdown(
           remaining: state.resendIn,

@@ -3,22 +3,35 @@ import 'package:flutter/material.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 
 /// A Home section as slivers: its title sticks to the top while the section's
 /// row is on screen, then scrolls away with it.
 class HomeSectionSliver extends StatelessWidget {
-  const HomeSectionSliver({super.key, required this.title, required this.children, this.onSeeAll});
+  const HomeSectionSliver({
+    super.key,
+    required this.title,
+    required this.children,
+    this.onSeeAll,
+    this.entranceDelay = Duration.zero,
+  });
 
   final String title;
   final List<Widget> children;
   final VoidCallback? onSeeAll;
+
+  /// When the title fades up as Home first appears.
+  final Duration entranceDelay;
 
   @override
   Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
         PinnedHeaderSliver(
-          child: _SectionHeader(title: title, onSeeAll: onSeeAll),
+          child: EntranceAnimation(
+            delay: entranceDelay,
+            child: _SectionHeader(title: title, onSeeAll: onSeeAll),
+          ),
         ),
         SliverToBoxAdapter(child: _CardRow(children: children)),
       ],

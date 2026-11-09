@@ -14,9 +14,12 @@ import '../widgets/product_details_view.dart';
 
 /// `/product/:id`. Reads the product from the local database, so it opens offline too.
 class ProductDetailPage extends StatelessWidget {
-  const ProductDetailPage({super.key, required this.productId});
+  const ProductDetailPage({super.key, required this.productId, this.heroTag});
 
   final String productId;
+
+  /// Tag of the Home image the photo flies from; null opens without a hero.
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,9 @@ class ProductDetailPage extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: BackButton(onPressed: () => context.canPop() ? context.pop() : null),
                 ),
-                Expanded(child: _ProductDetailBody(productId: productId)),
+                Expanded(
+                  child: _ProductDetailBody(productId: productId, heroTag: heroTag),
+                ),
               ],
             ),
           ),
@@ -44,9 +49,10 @@ class ProductDetailPage extends StatelessWidget {
 }
 
 class _ProductDetailBody extends StatelessWidget {
-  const _ProductDetailBody({required this.productId});
+  const _ProductDetailBody({required this.productId, this.heroTag});
 
   final String productId;
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +65,7 @@ class _ProductDetailBody extends StatelessWidget {
         if (product == null) return ErrorView(onRetry: () => bloc.add(ProductDetailStarted(productId)));
         return ProductDetailsView(
           product: product,
+          heroTag: heroTag,
           quantity: state.quantity,
           totalMmk: state.totalMmk,
           onQuantityChanged: (quantity) => bloc.add(ProductQuantityChanged(quantity)),

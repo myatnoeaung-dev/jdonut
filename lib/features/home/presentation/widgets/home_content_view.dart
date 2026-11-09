@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 import '../../../../core/widgets/status_bar_strip.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/bloc/auth/auth_bloc.dart';
@@ -31,6 +33,11 @@ class HomeContentView extends StatelessWidget {
 
   static Key productCardKey(String productId) => ValueKey('homeProduct_$productId');
 
+  /// Sections enter one after another below the header.
+  static const Duration _sectionStep = Duration(milliseconds: 120);
+
+  static Duration _sectionDelay(int index) => _sectionStep * (index + 1);
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -40,13 +47,21 @@ class HomeContentView extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           const StatusBarStrip(),
-          SliverToBoxAdapter(child: _HomeHeader(banners: content.banners)),
-          for (final section in content.sections) _ProductSection(section: section),
+          SliverToBoxAdapter(
+            child: EntranceAnimation(child: _HomeHeader(banners: content.banners)),
+          ),
+          for (final (index, section) in content.sections.indexed)
+            _ProductSection(section: section, entranceDelay: _sectionDelay(index)),
           if (content.shops.isNotEmpty)
             // Full width, touching the bottom: the background fills the end of the page.
             SliverPadding(
               padding: const EdgeInsets.only(top: AppSpacing.xxl),
-              sliver: SliverToBoxAdapter(child: NearbyShopsBanner(shops: content.shops)),
+              sliver: SliverToBoxAdapter(
+                child: EntranceAnimation(
+                  delay: _sectionDelay(content.sections.length),
+                  child: NearbyShopsBanner(shops: content.shops),
+                ),
+              ),
             ),
         ],
       ),
@@ -74,37 +89,59 @@ class _HomeHeader extends StatelessWidget {
 }
 
 class _ProductSection extends StatelessWidget {
-  const _ProductSection({required this.section});
+  const _ProductSection({required this.section, required this.entranceDelay});
 
   final HomeSection section;
+  final Duration entranceDelay;
+
+  /// Cards in a row slide in from the side, one after another.
+  static const Offset _cardOffset = Offset(0.25, 0);
 
   @override
   Widget build(BuildContext context) {
     final products = section.products;
     return HomeSectionSliver(
       title: _titleOf(context.l10n, section.type),
+      entranceDelay: entranceDelay,
       children: [
         for (final (index, product) in products.indexed)
           KeyedSubtree(
             key: HomeContentView.productCardKey(product.id),
-            child: _card(product, index, () => context.push(AppRoutes.productDetail(product.id))),
+            child: EntranceAnimation(
+              delay: entranceDelay + AppDurations.staggerStep * index,
+              offset: _cardOffset,
+              child: _card(product, index, () => _open(context, product)),
+            ),
           ),
       ],
     );
   }
 
+  /// A product can appear in several sections, so the tag names the section too.
+  String _heroTag(Product product) => 'product_${section.type.name}_${product.id}';
+
+  void _open(BuildContext context, Product product) =>
+      context.push(AppRoutes.productDetail(product.id, heroTag: _heroTag(product)));
+
   Widget _card(Product product, int index, VoidCallback onTap) => switch (section.type) {
-    HomeSectionType.seasonal => OfferCard(product: product, colorIndex: index, onTap: onTap),
+    HomeSectionType.seasonal => OfferCard(
+      product: product,
+      colorIndex: index,
+      heroTag: _heroTag(product),
+      onTap: onTap,
+    ),
     HomeSectionType.popular => ProductTileCard(
       product: product,
       colorIndex: index,
       aspectRatio: AppSizes.productTallAspectRatio,
+      heroTag: _heroTag(product),
       onTap: onTap,
     ),
     HomeSectionType.orderAgain => ProductTileCard(
       product: product,
       colorIndex: index,
       aspectRatio: AppSizes.productSquareAspectRatio,
+      heroTag: _heroTag(product),
       onTap: onTap,
     ),
   };

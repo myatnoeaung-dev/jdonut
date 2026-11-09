@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_motion.dart';
+import '../../../../core/widgets/entrance_animation.dart';
+
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../rewards/domain/entities/member.dart';
@@ -34,6 +37,11 @@ class HomeHeaderPanel extends StatelessWidget {
   /// Width kept free beside the name for the bell tab.
   static const double _bellReservedWidth = 72;
 
+  /// The hexagon pops and the bell slides in just after the panel appears.
+  static const Duration _decorationDelay = Duration(milliseconds: 250);
+  static const double _hexagonScaleFrom = 0.4;
+  static const Offset _fromRightEdge = Offset(1, 0);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -42,7 +50,17 @@ class HomeHeaderPanel extends StatelessWidget {
         color: context.palette.headerBackground,
         child: Stack(
           children: [
-            const Positioned(top: AppSpacing.lg, right: -_hexagonOverhang, child: TierHexagonBadge()),
+            const Positioned(
+              top: AppSpacing.lg,
+              right: -_hexagonOverhang,
+              child: EntranceAnimation(
+                delay: _decorationDelay,
+                offset: Offset.zero,
+                scaleFrom: _hexagonScaleFrom,
+                curve: AppCurves.pop,
+                child: TierHexagonBadge(),
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -58,7 +76,11 @@ class HomeHeaderPanel extends StatelessWidget {
             Positioned(
               top: AppSpacing.xl + AppSpacing.md,
               right: 0,
-              child: NotificationButton(count: member?.unreadNotifications ?? 0, onTap: onNotificationsTap),
+              child: EntranceAnimation(
+                delay: _decorationDelay,
+                offset: _fromRightEdge,
+                child: NotificationButton(count: member?.unreadNotifications ?? 0, onTap: onNotificationsTap),
+              ),
             ),
           ],
         ),

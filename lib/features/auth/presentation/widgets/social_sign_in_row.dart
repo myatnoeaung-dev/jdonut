@@ -5,6 +5,7 @@ import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/coming_soon_snack_bar.dart';
+import '../../../../core/widgets/press_scale.dart';
 
 /// Google / Apple / Facebook sign-in icons on the onboarding screen. No real
 /// integration yet: tapping shows a "Coming soon" placeholder.
@@ -41,13 +42,19 @@ class _SocialButton extends StatelessWidget {
   /// Only for single-colour logos (Apple); multi-colour logos stay untinted.
   final Color? tint;
 
+  /// Icons are small, so they press in further than wide buttons.
+  static const double _pressedScale = 0.85;
+
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onTap ?? () => showComingSoon(context),
-      tooltip: label,
-      constraints: const BoxConstraints.tightFor(width: AppSizes.socialTapTarget, height: AppSizes.socialTapTarget),
-      icon: AppSvgIcon(asset, size: AppSizes.socialIcon, currentColor: tint, semanticLabel: label),
+    return PressScale(
+      pressedScale: _pressedScale,
+      child: IconButton(
+        onPressed: onTap ?? () => showComingSoon(context),
+        tooltip: label,
+        constraints: const BoxConstraints.tightFor(width: AppSizes.socialTapTarget, height: AppSizes.socialTapTarget),
+        icon: AppSvgIcon(asset, size: AppSizes.socialIcon, currentColor: tint, semanticLabel: label),
+      ),
     );
   }
 }

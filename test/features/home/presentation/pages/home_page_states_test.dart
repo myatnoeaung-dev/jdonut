@@ -9,11 +9,11 @@ import 'package:jdonut/core/bloc/page_status.dart';
 import 'package:jdonut/core/di/injection_container.dart';
 import 'package:jdonut/core/error/failure.dart';
 import 'package:jdonut/core/network/connectivity_cubit.dart';
-import 'package:jdonut/core/widgets/state_views.dart';
 import 'package:jdonut/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:jdonut/features/home/domain/entities/home_content.dart';
 import 'package:jdonut/features/home/presentation/bloc/home_bloc.dart';
 import 'package:jdonut/features/home/presentation/pages/home_page.dart';
+import 'package:jdonut/features/home/presentation/widgets/home_skeleton.dart';
 import 'package:jdonut/features/rewards/presentation/bloc/member/member_bloc.dart';
 import 'package:jdonut/l10n/app_localizations.dart';
 
@@ -61,10 +61,10 @@ void main() {
     );
   }
 
-  testWidgets('shows a spinner on the first load', (tester) async {
+  testWidgets('shows a shimmering skeleton on the first load', (tester) async {
     await pumpHome(tester, const HomeState(status: PageStatus.loading));
 
-    expect(find.byKey(LoadingView.spinnerKey), findsOneWidget);
+    expect(find.byKey(HomeSkeleton.loadingKey), findsOneWidget);
   });
 
   testWidgets('shows an error with Try again, which restarts Home', (tester) async {

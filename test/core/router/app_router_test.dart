@@ -60,8 +60,15 @@ void main() {
     await tester.ensureVisible(coconutTile);
     await tester.pumpAndSettle();
     await tester.tap(coconutTile);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // Mid-transition: the photo is in flight between two heroes.
+    expect(find.byType(Hero), findsWidgets);
     await tester.pumpAndSettle();
 
-    expect(tester.widget<ProductDetailPage>(find.byType(ProductDetailPage)).productId, 'p_coconut');
+    final detail = tester.widget<ProductDetailPage>(find.byType(ProductDetailPage));
+    expect(detail.productId, 'p_coconut');
+    expect(detail.heroTag, 'product_orderAgain_p_coconut');
   });
 }

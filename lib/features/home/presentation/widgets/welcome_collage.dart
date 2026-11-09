@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/app_network_image.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 
 /// Staggered donut tiles at the top of Welcome. Tiles run off the screen edges
 /// and the bottom fades into the background.
@@ -12,6 +14,15 @@ class WelcomeCollage extends StatelessWidget {
 
   static const double _heightToWidth = 1.4;
   static const double _fadeStart = 0.72;
+
+  static const Duration _tileSlide = Duration(milliseconds: 650);
+  static const Duration _tileStep = Duration(milliseconds: 110);
+  static const double _middle = 0.5;
+  static const Offset _fromLeft = Offset(-1.1, 0);
+  static const Offset _fromRight = Offset(1.1, 0);
+
+  /// When every tile has landed; the title fades up after this.
+  static final Duration settleTime = _tileStep * (_CollageTile.layout.length - 1) + _tileSlide;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +47,20 @@ class WelcomeCollage extends StatelessWidget {
   Widget _tiles(AppPalette palette, Size size) {
     return Stack(
       children: [
-        for (final tile in _CollageTile.layout)
+        for (final (index, tile) in _CollageTile.layout.indexed)
           Positioned(
             left: tile.rect.left * size.width,
             top: tile.rect.top * size.height,
             width: tile.rect.width * size.width,
             height: tile.rect.height * size.height,
-            child: _Tile(color: palette.decorativeAt(tile.colorIndex), imagePath: tile.imagePath),
+            // Tiles slide in from the side they sit on, one after another.
+            child: EntranceAnimation(
+              delay: _tileStep * index,
+              duration: _tileSlide,
+              offset: tile.rect.center.dx < _middle ? _fromLeft : _fromRight,
+              curve: AppCurves.pop,
+              child: _Tile(color: palette.decorativeAt(tile.colorIndex), imagePath: tile.imagePath),
+            ),
           ),
       ],
     );

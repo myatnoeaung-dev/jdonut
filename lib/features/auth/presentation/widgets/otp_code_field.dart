@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../domain/validators/otp_validator.dart';
 
 /// Six OTP boxes backed by one hidden field, so typing advances box by box,
@@ -31,6 +32,8 @@ class OtpCodeField extends StatefulWidget {
 }
 
 class _OtpCodeFieldState extends State<OtpCodeField> {
+  static const double _checkingOpacity = 0.5;
+
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
@@ -60,10 +63,15 @@ class _OtpCodeFieldState extends State<OtpCodeField> {
           // Redraws the boxes when the code or focus changes, without setState.
           ListenableBuilder(
             listenable: Listenable.merge([_controller, _focusNode]),
-            builder: (context, _) => _OtpBoxes(
-              code: _controller.text,
-              isFocused: _focusNode.hasFocus && widget.isEnabled,
-              hasError: widget.hasError,
+            // Dims while the code is being checked.
+            builder: (context, _) => AnimatedOpacity(
+              opacity: widget.isEnabled ? 1 : _checkingOpacity,
+              duration: AppDurations.short,
+              child: _OtpBoxes(
+                code: _controller.text,
+                isFocused: _focusNode.hasFocus && widget.isEnabled,
+                hasError: widget.hasError,
+              ),
             ),
           ),
           Positioned.fill(child: _hiddenInput()),
@@ -118,6 +126,8 @@ class _OtpBoxes extends StatelessWidget {
   }
 }
 
+/// One digit box. Its outline fades in when it's next to fill or on error,
+/// it lifts slightly while active, and each typed digit pops in.
 class _OtpBox extends StatelessWidget {
   const _OtpBox({required this.digit, required this.isActive, required this.hasError});
 
@@ -126,21 +136,37 @@ class _OtpBox extends StatelessWidget {
   final bool hasError;
 
   static const double _borderWidth = 1.5;
+  static const double _activeScale = 1.08;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final duration = context.reduceMotion ? Duration.zero : AppDurations.press * 2;
     final borderColor = hasError ? theme.colorScheme.error : theme.colorScheme.primary;
-    return Container(
-      width: AppSizes.otpBoxWidth,
-      constraints: const BoxConstraints(minHeight: AppSizes.otpBoxHeight),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadii.xs),
-        border: isActive || hasError ? Border.all(color: borderColor, width: _borderWidth) : null,
+    final showBorder = isActive || hasError;
+    return AnimatedScale(
+      scale: isActive ? _activeScale : 1,
+      duration: duration,
+      curve: AppCurves.pop,
+      child: AnimatedContainer(
+        duration: duration,
+        width: AppSizes.otpBoxWidth,
+        constraints: const BoxConstraints(minHeight: AppSizes.otpBoxHeight),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(AppRadii.xs),
+          border: Border.all(color: showBorder ? borderColor : borderColor.withValues(alpha: 0), width: _borderWidth),
+        ),
+        child: AnimatedSwitcher(
+          duration: duration,
+          transitionBuilder: (child, animation) => ScaleTransition(
+            scale: animation.drive(CurveTween(curve: AppCurves.pop)),
+            child: FadeTransition(opacity: animation, child: child),
+          ),
+          child: Text(digit, key: ValueKey(digit), style: theme.textTheme.titleMedium),
+        ),
       ),
-      child: Text(digit, style: theme.textTheme.titleMedium),
     );
   }
 }

@@ -13,7 +13,9 @@ abstract final class AppRoutes {
   static const String settings = '/settings';
   static const String product = '/product/:${AppRouteParams.id}';
 
-  static String productDetail(String id) => '/product/$id';
+  /// [heroTag] names the image the detail page's photo flies from.
+  static String productDetail(String id, {String? heroTag}) =>
+      Uri(path: '/product/$id', queryParameters: heroTag == null ? null : {AppRouteParams.hero: heroTag}).toString();
 
   static String phoneFor(AuthFlow flow) =>
       Uri(path: phone, queryParameters: {AppRouteParams.flow: flow.name}).toString();
@@ -32,6 +34,7 @@ abstract final class AppRoutes {
 abstract final class AppRouteParams {
   static const String id = 'id';
   static const String flow = 'flow';
+  static const String hero = 'hero';
 }
 
 /// Whether the phone + OTP steps are creating an account or logging in.

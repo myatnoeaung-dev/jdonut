@@ -3,10 +3,13 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/theme/app_palette.dart';
 
 /// Pink sprinkled donut ring that fills with progress to the next tier, with
 /// the total points in the middle. Always square.
+///
+/// On entry the ring sweeps from 0 while the total counts up.
 class PointsRing extends StatelessWidget {
   const PointsRing({super.key, required this.points, required this.progress});
 
@@ -24,36 +27,68 @@ class PointsRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final palette = context.palette;
-    final textTheme = Theme.of(context).textTheme;
-    final labelColor = palette.progress;
+    final duration = context.reduceMotion ? Duration.zero : AppDurations.ringSweep;
+    // Screen readers hear the final total, not the count-up.
     return Semantics(
       label: '${l10n.totalPoints} ${l10n.pointsValue(points)}',
       excludeSemantics: true,
       child: AspectRatio(
         aspectRatio: 1,
-        child: CustomPaint(
-          painter: _PointsRingPainter(
-            progress: progress,
-            thicknessFactor: _ringThicknessFactor,
-            trackColor: palette.pageBackground,
-            ringColor: palette.progress,
-            sprinkleColors: palette.sprinkles,
+        // Starts from 0 on entry, then animates from the old values on updates.
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: progress),
+          duration: duration,
+          curve: AppCurves.emphasized,
+          builder: (context, shownProgress, label) =>
+              CustomPaint(painter: _painter(context.palette, shownProgress), child: label),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: points.toDouble()),
+            duration: duration,
+            curve: AppCurves.emphasized,
+            builder: (context, shownPoints, _) => _CentreLabel(points: shownPoints.round()),
           ),
-          child: Center(
-            child: FractionallySizedBox(
-              widthFactor: _labelWidthFactor,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(l10n.totalPoints, style: textTheme.bodySmall?.copyWith(color: labelColor)),
-                    Text(l10n.pointsValue(points), style: textTheme.headlineSmall?.copyWith(color: labelColor)),
-                  ],
-                ),
+        ),
+      ),
+    );
+  }
+
+  _PointsRingPainter _painter(AppPalette palette, double shownProgress) => _PointsRingPainter(
+    progress: shownProgress,
+    thicknessFactor: _ringThicknessFactor,
+    trackColor: palette.pageBackground,
+    ringColor: palette.progress,
+    sprinkleColors: palette.sprinkles,
+  );
+}
+
+/// "Total points" and the number, inside the hole of the ring.
+class _CentreLabel extends StatelessWidget {
+  const _CentreLabel({required this.points});
+
+  final int points;
+
+  /// Same-width digits, so the label doesn't wobble while counting.
+  static const List<FontFeature> _tabularDigits = [FontFeature.tabularFigures()];
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
+    final labelColor = context.palette.progress;
+    return Center(
+      child: FractionallySizedBox(
+        widthFactor: PointsRing._labelWidthFactor,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l10n.totalPoints, style: textTheme.bodySmall?.copyWith(color: labelColor)),
+              Text(
+                l10n.pointsValue(points),
+                style: textTheme.headlineSmall?.copyWith(color: labelColor, fontFeatures: _tabularDigits),
               ),
-            ),
+            ],
           ),
         ),
       ),

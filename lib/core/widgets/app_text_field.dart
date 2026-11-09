@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'shake_on_trigger.dart';
+
 /// White, borderless text field from the registration screens.
 /// Styling comes from the theme's `inputDecorationTheme`.
 ///
@@ -55,8 +57,18 @@ class AppTextField extends StatefulWidget {
 class _AppTextFieldState extends State<AppTextField> {
   TextEditingController? _ownController;
 
+  /// Goes up each time a new error appears, which shakes the field once.
+  int _errorShakes = 0;
+
   TextEditingController get _controller =>
       widget.controller ?? (_ownController ??= TextEditingController(text: widget.initialValue));
+
+  @override
+  void didUpdateWidget(AppTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final error = widget.errorText;
+    if (error != null && error != oldWidget.errorText) _errorShakes++;
+  }
 
   @override
   void dispose() {
@@ -73,21 +85,25 @@ class _AppTextFieldState extends State<AppTextField> {
     return Focus(
       onFocusChange: _onFocusChanged,
       skipTraversal: true,
-      child: TextField(
-        controller: _controller,
-        style: Theme.of(context).textTheme.bodyLarge,
-        keyboardType: widget.keyboardType,
-        textInputAction: widget.textInputAction,
-        inputFormatters: widget.inputFormatters,
-        autofillHints: widget.autofillHints,
-        textCapitalization: widget.textCapitalization,
-        readOnly: widget.readOnly,
-        autofocus: widget.autofocus,
-        enabled: widget.enabled,
-        onTap: widget.onTap,
-        onChanged: widget.onChanged,
-        decoration: InputDecoration(hintText: widget.hintText, errorText: widget.errorText, prefixIcon: widget.prefix),
-      ),
+      child: ShakeOnTrigger(trigger: _errorShakes, child: _field(context)),
+    );
+  }
+
+  Widget _field(BuildContext context) {
+    return TextField(
+      controller: _controller,
+      style: Theme.of(context).textTheme.bodyLarge,
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      inputFormatters: widget.inputFormatters,
+      autofillHints: widget.autofillHints,
+      textCapitalization: widget.textCapitalization,
+      readOnly: widget.readOnly,
+      autofocus: widget.autofocus,
+      enabled: widget.enabled,
+      onTap: widget.onTap,
+      onChanged: widget.onChanged,
+      decoration: InputDecoration(hintText: widget.hintText, errorText: widget.errorText, prefixIcon: widget.prefix),
     );
   }
 }

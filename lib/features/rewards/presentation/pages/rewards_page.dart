@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,12 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/coming_soon_snack_bar.dart';
 import '../../../../core/widgets/coming_soon_view.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 import '../../../../core/widgets/pill_tab_bar.dart';
 import '../../../../core/widgets/state_views.dart';
 import '../../../../core/widgets/status_bar_strip.dart';
+import '../../../../core/widgets/tab_fade_transition.dart';
 import '../../domain/entities/reward_challenge.dart';
 import '../bloc/member/member_bloc.dart';
 import '../sample/sample_reward_challenges.dart';
@@ -22,7 +27,7 @@ import '../widgets/tier_ladder.dart';
 /// Rewards tab: tier ladder and points ring from the shared member record
 /// (the same one Home shows), then the "Eat more earn more" and "Gift" tabs.
 ///
-/// Challenges are sample data for now; claiming shows "Coming soon".
+/// Challenges are sample data for now; EARN only gives press feedback.
 class RewardsPage extends StatelessWidget {
   const RewardsPage({super.key});
 
@@ -52,8 +57,8 @@ class RewardsPage extends StatelessWidget {
             ],
             body: const TabBarView(
               children: [
-                _ChallengeList(challenges: _challenges),
-                _GiftTab(),
+                TabFadeTransition(index: 0, child: _ChallengeList(challenges: _challenges)),
+                TabFadeTransition(index: 1, child: _GiftTab()),
               ],
             ),
           ),
@@ -118,10 +123,14 @@ class _MemberProgress extends StatelessWidget {
   }
 }
 
+/// Challenge cards that enter one after another each time the tab is shown.
 class _ChallengeList extends StatelessWidget {
   const _ChallengeList({required this.challenges});
 
   final List<RewardChallenge> challenges;
+
+  /// Cards further down enter together with this one, so none waits long.
+  static const int _lastStaggeredIndex = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +145,16 @@ class _ChallengeList extends StatelessWidget {
       ),
       itemCount: challenges.length,
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
-      itemBuilder: (context, index) =>
-          ChallengeCard(challenge: challenges[index], onEarn: () => showComingSoon(context)),
+      itemBuilder: (context, index) => _staggeredCard(challenges[index], index),
+    );
+  }
+
+  /// EARN gives press feedback only; claiming isn't built yet.
+  Widget _staggeredCard(RewardChallenge challenge, int index) {
+    final delay = AppDurations.staggerStep * math.min(index, _lastStaggeredIndex);
+    return EntranceAnimation(
+      delay: delay,
+      child: ChallengeCard(challenge: challenge, revealDelay: delay + AppDurations.entrance),
     );
   }
 }

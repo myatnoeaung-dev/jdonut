@@ -7,6 +7,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/app_primary_button.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 import '../../../../core/widgets/fill_viewport_scroll_view.dart';
 import '../../../../core/widgets/gradient_background.dart';
 import '../../../../core/widgets/highlighted_text.dart';
@@ -44,8 +45,9 @@ class _OnboardingActions extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: AppSizes.contentMaxWidth),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
+        // Enters piece by piece once the donuts have drifted in.
         child: Column(
-          children: [
+          children: EntranceAnimation.staggered(delay: OnboardingHero.settleTime, [
             Text(l10n.onboardingTitle, style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xxxl),
             AppPrimaryButton(
@@ -58,7 +60,7 @@ class _OnboardingActions extends StatelessWidget {
             const SocialSignInRow(),
             const SizedBox(height: AppSpacing.lg),
             const TermsNotice(),
-          ],
+          ]),
         ),
       ),
     );

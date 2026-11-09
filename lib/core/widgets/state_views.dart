@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../extensions/l10n_extension.dart';
 import '../theme/app_dimens.dart';
+import '../theme/app_motion.dart';
 import '../theme/app_palette.dart';
+import 'entrance_animation.dart';
 
 /// Full-area spinner for a screen's first load.
 class LoadingView extends StatelessWidget {
@@ -65,6 +67,8 @@ class _MessageView extends StatelessWidget {
   final String message;
   final Widget? action;
 
+  static const double _iconScaleFrom = 0.5;
+
   @override
   Widget build(BuildContext context) {
     final buttonAction = action;
@@ -74,10 +78,22 @@ class _MessageView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: AppSizes.stateIcon, color: context.palette.mutedText),
+            // The icon pops in; the message and button follow.
+            EntranceAnimation(
+              offset: Offset.zero,
+              scaleFrom: _iconScaleFrom,
+              curve: AppCurves.pop,
+              child: Icon(icon, size: AppSizes.stateIcon, color: context.palette.mutedText),
+            ),
             const SizedBox(height: AppSpacing.lg),
-            Text(message, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
-            if (buttonAction != null) ...[const SizedBox(height: AppSpacing.xl), buttonAction],
+            EntranceAnimation(
+              delay: AppDurations.staggerStep,
+              child: Text(message, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            if (buttonAction != null) ...[
+              const SizedBox(height: AppSpacing.xl),
+              EntranceAnimation(delay: AppDurations.staggerStep * 2, child: buttonAction),
+            ],
           ],
         ),
       ),

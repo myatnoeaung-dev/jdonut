@@ -6,6 +6,8 @@ import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/widgets/app_badge.dart';
+import '../../../../core/widgets/hero_wrap.dart';
+import '../../../../core/widgets/press_scale.dart';
 import '../../../product/domain/entities/product.dart';
 
 /// White card with the product cut-out and its name underneath. About 41% of
@@ -17,6 +19,7 @@ class ProductTileCard extends StatelessWidget {
     required this.onTap,
     this.colorIndex = 0,
     this.aspectRatio = AppSizes.productTallAspectRatio,
+    this.heroTag,
   });
 
   final Product product;
@@ -26,6 +29,9 @@ class ProductTileCard extends StatelessWidget {
   /// Width : height of the white card.
   final double aspectRatio;
 
+  /// Tag the detail page's photo flies from; null for no hero.
+  final String? heroTag;
+
   @override
   Widget build(BuildContext context) {
     final width = math.min(
@@ -34,16 +40,18 @@ class ProductTileCard extends StatelessWidget {
     );
     return SizedBox(
       width: width,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(aspectRatio: aspectRatio, child: _card(context)),
-            const SizedBox(height: AppSpacing.md),
-            Text(product.name, style: Theme.of(context).textTheme.titleSmall, maxLines: 2),
-          ],
+      child: PressScale(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(aspectRatio: aspectRatio, child: _card(context)),
+              const SizedBox(height: AppSpacing.md),
+              Text(product.name, style: Theme.of(context).textTheme.titleSmall, maxLines: 2),
+            ],
+          ),
         ),
       ),
     );
@@ -61,10 +69,13 @@ class ProductTileCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            AppNetworkImage(
-              path: product.imageUrl,
-              borderRadius: BorderRadius.circular(AppRadii.sm),
-              placeholderColorIndex: colorIndex,
+            heroWrap(
+              heroTag,
+              AppNetworkImage(
+                path: product.imageUrl,
+                borderRadius: BorderRadius.circular(AppRadii.sm),
+                placeholderColorIndex: colorIndex,
+              ),
             ),
             if (product.hasDiscount)
               Positioned(

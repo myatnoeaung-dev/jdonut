@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/donut_circle.dart';
+import '../../../../core/widgets/entrance_animation.dart';
 
 /// Collage of donut circles at the top of onboarding; edge circles are cropped
 /// and the bottom fades into the background. Give it a bounded size.
@@ -10,6 +11,16 @@ class OnboardingHero extends StatelessWidget {
   const OnboardingHero({super.key});
 
   static const double _fadeStart = 0.7;
+
+  static const Duration _drift = Duration(milliseconds: 1100);
+  static const Duration _driftStep = Duration(milliseconds: 90);
+
+  /// How far out (as a share of the circle's size per unit of alignment) a circle starts.
+  static const double _driftDistance = 0.35;
+  static const double _driftScaleFrom = 0.8;
+
+  /// When the title and buttons below can start entering.
+  static const Duration settleTime = Duration(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +39,20 @@ class OnboardingHero extends StatelessWidget {
     );
   }
 
+  /// Each circle drifts in from beyond its nearest edge, one after another.
   List<Widget> _circles(AppPalette palette) => [
-    for (final circle in _HeroCircle.layout)
+    for (final (index, circle) in _HeroCircle.layout.indexed)
       Align(
         alignment: circle.alignment,
         child: FractionallySizedBox(
           widthFactor: circle.widthFactor,
-          child: DonutCircle(backgroundColor: palette.decorativeAt(circle.colorIndex), imagePath: circle.imagePath),
+          child: EntranceAnimation(
+            delay: _driftStep * index,
+            duration: _drift,
+            offset: Offset(circle.alignment.x, circle.alignment.y) * _driftDistance,
+            scaleFrom: _driftScaleFrom,
+            child: DonutCircle(backgroundColor: palette.decorativeAt(circle.colorIndex), imagePath: circle.imagePath),
+          ),
         ),
       ),
   ];
