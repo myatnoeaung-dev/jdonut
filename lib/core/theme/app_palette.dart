@@ -27,6 +27,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.tierSilver,
     required this.tierGold,
     required this.tierPlatinum,
+    required this.tierLine,
     required this.disabledFill,
     required this.sprinkles,
   });
@@ -53,8 +54,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
     tierSilver: AppColors.tierSilver,
     tierGold: AppColors.tierGold,
     tierPlatinum: AppColors.tierPlatinum,
+    tierLine: AppColors.inkSoft,
     disabledFill: AppColors.disabledFill,
-    sprinkles: [AppColors.white, AppColors.sky, AppColors.butter, AppColors.lavender],
+    sprinkles: [AppColors.white, AppColors.rose],
   );
 
   final Color backgroundTop;
@@ -99,6 +101,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color tierGold;
   final Color tierPlatinum;
 
+  /// The reached part of the line joining tier badges.
+  final Color tierLine;
+
   /// Disabled pill buttons (EARN before a challenge is done).
   final Color disabledFill;
 
@@ -132,6 +137,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     tierSilver: tierSilver,
     tierGold: tierGold,
     tierPlatinum: tierPlatinum,
+    tierLine: tierLine,
     disabledFill: disabledFill,
     sprinkles: sprinkles,
   );

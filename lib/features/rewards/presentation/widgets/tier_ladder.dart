@@ -9,12 +9,14 @@ import '../../../../core/theme/app_palette.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/widgets/member_tier_label.dart';
 import '../../domain/entities/member.dart';
+import 'tier_shield.dart';
 
 /// Vertical ladder of three tiers starting at the member's tier, e.g.
-/// Silver (here now) → Gold (points to go) → Platinum (soon).
+/// Silver (here now) → Gold (points to go) → Platinum (soon), with shield
+/// badges joined by a line that is dark up to where the member is.
 ///
-/// On entry the tiers appear in order, the current tier's badge pops with a
-/// halo, then the line to the next tier fills to show progress.
+/// On entry the tiers appear in order, the current tier's shield pops with a
+/// soft glow, then the line to the next tier fills to show progress.
 class TierLadder extends StatefulWidget {
   const TierLadder({super.key, required this.member});
 
@@ -32,7 +34,8 @@ class _TierLadderState extends State<TierLadder> with SingleTickerProviderStateM
   /// Each tier starts this share of [_total] after the one before.
   static const double _stepStagger = 0.18;
   static const double _stepLength = 0.35;
-  static const Interval _halo = Interval(0.15, 0.5, curve: AppCurves.pop);
+  static const Offset _stepRise = Offset(0, 0.3);
+  static const Interval _pop = Interval(0.15, 0.5, curve: AppCurves.pop);
   static const Interval _lineFill = Interval(0.55, 1, curve: AppCurves.emphasized);
 
   late final AnimationController _controller = AnimationController(vsync: this, duration: _total);
@@ -58,19 +61,13 @@ class _TierLadderState extends State<TierLadder> with SingleTickerProviderStateM
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final (index, tier) in tiers.indexed) ...[
-          if (index > 0)
-            _Connector(
-              fill: _connectorFill(tier),
-              animation: _controller.drive(CurveTween(curve: _lineFill)),
-            ),
-          _step(index, tier),
-        ],
+        for (final (index, tier) in tiers.indexed)
+          _step(index, tier, lineFill: index < tiers.length - 1 ? _lineFillAfter(tiers[index + 1]) : null),
       ],
     );
   }
 
-  Widget _step(int index, MemberTier tier) {
+  Widget _step(int index, MemberTier tier, {required double? lineFill}) {
     final start = index * _stepStagger;
     final appear = _controller.drive(
       CurveTween(curve: Interval(start, start + _stepLength, curve: AppCurves.emphasized)),
@@ -78,11 +75,17 @@ class _TierLadderState extends State<TierLadder> with SingleTickerProviderStateM
     return FadeTransition(
       opacity: appear,
       child: SlideTransition(
-        position: appear.drive(Tween(begin: const Offset(0, 0.3), end: Offset.zero)),
+        position: appear.drive(Tween(begin: _stepRise, end: Offset.zero)),
         child: _TierStep(
           tier: tier,
           subtitle: _subtitle(context.l10n, tier),
-          halo: tier == widget.member.tier ? _controller.drive(CurveTween(curve: _halo)) : null,
+          pop: tier == widget.member.tier ? _controller.drive(CurveTween(curve: _pop)) : null,
+          line: lineFill == null
+              ? null
+              : _Connector(
+                  fill: lineFill,
+                  animation: _controller.drive(CurveTween(curve: _lineFill)),
+                ),
         ),
       ),
     );
@@ -95,11 +98,11 @@ class _TierLadderState extends State<TierLadder> with SingleTickerProviderStateM
     return tiers.sublist(start, start + TierLadder._visibleTierCount);
   }
 
-  /// How full the line leading up to [tier] is: reached, on the way, or not yet.
-  double _connectorFill(MemberTier tier) {
+  /// How full the line leading up to [next] is: reached, on the way, or not yet.
+  double _lineFillAfter(MemberTier next) {
     final member = widget.member;
-    if (tier.index <= member.tier.index) return 1;
-    return tier == member.nextTier ? member.tierProgress : 0;
+    if (next.index <= member.tier.index) return 1;
+    return next == member.nextTier ? member.tierProgress : 0;
   }
 
   String _subtitle(AppLocalizations l10n, MemberTier tier) {
@@ -113,112 +116,106 @@ class _TierLadderState extends State<TierLadder> with SingleTickerProviderStateM
   }
 }
 
+/// One tier: shield (and the line down to the next tier) beside its name and
+/// subtitle. The line stretches with the text, so it always reaches the next
+/// shield, however tall large text makes the row.
 class _TierStep extends StatelessWidget {
-  const _TierStep({required this.tier, required this.subtitle, this.halo});
+  const _TierStep({required this.tier, required this.subtitle, this.pop, this.line});
 
   final MemberTier tier;
   final String subtitle;
 
-  /// Set for the member's current tier: pops the badge and draws its halo.
-  final Animation<double>? halo;
+  /// Set for the member's current tier: pops the shield and adds a glow.
+  final Animation<double>? pop;
+
+  /// Null on the last tier.
+  final Widget? line;
+
+  /// Centres the line under the shield.
+  static const double _lineStart = (AppSizes.tierLadderBadge - AppSizes.tierLadderLine) / 2;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final name = memberTierName(context.l10n, tier);
-    final isCurrent = halo != null;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final line = this.line;
+    // The line hangs below the shield down to the row's bottom edge, so it
+    // reaches the next shield however tall the text makes this row.
+    return Stack(
       children: [
-        _TierBadge(tier: tier, name: name, halo: halo),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: textTheme.titleSmall?.copyWith(color: isCurrent ? context.palette.progress : null),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(subtitle, style: textTheme.bodySmall?.copyWith(color: context.palette.mutedText)),
-            ],
+        if (line != null)
+          PositionedDirectional(
+            start: _lineStart,
+            top: AppSizes.tierLadderBadgeHeight,
+            bottom: 0,
+            child: line,
           ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _AnimatedShield(tier: tier, name: name, pop: pop),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Padding(
+                // Leaves room for the line before the next tier.
+                padding: EdgeInsets.only(
+                  top: AppSpacing.xs,
+                  bottom: line == null ? 0 : AppSizes.tierLadderConnector,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(name, style: textTheme.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(subtitle, style: textTheme.bodySmall),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 }
 
-/// Round badge in the tier's colour with the tier's first letter; the current
-/// tier's badge pops in and gets a soft halo.
-class _TierBadge extends StatelessWidget {
-  const _TierBadge({required this.tier, required this.name, this.halo});
+/// The shield; for the current tier it pops in with a glow in its own colour.
+class _AnimatedShield extends StatelessWidget {
+  const _AnimatedShield({required this.tier, required this.name, this.pop});
 
   final MemberTier tier;
   final String name;
-  final Animation<double>? halo;
+  final Animation<double>? pop;
 
-  static const double _outlineWidth = 2;
-  static const double _haloWidth = 3;
-  static const double _haloAlpha = 0.45;
   static const double _popFrom = 0.6;
+  static const double _glowAlpha = 0.6;
+  static const double _glowBlur = 12;
 
   @override
   Widget build(BuildContext context) {
-    final halo = this.halo;
-    final badge = _badge(context);
-    if (halo == null) return ExcludeSemantics(child: badge);
-    final haloColor = context.palette.progress.withValues(alpha: _haloAlpha);
-    return ExcludeSemantics(
-      child: AnimatedBuilder(
-        animation: halo,
-        child: badge,
-        builder: (context, child) => Transform.scale(
-          scale: _popFrom + (1 - _popFrom) * halo.value,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: haloColor, spreadRadius: _haloWidth * halo.value.clamp(0, 1))],
-            ),
-            child: child,
+    final pop = this.pop;
+    final shield = TierShield(tier: tier, name: name);
+    if (pop == null) return shield;
+    final glow = TierShield.tierColor(context.palette, tier).withValues(alpha: _glowAlpha);
+    return AnimatedBuilder(
+      animation: pop,
+      child: shield,
+      builder: (context, child) => Transform.scale(
+        scale: _popFrom + (1 - _popFrom) * pop.value,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [BoxShadow(color: glow, blurRadius: _glowBlur * pop.value.clamp(0, 1))],
           ),
+          child: child,
         ),
       ),
     );
   }
-
-  Widget _badge(BuildContext context) {
-    final surface = Theme.of(context).colorScheme.surface;
-    return Container(
-      width: AppSizes.tierLadderBadge,
-      height: AppSizes.tierLadderBadge,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: _tierColor(context.palette),
-        shape: BoxShape.circle,
-        border: Border.all(color: surface, width: _outlineWidth),
-        boxShadow: [BoxShadow(color: context.palette.shadow, blurRadius: AppSpacing.xs)],
-      ),
-      child: Text(
-        name.characters.first.toUpperCase(),
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: surface),
-        textScaler: TextScaler.noScaling, // the badge is a fixed-size icon
-      ),
-    );
-  }
-
-  Color _tierColor(AppPalette palette) => switch (tier) {
-    MemberTier.bronze => palette.tierBronze,
-    MemberTier.silver => palette.tierSilver,
-    MemberTier.gold => palette.tierGold,
-    MemberTier.platinum => palette.tierPlatinum,
-  };
 }
 
-/// Thin grey line joining two badges; the coloured part grows downwards to
-/// [fill] (0 to 1) as [animation] runs.
+/// Line from one shield down to the next: dark up to [fill] (0 to 1) as
+/// [animation] runs, light grey after that.
 class _Connector extends StatelessWidget {
   const _Connector({required this.fill, required this.animation});
 
@@ -228,22 +225,18 @@ class _Connector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(start: (AppSizes.tierLadderBadge - AppSizes.tierLadderLine) / 2),
-      child: SizedBox(
-        width: AppSizes.tierLadderLine,
-        height: AppSizes.tierLadderConnector,
-        child: ColoredBox(
-          color: palette.disabledFill,
-          child: AnimatedBuilder(
-            animation: animation,
-            builder: (context, _) => Align(
-              alignment: Alignment.topCenter,
-              child: FractionallySizedBox(
-                heightFactor: fill * animation.value,
-                widthFactor: 1,
-                child: ColoredBox(color: palette.progress),
-              ),
+    return SizedBox(
+      width: AppSizes.tierLadderLine,
+      child: ColoredBox(
+        color: palette.disabledFill,
+        child: AnimatedBuilder(
+          animation: animation,
+          builder: (context, _) => Align(
+            alignment: Alignment.topCenter,
+            child: FractionallySizedBox(
+              heightFactor: fill * animation.value,
+              widthFactor: 1,
+              child: ColoredBox(color: palette.tierLine),
             ),
           ),
         ),

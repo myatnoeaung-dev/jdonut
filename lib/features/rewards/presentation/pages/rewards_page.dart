@@ -48,12 +48,7 @@ class RewardsPage extends StatelessWidget {
             headerSliverBuilder: (context, _) => [
               StatusBarStrip(color: surface),
               const SliverToBoxAdapter(child: _RewardsSummaryPanel(challenges: _challenges)),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.homeH, vertical: AppSpacing.sm),
-                  child: PillTabBar(labels: [l10n.eatMoreEarnMore, l10n.gift]),
-                ),
-              ),
+              SliverToBoxAdapter(child: _TabsOnPanelEdge(labels: [l10n.eatMoreEarnMore, l10n.gift])),
             ],
             body: const TabBarView(
               children: [
@@ -83,8 +78,9 @@ class _RewardsSummaryPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           RewardsHeader(readyCount: readyCount, onRewardsTap: () => showComingSoon(context)),
+          // No right padding: the ring runs off the screen edge, as in the design.
           const Padding(
-            padding: EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.xl, AppSpacing.lg, AppSpacing.xl),
+            padding: EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.xxl, 0, AppSpacing.lg),
             child: _MemberProgress(),
           ),
         ],
@@ -97,6 +93,9 @@ class _RewardsSummaryPanel extends StatelessWidget {
 class _MemberProgress extends StatelessWidget {
   const _MemberProgress();
 
+  static const int _ladderFlex = 9;
+  static const int _ringFlex = 11;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MemberBloc, MemberState>(
@@ -104,12 +103,17 @@ class _MemberProgress extends StatelessWidget {
         final member = state.member;
         if (member != null) {
           return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: TierLadder(member: member)),
+              Expanded(
+                flex: _ladderFlex,
+                child: TierLadder(member: member),
+              ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
-                child: PointsRing(points: member.loyaltyPoints, progress: member.tierProgress),
+                flex: _ringFlex,
+                child: _BleedingRing(
+                  child: PointsRing(points: member.loyaltyPoints, progress: member.tierProgress),
+                ),
               ),
             ],
           );
@@ -119,6 +123,70 @@ class _MemberProgress extends StatelessWidget {
         }
         return const LoadingView();
       },
+    );
+  }
+}
+
+/// The points ring, drawn larger than its column so it runs past the right
+/// edge of the screen; only the visible part takes up layout height.
+class _BleedingRing extends StatelessWidget {
+  const _BleedingRing({required this.child});
+
+  final Widget child;
+
+  /// Ring diameter as a multiple of the column width.
+  static const double _bleed = 1.12;
+
+  /// Keeps the ring phone-sized on wide screens (about the largest phone's ring).
+  static const double _maxDiameter = 240;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final diameter = math.min(constraints.maxWidth * _bleed, _maxDiameter);
+        return SizedBox(
+          height: diameter,
+          child: OverflowBox(
+            alignment: AlignmentDirectional.centerStart,
+            minWidth: 0,
+            minHeight: 0,
+            maxWidth: diameter,
+            maxHeight: diameter,
+            child: SizedBox.square(dimension: diameter, child: child),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// The tab pills sit across the panel's bottom edge: white above their middle,
+/// the grey page below.
+class _TabsOnPanelEdge extends StatelessWidget {
+  const _TabsOnPanelEdge({required this.labels});
+
+  final List<String> labels;
+
+  static const List<double> _halfway = [0.5, 0.5];
+
+  @override
+  Widget build(BuildContext context) {
+    final surface = Theme.of(context).colorScheme.surface;
+    final page = context.palette.pageBackground;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [surface, page],
+          stops: _halfway,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.homeH),
+        child: PillTabBar(labels: labels),
+      ),
     );
   }
 }

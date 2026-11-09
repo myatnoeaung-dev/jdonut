@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_dimens.dart';
 import '../theme/app_motion.dart';
+import '../theme/app_palette.dart';
 
 /// Centered pill tabs for the nearest [DefaultTabController]: white pills with
 /// one cyan indicator pill that slides under the selected label, following
@@ -59,23 +60,27 @@ class _PillTabBarState extends State<PillTabBar> {
   }
 
   Widget _tabs(TabController controller, double position, {required bool hasIndicator}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (final (index, label) in widget.labels.indexed)
-          Flexible(
-            child: _PillTab(
-              key: PillTabBar.tabKey(index),
-              pillKey: _pillKeys[index],
-              label: label,
-              // Before the first measurement there's no indicator: the tab paints itself.
-              selectedness: (1 - (position - index).abs()).clamp(0, 1).toDouble(),
-              hasIndicator: hasIndicator,
-              isSelected: controller.index == index,
-              onTap: () => controller.animateTo(index, duration: AppDurations.short, curve: AppCurves.emphasized),
-            ),
-          ),
-      ],
+    // Labels keep their full width; on narrow screens the whole row shrinks instead.
+    return Center(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final (index, label) in widget.labels.indexed)
+              _PillTab(
+                key: PillTabBar.tabKey(index),
+                pillKey: _pillKeys[index],
+                label: label,
+                // Before the first measurement there's no indicator: the tab paints itself.
+                selectedness: (1 - (position - index).abs()).clamp(0, 1).toDouble(),
+                hasIndicator: hasIndicator,
+                isSelected: controller.index == index,
+                onTap: () => controller.animateTo(index, duration: AppDurations.short, curve: AppCurves.emphasized),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -96,7 +101,8 @@ class _PillTabBarState extends State<PillTabBar> {
     for (final key in _pillKeys) {
       final pill = key.currentContext?.findRenderObject() as RenderBox?;
       if (pill == null || !pill.hasSize) return;
-      rects.add(pill.localToGlobal(Offset.zero, ancestor: stack) & pill.size);
+      // Includes any scaling from the FittedBox around the tabs.
+      rects.add(MatrixUtils.transformRect(pill.getTransformTo(stack), Offset.zero & pill.size));
     }
     if (!listEquals(rects, _pillRects)) setState(() => _pillRects = rects);
   }
@@ -156,10 +162,15 @@ class _PillTab extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.sm),
           child: DecoratedBox(
             key: pillKey,
-            decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(AppRadii.pill)),
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(AppRadii.pill),
+              // A light outline on white pills; it fades as the indicator arrives.
+              border: Border.all(color: context.palette.disabledFill.withValues(alpha: 1 - selectedness)),
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-              child: Text(label, style: textStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
+              child: Text(label, style: textStyle, maxLines: 1),
             ),
           ),
         ),

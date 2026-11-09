@@ -88,8 +88,11 @@ abstract final class AppSizes {
 
   // Rewards
   static const double tierLadderBadge = 36;
-  static const double tierLadderConnector = 28;
-  static const double tierLadderLine = 2;
+  static const double tierLadderBadgeHeight = 42;
+
+  /// Shortest line between two tier badges.
+  static const double tierLadderConnector = 36;
+  static const double tierLadderLine = 3;
   static const double rewardsCount = 22;
   static const double challengeArtwork = 104;
   static const double earnButtonWidth = 92;

@@ -19,10 +19,10 @@ class PointsRing extends StatelessWidget {
   final double progress;
 
   /// Ring thickness as a share of the diameter.
-  static const double _ringThicknessFactor = 0.22;
+  static const double _ringThicknessFactor = 0.24;
 
   /// Width of the centre text, inside the hole of the ring.
-  static const double _labelWidthFactor = 0.5;
+  static const double _labelWidthFactor = 0.42;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,10 @@ class _CentreLabel extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(l10n.totalPoints, style: textTheme.bodySmall?.copyWith(color: labelColor)),
+              Text(
+                l10n.totalPoints,
+                style: textTheme.bodySmall?.copyWith(color: labelColor, fontWeight: FontWeight.w600),
+              ),
               Text(
                 l10n.pointsValue(points),
                 style: textTheme.headlineSmall?.copyWith(color: labelColor, fontFeatures: _tabularDigits),
@@ -114,15 +117,21 @@ class _PointsRingPainter extends CustomPainter {
   static const double _startAngle = -math.pi / 2; // 12 o'clock
   static const double _fullTurn = 2 * math.pi;
 
-  /// Roughly one sprinkle every 0.3 radians of filled ring.
-  static const double _sprinkleSpacing = 0.3;
+  /// One sprinkle every 0.28 radians around the ring; they appear as the ring fills.
+  static const double _sprinkleSpacing = 0.28;
+
+  /// Sprinkles are a little see-through, as in the design.
+  static const double _sprinkleAlpha = 0.8;
+
+  /// How much lighter the middle of the ring is than its edges (a soft tube).
+  static const double _highlight = 0.28;
 
   /// Each sprinkle's distance from the ring's centre line and its tilt,
   /// repeated around the ring so the pattern looks scattered.
   static const List<double> _radialOffsets = [-0.24, 0.12, 0.28, -0.06, 0.2, -0.28, 0.04];
   static const List<double> _tilts = [0.9, -0.5, 1.6, 0.2, -1.2, 0.7, -0.1];
-  static const double _sprinkleLengthFactor = 0.2;
-  static const double _sprinkleWidthFactor = 0.07;
+  static const double _sprinkleLengthFactor = 0.26;
+  static const double _sprinkleWidthFactor = 0.065;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -137,23 +146,37 @@ class _PointsRingPainter extends CustomPainter {
     canvas.drawCircle(center, radius, ring..color = trackColor);
     final sweep = _fullTurn * progress;
     if (sweep <= 0) return;
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), _startAngle, sweep, false, ring..color = ringColor);
+    ring
+      ..color = ringColor
+      ..shader = _tubeShader(center, radius, thickness);
+    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), _startAngle, sweep, false, ring);
     _paintSprinkles(canvas, center, radius, thickness, sweep);
   }
 
+  /// Darker at the inner and outer edges, lighter along the middle.
+  Shader _tubeShader(Offset center, double radius, double thickness) {
+    final outer = radius + thickness / 2;
+    final light = Color.lerp(ringColor, sprinkleColors.first, _highlight)!;
+    return RadialGradient(
+      colors: [ringColor, light, ringColor],
+      stops: [(radius - thickness / 2) / outer, radius / outer, 1],
+    ).createShader(Rect.fromCircle(center: center, radius: outer));
+  }
+
   void _paintSprinkles(Canvas canvas, Offset center, double radius, double thickness, double sweep) {
-    final count = math.max(1, (sweep / _sprinkleSpacing).floor());
+    // Fixed places around the ring, so sprinkles don't shuffle while it sweeps.
+    final count = (sweep / _sprinkleSpacing).floor();
     final halfLength = thickness * _sprinkleLengthFactor / 2;
     final paint = Paint()
       ..strokeWidth = thickness * _sprinkleWidthFactor
       ..strokeCap = StrokeCap.round;
     for (var i = 0; i < count; i++) {
-      final angle = _startAngle + sweep * (i + 0.5) / count;
+      final angle = _startAngle + _sprinkleSpacing * (i + 0.5);
       final distance = radius + thickness * _radialOffsets[i % _radialOffsets.length];
       final position = center + Offset(math.cos(angle), math.sin(angle)) * distance;
       final direction = angle + _tilts[i % _tilts.length];
       final halfStroke = Offset(math.cos(direction), math.sin(direction)) * halfLength;
-      paint.color = sprinkleColors[i % sprinkleColors.length];
+      paint.color = sprinkleColors[i % sprinkleColors.length].withValues(alpha: _sprinkleAlpha);
       canvas.drawLine(position - halfStroke, position + halfStroke, paint);
     }
   }
