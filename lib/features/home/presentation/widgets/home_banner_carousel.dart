@@ -22,17 +22,11 @@ class HomeBannerCarousel extends StatefulWidget {
   static const double _cardWidthFactor = 0.76;
   static const double _visibleHeight = 170;
 
-  /// Time each card stays before the next one slides in.
-  static const Duration autoPlayInterval = Duration(seconds: 4);
-
   @override
   State<HomeBannerCarousel> createState() => _HomeBannerCarouselState();
 }
 
 class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
-  static const Duration _pauseAfterSwipe = Duration(seconds: 6);
-  static const Duration _slide = Duration(milliseconds: 600);
-
   final ScrollController _controller = ScrollController();
   Timer? _timer;
   DateTime _lastSwipe = DateTime.fromMillisecondsSinceEpoch(0);
@@ -40,7 +34,7 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(HomeBannerCarousel.autoPlayInterval, (_) => _showNext());
+    _timer = Timer.periodic(AppDurations.carouselInterval, (_) => _showNext());
   }
 
   @override
@@ -54,12 +48,16 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
 
   void _showNext() {
     final isVisible = TickerMode.getValuesNotifier(context).value.enabled;
-    final recentlySwiped = DateTime.now().difference(_lastSwipe) < _pauseAfterSwipe;
+    final recentlySwiped = DateTime.now().difference(_lastSwipe) < AppDurations.carouselPauseAfterSwipe;
     if (!_controller.hasClients || !isVisible || recentlySwiped || context.reduceMotion) return;
     final position = _controller.position;
     final atEnd = position.pixels >= position.maxScrollExtent - 1;
     final next = atEnd ? 0.0 : ((position.pixels / _stride).round() + 1) * _stride;
-    _controller.animateTo(next.clamp(0, position.maxScrollExtent), duration: _slide, curve: Curves.easeInOutCubic);
+    _controller.animateTo(
+      next.clamp(0, position.maxScrollExtent),
+      duration: AppDurations.carouselSlide,
+      curve: AppCurves.standard,
+    );
   }
 
   bool _onScroll(ScrollStartNotification notification) {

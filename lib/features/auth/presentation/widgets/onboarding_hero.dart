@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_images.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/donut_circle.dart';
 import '../../../../core/widgets/entrance_animation.dart';
@@ -12,15 +13,9 @@ class OnboardingHero extends StatelessWidget {
 
   static const double _fadeStart = 0.7;
 
-  static const Duration _drift = Duration(milliseconds: 1100);
-  static const Duration _driftStep = Duration(milliseconds: 90);
-
   /// How far out (as a share of the circle's size per unit of alignment) a circle starts.
   static const double _driftDistance = 0.35;
   static const double _driftScaleFrom = 0.8;
-
-  /// When the title and buttons below can start entering.
-  static const Duration settleTime = Duration(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +42,8 @@ class OnboardingHero extends StatelessWidget {
         child: FractionallySizedBox(
           widthFactor: circle.widthFactor,
           child: EntranceAnimation(
-            delay: _driftStep * index,
-            duration: _drift,
+            delay: AppDurations.onboardingDriftStep * index,
+            duration: AppDurations.onboardingDrift,
             offset: Offset(circle.alignment.x, circle.alignment.y) * _driftDistance,
             scaleFrom: _driftScaleFrom,
             child: DonutCircle(backgroundColor: palette.decorativeAt(circle.colorIndex), imagePath: circle.imagePath),

@@ -66,7 +66,7 @@ class _OtpCodeFieldState extends State<OtpCodeField> {
             // Dims while the code is being checked.
             builder: (context, _) => AnimatedOpacity(
               opacity: widget.isEnabled ? 1 : _checkingOpacity,
-              duration: AppDurations.short,
+              duration: context.motion(AppDurations.short),
               child: _OtpBoxes(
                 code: _controller.text,
                 isFocused: _focusNode.hasFocus && widget.isEnabled,
@@ -141,7 +141,7 @@ class _OtpBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final duration = context.reduceMotion ? Duration.zero : AppDurations.press * 2;
+    final duration = context.motion(AppDurations.press * 2);
     final borderColor = hasError ? theme.colorScheme.error : theme.colorScheme.primary;
     final showBorder = isActive || hasError;
     return AnimatedScale(

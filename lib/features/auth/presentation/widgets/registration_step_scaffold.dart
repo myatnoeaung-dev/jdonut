@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/widgets/app_back_button.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../core/widgets/entrance_animation.dart';
@@ -25,8 +26,6 @@ class RegistrationStepScaffold extends StatelessWidget {
   });
 
   static const int totalSteps = 4;
-
-  static const Duration _contentDelay = Duration(milliseconds: 150);
 
   final int step;
   final String title;
@@ -73,7 +72,7 @@ class RegistrationStepScaffold extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xxxl),
         // Title, then the step's fields, enter just after the page slides in.
-        ...EntranceAnimation.staggered(delay: _contentDelay, [
+        ...EntranceAnimation.staggered(delay: AppDurations.stepContentDelay, [
           Text(title, style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.xxl),
           ...children,

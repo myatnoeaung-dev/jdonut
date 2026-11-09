@@ -106,13 +106,16 @@ class _MemberProgress extends StatelessWidget {
             children: [
               Expanded(
                 flex: _ladderFlex,
-                child: TierLadder(member: member),
+                // Repaint boundaries keep each animation from repainting the whole panel.
+                child: RepaintBoundary(child: TierLadder(member: member)),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 flex: _ringFlex,
                 child: _BleedingRing(
-                  child: PointsRing(points: member.loyaltyPoints, progress: member.tierProgress),
+                  child: RepaintBoundary(
+                    child: PointsRing(points: member.loyaltyPoints, progress: member.tierProgress),
+                  ),
                 ),
               ),
             ],

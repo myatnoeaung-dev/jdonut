@@ -37,8 +37,6 @@ class HomeHeaderPanel extends StatelessWidget {
   /// Width kept free beside the name for the bell tab.
   static const double _bellReservedWidth = 72;
 
-  /// The hexagon pops and the bell slides in just after the panel appears.
-  static const Duration _decorationDelay = Duration(milliseconds: 250);
   static const double _hexagonScaleFrom = 0.4;
   static const Offset _fromRightEdge = Offset(1, 0);
 
@@ -54,7 +52,7 @@ class HomeHeaderPanel extends StatelessWidget {
               top: AppSpacing.lg,
               right: -_hexagonOverhang,
               child: EntranceAnimation(
-                delay: _decorationDelay,
+                delay: AppDurations.homeDecorationDelay,
                 offset: Offset.zero,
                 scaleFrom: _hexagonScaleFrom,
                 curve: AppCurves.pop,
@@ -77,7 +75,7 @@ class HomeHeaderPanel extends StatelessWidget {
               top: AppSpacing.xl + AppSpacing.md,
               right: 0,
               child: EntranceAnimation(
-                delay: _decorationDelay,
+                delay: AppDurations.homeDecorationDelay,
                 offset: _fromRightEdge,
                 child: NotificationButton(count: member?.unreadNotifications ?? 0, onTap: onNotificationsTap),
               ),

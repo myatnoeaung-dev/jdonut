@@ -76,7 +76,11 @@ class _PillTabBarState extends State<PillTabBar> {
                 selectedness: (1 - (position - index).abs()).clamp(0, 1).toDouble(),
                 hasIndicator: hasIndicator,
                 isSelected: controller.index == index,
-                onTap: () => controller.animateTo(index, duration: AppDurations.short, curve: AppCurves.emphasized),
+                onTap: () => controller.animateTo(
+                  index,
+                  duration: context.motion(AppDurations.short),
+                  curve: AppCurves.emphasized,
+                ),
               ),
           ],
         ),

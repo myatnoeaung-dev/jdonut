@@ -40,12 +40,20 @@ class AppBottomNavBar extends StatelessWidget {
         ),
         child: SafeArea(
           top: false,
+          bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.md),
+            // The system inset (home indicator / navigation buttons) replaces the
+            // bottom padding instead of adding to it, so the bar stays compact.
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.sm,
+              AppSpacing.md,
+              AppSpacing.sm,
+              math.max(AppSpacing.md, MediaQuery.paddingOf(context).bottom),
+            ),
             // Starts at the selected tab, then animates from the old one on changes.
             child: TweenAnimationBuilder<double>(
               tween: Tween(end: selectedIndex.toDouble()),
-              duration: context.reduceMotion ? Duration.zero : AppDurations.short,
+              duration: context.motion(AppDurations.short),
               curve: AppCurves.emphasized,
               builder: (context, position, _) => _NavTrack(
                 destinations: destinations,

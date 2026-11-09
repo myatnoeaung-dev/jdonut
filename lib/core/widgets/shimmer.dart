@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_dimens.dart';
+import '../theme/app_motion.dart';
 import '../theme/app_palette.dart';
 
 /// Sweeps a soft highlight across [child]'s skeleton shapes while content
@@ -15,12 +16,10 @@ class Shimmer extends StatefulWidget {
 }
 
 class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
-  static const Duration _sweep = Duration(milliseconds: 1300);
-
   /// Where the highlight sits across the band (start, centre, end).
   static const List<double> _stops = [0.35, 0.5, 0.65];
 
-  late final AnimationController _controller = AnimationController(vsync: this, duration: _sweep);
+  late final AnimationController _controller = AnimationController(vsync: this, duration: AppDurations.shimmerSweep);
 
   @override
   void didChangeDependencies() {

@@ -35,7 +35,7 @@ class _PressScaleState extends State<PressScale> {
       onPointerCancel: (_) => _setPressed(false),
       child: AnimatedScale(
         scale: _isPressed ? widget.pressedScale : 1,
-        duration: AppDurations.press,
+        duration: context.motion(AppDurations.press),
         curve: AppCurves.emphasized,
         child: widget.child,
       ),

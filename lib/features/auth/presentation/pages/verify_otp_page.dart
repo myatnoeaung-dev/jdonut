@@ -88,7 +88,7 @@ class _OtpForm extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         // Grows smoothly as the status or error line appears.
         AnimatedSize(
-          duration: AppDurations.short,
+          duration: context.motion(AppDurations.short),
           curve: AppCurves.emphasized,
           alignment: Alignment.topLeft,
           child: _OtpStatusLine(state: state),

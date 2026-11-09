@@ -60,7 +60,7 @@ class _HomeView extends StatelessWidget {
               previous.isBlockingError != current.isBlockingError,
           // Cross-fades between skeleton, content, error and empty.
           builder: (context, state) => AnimatedSwitcher(
-            duration: context.reduceMotion ? Duration.zero : AppDurations.entrance,
+            duration: context.motion(AppDurations.entrance),
             child: KeyedSubtree(key: ValueKey(_bodyKind(state)), child: _buildBody(context, state)),
           ),
         ),

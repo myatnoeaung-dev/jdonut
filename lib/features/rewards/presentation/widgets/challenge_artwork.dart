@@ -64,16 +64,14 @@ class _DonutSlices extends StatelessWidget {
   /// 0 to 1 over the fill animation.
   final Animation<double> fill;
 
-  /// Standard luminance weights: turns the photo grey.
-  static const List<double> _greyscale = [
+  /// Standard luminance weights turn the photo grey; the alpha row keeps it at
+  /// 45% so the not-yet-earned part is muted. One filter, so one layer.
+  static const List<double> _mutedGreyscale = [
     0.2126, 0.7152, 0.0722, 0, 0, //
     0.2126, 0.7152, 0.0722, 0, 0, //
     0.2126, 0.7152, 0.0722, 0, 0, //
-    0, 0, 0, 1, 0, //
+    0, 0, 0, 0.45, 0, //
   ];
-
-  /// Keeps the not-yet-earned part visible but clearly muted.
-  static const double _greyOpacity = 0.45;
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +80,10 @@ class _DonutSlices extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
+        // Its own layer: painted once, not again on every frame of the fill.
         ExcludeSemantics(
-          child: Opacity(
-            opacity: _greyOpacity,
-            child: ColorFiltered(colorFilter: const ColorFilter.matrix(_greyscale), child: photo),
+          child: RepaintBoundary(
+            child: ColorFiltered(colorFilter: const ColorFilter.matrix(_mutedGreyscale), child: photo),
           ),
         ),
         AnimatedBuilder(

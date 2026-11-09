@@ -67,7 +67,9 @@ class _EntranceAnimationState extends State<EntranceAnimation> with SingleTicker
   Widget build(BuildContext context) {
     final total = widget.delay + widget.duration;
     // Opacity uses its own curve: springy curves overshoot past 1.
-    final fade = _controller.drive(CurveTween(curve: delayedInterval(widget.delay, total, curve: Curves.easeOut)));
+    final fade = _controller.drive(
+      CurveTween(curve: delayedInterval(widget.delay, total, curve: AppCurves.decelerate)),
+    );
     final motion = _controller.drive(CurveTween(curve: delayedInterval(widget.delay, total, curve: widget.curve)));
     return FadeTransition(
       opacity: fade,

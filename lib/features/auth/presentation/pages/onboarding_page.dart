@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../core/widgets/entrance_animation.dart';
@@ -27,7 +28,10 @@ class OnboardingPage extends StatelessWidget {
     return Scaffold(
       body: GradientBackground(
         child: FillViewportScrollView(
-          top: SizedBox(height: heroHeight, child: const OnboardingHero()),
+          top: SizedBox(
+            height: heroHeight,
+            child: const RepaintBoundary(child: OnboardingHero()),
+          ),
           bottom: const SafeArea(top: false, child: Center(child: _OnboardingActions())),
         ),
       ),
@@ -47,7 +51,7 @@ class _OnboardingActions extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
         // Enters piece by piece once the donuts have drifted in.
         child: Column(
-          children: EntranceAnimation.staggered(delay: OnboardingHero.settleTime, [
+          children: EntranceAnimation.staggered(delay: AppDurations.onboardingSettle, [
             Text(l10n.onboardingTitle, style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xxxl),
             AppPrimaryButton(

@@ -80,7 +80,7 @@ void main() {
     double offset() => tester.state<ScrollableState>(list).position.pixels;
     expect(offset(), 0);
 
-    await tester.pump(HomeBannerCarousel.autoPlayInterval);
+    await tester.pump(AppDurations.carouselInterval);
     await tester.pumpAndSettle();
 
     expect(offset(), greaterThan(0));

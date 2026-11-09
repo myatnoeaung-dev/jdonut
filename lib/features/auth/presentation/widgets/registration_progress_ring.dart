@@ -23,19 +23,25 @@ class RegistrationProgressRing extends StatefulWidget {
 }
 
 class _RegistrationProgressRingState extends State<RegistrationProgressRing> with SingleTickerProviderStateMixin {
-  /// Lets the page slide in before the ring moves.
-  static const Duration _delay = Duration(milliseconds: 300);
-  static const Duration _sweep = Duration(milliseconds: 600);
-  static const Duration _morph = Duration(milliseconds: 700);
-
   late final bool _isLastStep = widget.step >= widget.totalSteps;
-  late final Duration _total = _delay + _sweep + (_isLastStep ? _morph : Duration.zero);
+  late final Duration _total =
+      AppDurations.registrationRingDelay +
+      AppDurations.registrationRingSweep +
+      (_isLastStep ? AppDurations.registrationRingMorph : Duration.zero);
   late final AnimationController _controller = AnimationController(vsync: this, duration: _total);
   late final Animation<double> _sweepProgress = _controller.drive(
-    CurveTween(curve: _segment(_delay, _sweep, AppCurves.emphasized)),
+    CurveTween(
+      curve: _segment(AppDurations.registrationRingDelay, AppDurations.registrationRingSweep, AppCurves.emphasized),
+    ),
   );
   late final Animation<double> _morphProgress = _controller.drive(
-    CurveTween(curve: _segment(_delay + _sweep, _morph, Curves.linear)),
+    CurveTween(
+      curve: _segment(
+        AppDurations.registrationRingDelay + AppDurations.registrationRingSweep,
+        AppDurations.registrationRingMorph,
+        AppCurves.linear,
+      ),
+    ),
   );
   bool _started = false;
 
@@ -104,8 +110,8 @@ class _MorphingRingPainter extends CustomPainter {
 
   static const double _startAngle = -math.pi / 2;
   static const double _fullTurn = 2 * math.pi;
-  static const Interval _fill = Interval(0, 0.5, curve: Curves.easeOutCubic);
-  static const Interval _draw = Interval(0.5, 1, curve: Curves.easeOut);
+  static const Interval _fill = Interval(0, 0.5, curve: AppCurves.emphasized);
+  static const Interval _draw = Interval(0.5, 1, curve: AppCurves.decelerate);
   static const double _bounce = 0.12;
   static const double _checkStrokeFactor = 0.1;
 

@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../theme/app_motion.dart';
+
 /// Shakes [child] sideways each time [trigger] changes (e.g. a wrong OTP).
 class ShakeOnTrigger extends StatefulWidget {
   const ShakeOnTrigger({super.key, required this.trigger, required this.child});
@@ -15,16 +17,16 @@ class ShakeOnTrigger extends StatefulWidget {
 }
 
 class _ShakeOnTriggerState extends State<ShakeOnTrigger> with SingleTickerProviderStateMixin {
-  static const Duration _duration = Duration(milliseconds: 450);
   static const double _amplitude = 10;
   static const int _wiggles = 4;
 
-  late final AnimationController _controller = AnimationController(vsync: this, duration: _duration);
+  late final AnimationController _controller = AnimationController(vsync: this, duration: AppDurations.shake);
 
   @override
   void didUpdateWidget(ShakeOnTrigger oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.trigger != widget.trigger) _controller.forward(from: 0);
+    // With reduced motion the error colour and haptic are cue enough.
+    if (oldWidget.trigger != widget.trigger && !context.reduceMotion) _controller.forward(from: 0);
   }
 
   @override

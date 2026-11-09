@@ -98,15 +98,12 @@ class _CountDot extends StatelessWidget {
 
   final int count;
 
-  static const Duration _popDelay = Duration(milliseconds: 350);
-  static const Duration _popDuration = Duration(milliseconds: 700);
-
   @override
   Widget build(BuildContext context) {
     return EntranceAnimation(
       key: ValueKey(count),
-      delay: _popDelay,
-      duration: _popDuration,
+      delay: AppDurations.rewardsBadgePopDelay,
+      duration: AppDurations.rewardsBadgePop,
       offset: Offset.zero,
       scaleFrom: 0,
       curve: AppCurves.bounce,

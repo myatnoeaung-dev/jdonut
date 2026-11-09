@@ -19,12 +19,11 @@ class AppPrimaryButton extends StatelessWidget {
   /// Shows a spinner and ignores taps, so a double tap sends only one request.
   final bool isLoading;
 
-  static const Duration _morph = Duration(milliseconds: 350);
   static const double _labelPadding = AppSpacing.xl;
 
   @override
   Widget build(BuildContext context) {
-    final duration = context.reduceMotion ? Duration.zero : _morph;
+    final duration = context.motion(AppDurations.buttonMorph);
     return LayoutBuilder(
       builder: (context, constraints) {
         final fullWidth = constraints.maxWidth;

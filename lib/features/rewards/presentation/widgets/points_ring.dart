@@ -27,7 +27,7 @@ class PointsRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final duration = context.reduceMotion ? Duration.zero : AppDurations.ringSweep;
+    final duration = context.motion(AppDurations.ringSweep);
     // Screen readers hear the final total, not the count-up.
     return Semantics(
       label: '${l10n.totalPoints} ${l10n.pointsValue(points)}',

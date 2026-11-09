@@ -29,16 +29,14 @@ class TierLadder extends StatefulWidget {
 }
 
 class _TierLadderState extends State<TierLadder> with SingleTickerProviderStateMixin {
-  static const Duration _total = Duration(milliseconds: 1600);
-
-  /// Each tier starts this share of [_total] after the one before.
+  /// Each tier starts this share of [AppDurations.tierLadder] after the one before.
   static const double _stepStagger = 0.18;
   static const double _stepLength = 0.35;
   static const Offset _stepRise = Offset(0, 0.3);
   static const Interval _pop = Interval(0.15, 0.5, curve: AppCurves.pop);
   static const Interval _lineFill = Interval(0.55, 1, curve: AppCurves.emphasized);
 
-  late final AnimationController _controller = AnimationController(vsync: this, duration: _total);
+  late final AnimationController _controller = AnimationController(vsync: this, duration: AppDurations.tierLadder);
   bool _started = false;
 
   @override
@@ -144,12 +142,7 @@ class _TierStep extends StatelessWidget {
     return Stack(
       children: [
         if (line != null)
-          PositionedDirectional(
-            start: _lineStart,
-            top: AppSizes.tierLadderBadgeHeight,
-            bottom: 0,
-            child: line,
-          ),
+          PositionedDirectional(start: _lineStart, top: AppSizes.tierLadderBadgeHeight, bottom: 0, child: line),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -158,10 +151,7 @@ class _TierStep extends StatelessWidget {
             Expanded(
               child: Padding(
                 // Leaves room for the line before the next tier.
-                padding: EdgeInsets.only(
-                  top: AppSpacing.xs,
-                  bottom: line == null ? 0 : AppSizes.tierLadderConnector,
-                ),
+                padding: EdgeInsets.only(top: AppSpacing.xs, bottom: line == null ? 0 : AppSizes.tierLadderConnector),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -205,7 +195,13 @@ class _AnimatedShield extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: glow, blurRadius: _glowBlur * pop.value.clamp(0, 1))],
+            // Fixed blur, fading colour: cheaper than re-blurring at a new radius each frame.
+            boxShadow: [
+              BoxShadow(
+                color: glow.withValues(alpha: glow.a * pop.value.clamp(0, 1)),
+                blurRadius: _glowBlur,
+              ),
+            ],
           ),
           child: child,
         ),

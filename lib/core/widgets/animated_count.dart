@@ -37,7 +37,7 @@ class _AnimatedCountState extends State<AnimatedCount> {
     final text = widget.format?.call(widget.value) ?? '${widget.value}';
     return ClipRect(
       child: AnimatedSwitcher(
-        duration: context.reduceMotion ? Duration.zero : AppDurations.short,
+        duration: context.motion(AppDurations.short),
         switchInCurve: AppCurves.emphasized,
         switchOutCurve: AppCurves.emphasized,
         transitionBuilder: _transition,

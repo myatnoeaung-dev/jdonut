@@ -6,8 +6,6 @@ import '../theme/app_motion.dart';
 
 /// Page transitions used by the router.
 abstract final class AppPageTransitions {
-  static const Duration _sharedAxisDuration = Duration(milliseconds: 420);
-  static const Duration _fadeScaleDuration = Duration(milliseconds: 380);
   static const double _fadeScaleFrom = 0.96;
 
   /// Steps of one flow (onboarding → registration → welcome): the new page
@@ -15,8 +13,8 @@ abstract final class AppPageTransitions {
   static Page<void> sharedAxis(GoRouterState state, Widget child) => CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,
-    transitionDuration: _sharedAxisDuration,
-    reverseTransitionDuration: _sharedAxisDuration,
+    transitionDuration: AppDurations.sharedAxis,
+    reverseTransitionDuration: AppDurations.sharedAxis,
     transitionsBuilder: (context, animation, secondaryAnimation, child) =>
         _SharedAxisX(animation: animation, secondaryAnimation: secondaryAnimation, child: child),
   );
@@ -26,8 +24,8 @@ abstract final class AppPageTransitions {
   static Page<void> fadeScale(GoRouterState state, Widget child) => CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,
-    transitionDuration: _fadeScaleDuration,
-    reverseTransitionDuration: _fadeScaleDuration,
+    transitionDuration: AppDurations.fadeScale,
+    reverseTransitionDuration: AppDurations.fadeScale,
     transitionsBuilder: (context, animation, _, child) {
       if (context.reduceMotion) return child;
       final curved = animation.drive(CurveTween(curve: AppCurves.emphasized));
@@ -53,32 +51,41 @@ class _SharedAxisX extends StatelessWidget {
   final Widget child;
 
   static const double _slideDistance = 30;
-  static const Interval _fadeIn = Interval(0.3, 1, curve: Curves.easeOut);
-  static const Interval _fadeOut = Interval(0, 0.3, curve: Curves.easeIn);
-  static const Curve _motion = Curves.easeInOutCubic;
+  static const Interval _fadeIn = Interval(0.3, 1, curve: AppCurves.decelerate);
+  static const Curve _motion = AppCurves.standard;
 
   @override
   Widget build(BuildContext context) {
     if (context.reduceMotion) return child;
     final direction = Directionality.of(context) == TextDirection.rtl ? -1.0 : 1.0;
     final fill = Theme.of(context).colorScheme.surface;
+    // Fades run on their own layers (no page repaint); only the offset rebuilds.
+    final faded = FadeTransition(
+      opacity: animation.drive(CurveTween(curve: _fadeIn)),
+      child: FadeTransition(opacity: secondaryAnimation.drive(_FadeOut()), child: child),
+    );
     return AnimatedBuilder(
       animation: Listenable.merge([animation, secondaryAnimation]),
-      child: child,
+      child: faded,
       builder: (context, child) {
-        final enter = animation.value;
         final exit = secondaryAnimation.value;
-        final dx = ((1 - _motion.transform(enter)) - _motion.transform(exit)) * _slideDistance * direction;
-        final opacity = _fadeIn.transform(enter) * (1 - _fadeOut.transform(exit));
+        final dx = ((1 - _motion.transform(animation.value)) - _motion.transform(exit)) * _slideDistance * direction;
         return ColoredBox(
           // Only a page being covered paints the fill behind itself.
           color: exit > 0 ? fill : fill.withValues(alpha: 0),
-          child: Opacity(
-            opacity: opacity,
-            child: Transform.translate(offset: Offset(dx, 0), child: child),
-          ),
+          child: Transform.translate(offset: Offset(dx, 0), child: child),
         );
       },
     );
   }
+}
+
+/// 1 → 0 over the first 30% of the covering page's arrival.
+class _FadeOut extends Animatable<double> {
+  const _FadeOut();
+
+  static const Interval _interval = Interval(0, 0.3, curve: AppCurves.accelerate);
+
+  @override
+  double transform(double t) => 1 - _interval.transform(t);
 }

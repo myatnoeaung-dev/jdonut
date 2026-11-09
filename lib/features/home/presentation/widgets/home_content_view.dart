@@ -33,10 +33,7 @@ class HomeContentView extends StatelessWidget {
 
   static Key productCardKey(String productId) => ValueKey('homeProduct_$productId');
 
-  /// Sections enter one after another below the header.
-  static const Duration _sectionStep = Duration(milliseconds: 120);
-
-  static Duration _sectionDelay(int index) => _sectionStep * (index + 1);
+  static Duration _sectionDelay(int index) => AppDurations.homeSectionStep * (index + 1);
 
   @override
   Widget build(BuildContext context) {

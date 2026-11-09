@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/entrance_animation.dart';
 
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_motion.dart';
 import '../../domain/entities/product.dart';
 import 'add_to_cart_bar.dart';
 import 'product_description.dart';
@@ -27,9 +28,6 @@ class ProductDetailsView extends StatelessWidget {
   final VoidCallback onAddToCart;
   final String? heroTag;
 
-  /// Waits for the page transition before the rest enters.
-  static const Duration _detailsDelay = Duration(milliseconds: 250);
-
   /// The bar rises from the bottom edge.
   static const Offset _barOffset = Offset(0, 0.6);
 
@@ -49,7 +47,7 @@ class ProductDetailsView extends StatelessWidget {
                 quantity: quantity,
                 onQuantityChanged: onQuantityChanged,
               ),
-              ...EntranceAnimation.staggered(delay: _detailsDelay, [
+              ...EntranceAnimation.staggered(delay: AppDurations.productDetailsDelay, [
                 const SizedBox(height: AppSpacing.xxl),
                 ProductDescription(description: product.description),
               ]),
@@ -60,7 +58,7 @@ class ProductDetailsView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.sm, AppSpacing.xl, AppSpacing.lg),
           child: EntranceAnimation(
-            delay: _detailsDelay,
+            delay: AppDurations.productDetailsDelay,
             offset: _barOffset,
             child: AddToCartBar(totalMmk: totalMmk, onPressed: onAddToCart),
           ),

@@ -15,14 +15,13 @@ class WelcomeCollage extends StatelessWidget {
   static const double _heightToWidth = 1.4;
   static const double _fadeStart = 0.72;
 
-  static const Duration _tileSlide = Duration(milliseconds: 650);
-  static const Duration _tileStep = Duration(milliseconds: 110);
   static const double _middle = 0.5;
   static const Offset _fromLeft = Offset(-1.1, 0);
   static const Offset _fromRight = Offset(1.1, 0);
 
   /// When every tile has landed; the title fades up after this.
-  static final Duration settleTime = _tileStep * (_CollageTile.layout.length - 1) + _tileSlide;
+  static final Duration settleTime =
+      AppDurations.welcomeTileStep * (_CollageTile.layout.length - 1) + AppDurations.welcomeTileSlide;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +54,8 @@ class WelcomeCollage extends StatelessWidget {
             height: tile.rect.height * size.height,
             // Tiles slide in from the side they sit on, one after another.
             child: EntranceAnimation(
-              delay: _tileStep * index,
-              duration: _tileSlide,
+              delay: AppDurations.welcomeTileStep * index,
+              duration: AppDurations.welcomeTileSlide,
               offset: tile.rect.center.dx < _middle ? _fromLeft : _fromRight,
               curve: AppCurves.pop,
               child: _Tile(color: palette.decorativeAt(tile.colorIndex), imagePath: tile.imagePath),

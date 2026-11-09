@@ -126,6 +126,38 @@ flutter test
 flutter test integration_test
 ```
 
+## Animations and performance
+
+- **One motion file.** Every animation duration and curve is a named constant in
+  `lib/core/theme/app_motion.dart` (`AppDurations`, `AppCurves`). Widgets never create their own.
+- **Reduce Motion.** When the system asks for less motion (`MediaQuery.disableAnimations`),
+  animations are skipped or made instant: `context.motion(duration)` returns zero, entrance
+  animations jump to their end (`playUnlessReduced`), page transitions and the tab cross-fade
+  are skipped, error shakes and the EARN pulse don't play, the carousel stops auto-playing and
+  the loading shimmer stands still. Covered by `test/core/widgets/reduce_motion_test.dart`.
+- **No infinite animations** outside loading states, and off-screen tabs stop their tickers.
+- **Cheap frames.** Fades and scales use `FadeTransition`/`ScaleTransition` (layer updates, no
+  repaint); animating parts (points ring, tier ladder, shimmer, onboarding and welcome art)
+  sit behind `RepaintBoundary`; the muted donut art is one cached filter layer; glows animate
+  colour, not blur radius.
+
+### Checking 60 fps on a phone
+
+Run on a mid-range Android phone in **profile** mode (debug mode is much slower and not
+representative):
+
+```bash
+flutter drive --profile \
+  --driver=test_driver/perf_driver.dart \
+  --target=integration_test/perf_test.dart
+```
+
+The test walks Onboarding → Registration → Welcome → Home → Rewards (switching tabs and
+scrolling) while recording frame timings. The driver prints the summary, saves it to
+`build/onboarding_to_rewards_perf.timeline_summary.json` and **fails if the 90th-percentile
+build or raster time is over 16 ms**. For a closer look, use `flutter run --profile` with
+DevTools → Performance.
+
 ## Database migrations
 
 1. Change tables and bump `schemaVersion` in `lib/core/database/app_database.dart`.

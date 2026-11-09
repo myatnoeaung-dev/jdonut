@@ -40,7 +40,7 @@ class AddToCartBar extends StatelessWidget {
               // Rolls to the new total when the quantity changes.
               TweenAnimationBuilder<double>(
                 tween: Tween(end: totalMmk.toDouble()),
-                duration: context.reduceMotion ? Duration.zero : AppDurations.short,
+                duration: context.motion(AppDurations.short),
                 curve: AppCurves.emphasized,
                 builder: (context, total, _) => Text(context.formatMmk(total.round())),
               ),

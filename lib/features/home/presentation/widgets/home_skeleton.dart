@@ -30,24 +30,27 @@ class HomeSkeleton extends StatelessWidget {
       key: loadingKey,
       label: context.l10n.loading,
       excludeSemantics: true,
-      child: Shimmer(
-        child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.homeH,
-            MediaQuery.paddingOf(context).top + AppSpacing.xl,
-            0,
-            AppSpacing.xl,
-          ),
-          children: [
-            const _Header(),
-            const SizedBox(height: AppSpacing.xxl),
-            const Padding(
-              padding: EdgeInsets.only(right: AppSpacing.homeH),
-              child: SkeletonBox(height: _bannerHeight, radius: AppRadii.xxl),
+      // The shimmer repaints every frame; keep that to the skeleton's own layer.
+      child: RepaintBoundary(
+        child: Shimmer(
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.homeH,
+              MediaQuery.paddingOf(context).top + AppSpacing.xl,
+              0,
+              AppSpacing.xl,
             ),
-            for (var row = 0; row < _rows; row++) _CardRow(cardWidth: cardWidth),
-          ],
+            children: [
+              const _Header(),
+              const SizedBox(height: AppSpacing.xxl),
+              const Padding(
+                padding: EdgeInsets.only(right: AppSpacing.homeH),
+                child: SkeletonBox(height: _bannerHeight, radius: AppRadii.xxl),
+              ),
+              for (var row = 0; row < _rows; row++) _CardRow(cardWidth: cardWidth),
+            ],
+          ),
         ),
       ),
     );
