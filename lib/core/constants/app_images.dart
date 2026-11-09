@@ -16,7 +16,7 @@ abstract final class AppImages {
   static const String bannerNewShop = 'assets/images/banner_new_shop.png';
 
   /// Sky-and-grass background behind the nearby shops section on Home.
-  static const String nearbyShopsBackground = 'assets/images/nearby_shops_bg.png';
+  static const String nearbyShopsBackground = 'assets/images/nearby_shops_bg.jpg';
 
   /// Sample member photo on Home (falls back to the initial until added).
   static const String avatarSample = 'assets/images/avatar_sample.png';

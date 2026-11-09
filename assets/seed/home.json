@@ -57,28 +57,28 @@
       "id": "s_myaynigone",
       "name": "Myaynigone J'Donut",
       "address": "2972 Pyay Road, Sanchaung Township, Yangon.",
-      "imageUrl": "assets/images/shops/shop1.png",
+      "imageUrl": "assets/images/shops/shop1.jpg",
       "position": 0
     },
     {
       "id": "s_central_boulevard",
       "name": "Central Boulevard J'Donut",
       "address": "Central Boulevard Mall, Ground Floor, Yangon.",
-      "imageUrl": "assets/images/shops/shop2.png",
+      "imageUrl": "assets/images/shops/shop2.jpg",
       "position": 1
     },
     {
       "id": "s_kamayut",
       "name": "Kamayut J'Donut",
       "address": "Insein Road, Kamayut Township, Yangon.",
-      "imageUrl": "assets/images/shops/shop3.png",
+      "imageUrl": "assets/images/shops/shop3.jpg",
       "position": 2
     },
     {
       "id": "s_bahan",
       "name": "Bahan J'Donut",
       "address": "Shwegondaing Road, Bahan Township, Yangon.",
-      "imageUrl": "assets/images/shops/shop4.png",
+      "imageUrl": "assets/images/shops/shop4.jpg",
       "position": 3
     }
   ]
