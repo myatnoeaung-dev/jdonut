@@ -31,22 +31,4 @@ const List<RewardChallenge> sampleRewardChallenges = [
     goal: 12,
     rewardPoints: 100,
   ),
-  RewardChallenge(
-    id: 'c_biscoff_3',
-    title: 'Eat 3 Chocolate Biscoff donuts',
-    imageUrl: AppImages.donutChocolateBiscoff,
-    kind: ChallengeKind.eat,
-    progress: 3,
-    goal: 3,
-    rewardPoints: 80,
-  ),
-  RewardChallenge(
-    id: 'c_latte_6',
-    title: 'Drink 6 cups latte',
-    imageUrl: AppImages.latte,
-    kind: ChallengeKind.drink,
-    progress: 6,
-    goal: 6,
-    rewardPoints: 60,
-  ),
 ];
