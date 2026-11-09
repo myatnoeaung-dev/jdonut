@@ -23,6 +23,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.shadow,
     required this.decorative,
     required this.banners,
+    required this.tierBronze,
+    required this.tierSilver,
+    required this.tierGold,
+    required this.tierPlatinum,
+    required this.disabledFill,
+    required this.sprinkles,
   });
 
   static const AppPalette light = AppPalette(
@@ -43,6 +49,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     shadow: AppColors.shadow,
     decorative: [AppColors.peach, AppColors.lavender, AppColors.butter, AppColors.aqua, AppColors.rose],
     banners: [AppColors.purple, AppColors.sky, AppColors.pink],
+    tierBronze: AppColors.tierBronze,
+    tierSilver: AppColors.tierSilver,
+    tierGold: AppColors.tierGold,
+    tierPlatinum: AppColors.tierPlatinum,
+    disabledFill: AppColors.disabledFill,
+    sprinkles: [AppColors.white, AppColors.sky, AppColors.butter, AppColors.lavender],
   );
 
   final Color backgroundTop;
@@ -81,6 +93,18 @@ class AppPalette extends ThemeExtension<AppPalette> {
   /// Promo banner card colours on Home.
   final List<Color> banners;
 
+  // Member tier badges on Rewards.
+  final Color tierBronze;
+  final Color tierSilver;
+  final Color tierGold;
+  final Color tierPlatinum;
+
+  /// Disabled pill buttons (EARN before a challenge is done).
+  final Color disabledFill;
+
+  /// Sprinkles drawn on the pink points ring.
+  final List<Color> sprinkles;
+
   Color decorativeAt(int index) => decorative[index % decorative.length];
 
   Color bannerAt(int index) => banners[index % banners.length];
@@ -104,6 +128,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     shadow: shadow,
     decorative: decorative,
     banners: banners,
+    tierBronze: tierBronze,
+    tierSilver: tierSilver,
+    tierGold: tierGold,
+    tierPlatinum: tierPlatinum,
+    disabledFill: disabledFill,
+    sprinkles: sprinkles,
   );
 
   @override

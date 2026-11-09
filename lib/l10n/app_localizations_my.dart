@@ -232,6 +232,9 @@ class AppLocalizationsMy extends AppLocalizations {
   String get tierGold => 'ရွှေ';
 
   @override
+  String get tierPlatinum => 'ပလက်တီနမ်';
+
+  @override
   String memberTier(String tier) {
     return '$tier အဖွဲ့ဝင်';
   }
@@ -378,11 +381,74 @@ class AppLocalizationsMy extends AppLocalizations {
   String get featureComingSoon => 'မကြာမီ လာပါမည်';
 
   @override
-  String get rewardsTitle => 'ဆုလာဘ်များ';
+  String get rewardsTitle => 'J\' Donuts ဆုလာဘ်များ';
 
   @override
   String get eatMoreEarnMore => 'များများစား များများရ';
 
   @override
   String get gift => 'လက်ဆောင်';
+
+  @override
+  String get rewardsReady => 'ဆုလာဘ်';
+
+  @override
+  String rewardsReadyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ရယူနိုင်သော ဆုလာဘ် $count ခု',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tierCurrent => 'ယခု ဤအဆင့်တွင် ရှိသည်';
+
+  @override
+  String get tierUpcoming => 'မကြာမီ ရောက်ပါမည်';
+
+  @override
+  String get tierUnlocked => 'ရရှိပြီး';
+
+  @override
+  String tierPointsRemaining(int points, String tier) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$tier ဖြစ်ရန် $pointsString မှတ် ကျန်သည်';
+  }
+
+  @override
+  String get totalPoints => 'စုစုပေါင်း မှတ်';
+
+  @override
+  String pointsValue(int points) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString';
+  }
+
+  @override
+  String challengeProgress(int progress, int goal) {
+    return '$progress/$goal';
+  }
+
+  @override
+  String challengeReward(int points) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString မှတ်';
+  }
+
+  @override
+  String get earn => 'ရယူမည်';
+
+  @override
+  String get rewardsEmpty => 'ယခု စိန်ခေါ်မှု မရှိသေးပါ။ နောက်မှ ပြန်ကြည့်ပါ။';
 }

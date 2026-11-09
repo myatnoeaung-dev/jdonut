@@ -21,6 +21,10 @@ abstract final class AppImages {
   /// Sample member photo on Home (falls back to the initial until added).
   static const String avatarSample = 'assets/images/avatar_sample.png';
 
+  // Drinks on Rewards challenges (placeholder until the artwork is added).
+  static const String americano = 'assets/images/drinks/americano.png';
+  static const String latte = 'assets/images/drinks/latte.png';
+
   // Transparent donut artwork for the onboarding hero.
   static const String _donuts = 'assets/images/donuts';
   static const String donutMarshmallow = '$_donuts/marshmallow.png';

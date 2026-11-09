@@ -35,9 +35,10 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Rewards'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Silver member'), findsOneWidget);
-    expect(find.text('500 points'), findsOneWidget);
-    expect(find.text('500 points left to become Gold Member'), findsOneWidget);
+    expect(find.text("You're here now"), findsOneWidget);
+    expect(find.text('Silver'), findsOneWidget);
+    expect(find.text('500 pts remaining to become Gold'), findsOneWidget);
+    expect(find.bySemanticsLabel('Total points 500'), findsOneWidget);
   });
 
   testWidgets('the offline banner goes away when the connection returns', (tester) async {

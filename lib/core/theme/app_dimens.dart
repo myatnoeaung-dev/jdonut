@@ -86,6 +86,15 @@ abstract final class AppSizes {
   static const double settingsIcon = 20;
   static const double settingsTierIcon = 16;
 
+  // Rewards
+  static const double tierLadderBadge = 36;
+  static const double tierLadderConnector = 28;
+  static const double tierLadderLine = 2;
+  static const double rewardsCount = 22;
+  static const double challengeArtwork = 104;
+  static const double earnButtonWidth = 92;
+  static const double earnButtonHeight = 40;
+
   // Product detail
   static const double stepperButton = 30;
   static const double stepperIcon = 18;

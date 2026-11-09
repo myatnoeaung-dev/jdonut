@@ -38,6 +38,13 @@ abstract final class AppColors {
   static const Color tierBadgeFill = Color(0xFFF6D6C0);
   static const Color orangeLight = Color(0xFFFFC08A);
 
+  // Rewards
+  static const Color tierBronze = Color(0xFFE2A77C);
+  static const Color tierSilver = Color(0xFFB9BCC4);
+  static const Color tierGold = Color(0xFFF4D36B);
+  static const Color tierPlatinum = Color(0xFF9FD8F2);
+  static const Color disabledFill = Color(0xFFE4E4E8);
+
   // Shadows
   static const Color shadow = Color(0x14000000);
 }

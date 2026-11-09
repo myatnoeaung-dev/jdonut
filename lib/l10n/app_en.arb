@@ -96,6 +96,7 @@
   "tierBronze": "Bronze",
   "tierSilver": "Silver",
   "tierGold": "Gold",
+  "tierPlatinum": "Platinum",
   "memberTier": "{tier} member",
   "@memberTier": {
     "description": "Member tier under the name on Home, e.g. Bronze member",
@@ -153,7 +154,26 @@
   "cancel": "Cancel",
   "featureComingSoon": "Coming soon",
 
-  "rewardsTitle": "Rewards",
+  "rewardsTitle": "J' Donuts Rewards",
   "eatMoreEarnMore": "Eat more earn more",
-  "gift": "Gift"
+  "gift": "Gift",
+  "rewardsReady": "Rewards",
+  "rewardsReadyCount": "{count, plural, =1{1 reward ready to claim} other{{count} rewards ready to claim}}",
+  "@rewardsReadyCount": { "placeholders": { "count": { "type": "int" } } },
+  "tierCurrent": "You're here now",
+  "tierUpcoming": "You'll be here soon",
+  "tierUnlocked": "Unlocked",
+  "tierPointsRemaining": "{points} pts remaining to become {tier}",
+  "@tierPointsRemaining": {
+    "placeholders": { "points": { "type": "int", "format": "decimalPattern" }, "tier": { "type": "String" } }
+  },
+  "totalPoints": "Total points",
+  "pointsValue": "{points}",
+  "@pointsValue": { "placeholders": { "points": { "type": "int", "format": "decimalPattern" } } },
+  "challengeProgress": "{progress}/{goal}",
+  "@challengeProgress": { "placeholders": { "progress": { "type": "int" }, "goal": { "type": "int" } } },
+  "challengeReward": "{points} pts",
+  "@challengeReward": { "placeholders": { "points": { "type": "int", "format": "decimalPattern" } } },
+  "earn": "Earn",
+  "rewardsEmpty": "No challenges right now. Check back soon!"
 }

@@ -233,6 +233,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tierGold => 'Gold';
 
   @override
+  String get tierPlatinum => 'Platinum';
+
+  @override
   String memberTier(String tier) {
     return '$tier member';
   }
@@ -381,11 +384,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String get featureComingSoon => 'Coming soon';
 
   @override
-  String get rewardsTitle => 'Rewards';
+  String get rewardsTitle => 'J\' Donuts Rewards';
 
   @override
   String get eatMoreEarnMore => 'Eat more earn more';
 
   @override
   String get gift => 'Gift';
+
+  @override
+  String get rewardsReady => 'Rewards';
+
+  @override
+  String rewardsReadyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rewards ready to claim',
+      one: '1 reward ready to claim',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tierCurrent => 'You\'re here now';
+
+  @override
+  String get tierUpcoming => 'You\'ll be here soon';
+
+  @override
+  String get tierUnlocked => 'Unlocked';
+
+  @override
+  String tierPointsRemaining(int points, String tier) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString pts remaining to become $tier';
+  }
+
+  @override
+  String get totalPoints => 'Total points';
+
+  @override
+  String pointsValue(int points) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString';
+  }
+
+  @override
+  String challengeProgress(int progress, int goal) {
+    return '$progress/$goal';
+  }
+
+  @override
+  String challengeReward(int points) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString pts';
+  }
+
+  @override
+  String get earn => 'Earn';
+
+  @override
+  String get rewardsEmpty => 'No challenges right now. Check back soon!';
 }

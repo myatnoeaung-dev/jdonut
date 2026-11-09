@@ -73,6 +73,7 @@
   "tierBronze": "ကြေး",
   "tierSilver": "ငွေ",
   "tierGold": "ရွှေ",
+  "tierPlatinum": "ပလက်တီနမ်",
   "memberTier": "{tier} အဖွဲ့ဝင်",
   "pointsToNextTier": "{tier} အဖွဲ့ဝင်ဖြစ်ရန် ပွိုင့် {points} ကျန်ပါသေးသည်",
   "notifications": "အသိပေးချက်များ",
@@ -115,7 +116,19 @@
   "cancel": "မလုပ်တော့ပါ",
   "featureComingSoon": "မကြာမီ လာပါမည်",
 
-  "rewardsTitle": "ဆုလာဘ်များ",
+  "rewardsTitle": "J' Donuts ဆုလာဘ်များ",
   "eatMoreEarnMore": "များများစား များများရ",
-  "gift": "လက်ဆောင်"
+  "gift": "လက်ဆောင်",
+  "rewardsReady": "ဆုလာဘ်",
+  "rewardsReadyCount": "{count, plural, other{ရယူနိုင်သော ဆုလာဘ် {count} ခု}}",
+  "tierCurrent": "ယခု ဤအဆင့်တွင် ရှိသည်",
+  "tierUpcoming": "မကြာမီ ရောက်ပါမည်",
+  "tierUnlocked": "ရရှိပြီး",
+  "tierPointsRemaining": "{tier} ဖြစ်ရန် {points} မှတ် ကျန်သည်",
+  "totalPoints": "စုစုပေါင်း မှတ်",
+  "pointsValue": "{points}",
+  "challengeProgress": "{progress}/{goal}",
+  "challengeReward": "{points} မှတ်",
+  "earn": "ရယူမည်",
+  "rewardsEmpty": "ယခု စိန်ခေါ်မှု မရှိသေးပါ။ နောက်မှ ပြန်ကြည့်ပါ။"
 }

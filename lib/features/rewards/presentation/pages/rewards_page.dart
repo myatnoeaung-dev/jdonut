@@ -5,58 +5,55 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/theme/app_palette.dart';
+import '../../../../core/widgets/coming_soon_snack_bar.dart';
 import '../../../../core/widgets/coming_soon_view.dart';
-import '../../../../core/widgets/gradient_background.dart';
+import '../../../../core/widgets/pill_tab_bar.dart';
 import '../../../../core/widgets/state_views.dart';
+import '../../../../core/widgets/status_bar_strip.dart';
+import '../../domain/entities/reward_challenge.dart';
 import '../bloc/member/member_bloc.dart';
-import '../widgets/member_points_card.dart';
+import '../sample/sample_reward_challenges.dart';
+import '../widgets/challenge_card.dart';
+import '../widgets/points_ring.dart';
+import '../widgets/rewards_header.dart';
+import '../widgets/tier_ladder.dart';
 
-/// Rewards tab: the member's tier and points (the same record Home shows) and
-/// the two tabs (layout placeholder).
+/// Rewards tab: tier ladder and points ring from the shared member record
+/// (the same one Home shows), then the "Eat more earn more" and "Gift" tabs.
+///
+/// Challenges are sample data for now; claiming shows "Coming soon".
 class RewardsPage extends StatelessWidget {
   const RewardsPage({super.key});
 
+  static const List<RewardChallenge> _challenges = sampleRewardChallenges;
   static const int _tabCount = 2;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final surface = Theme.of(context).colorScheme.surface;
     return BlocProvider(
       create: (_) => getIt<MemberBloc>()..add(const MemberStarted()),
       child: DefaultTabController(
         length: _tabCount,
-        child: GradientBackground(
-          child: SafeArea(
-            bottom: false,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: ColoredBox(
+          color: context.palette.pageBackground,
+          child: NestedScrollView(
+            headerSliverBuilder: (context, _) => [
+              StatusBarStrip(color: surface),
+              const SliverToBoxAdapter(child: _RewardsSummaryPanel(challenges: _challenges)),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.homeH, vertical: AppSpacing.sm),
+                  child: PillTabBar(labels: [l10n.eatMoreEarnMore, l10n.gift]),
+                ),
+              ),
+            ],
+            body: const TabBarView(
               children: [
-                // Scrolls on small phones with large text instead of squeezing the tabs.
-                Flexible(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.screenH,
-                      AppSpacing.screenH,
-                      AppSpacing.screenH,
-                      AppSpacing.lg,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(l10n.rewardsTitle, style: Theme.of(context).textTheme.headlineMedium),
-                        const SizedBox(height: AppSpacing.lg),
-                        const _MemberSummary(),
-                      ],
-                    ),
-                  ),
-                ),
-                TabBar(
-                  tabs: [
-                    Tab(text: l10n.eatMoreEarnMore),
-                    Tab(text: l10n.gift),
-                  ],
-                ),
-                const Expanded(child: TabBarView(children: [ComingSoonView(), ComingSoonView()])),
+                _ChallengeList(challenges: _challenges),
+                _GiftTab(),
               ],
             ),
           ),
@@ -66,15 +63,52 @@ class RewardsPage extends StatelessWidget {
   }
 }
 
-class _MemberSummary extends StatelessWidget {
-  const _MemberSummary();
+/// White panel: title with the ready-rewards pill, tier ladder and points ring.
+class _RewardsSummaryPanel extends StatelessWidget {
+  const _RewardsSummaryPanel({required this.challenges});
+
+  final List<RewardChallenge> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    final readyCount = challenges.where((challenge) => challenge.isCompleted).length;
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          RewardsHeader(readyCount: readyCount, onRewardsTap: () => showComingSoon(context)),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.xl, AppSpacing.lg, AppSpacing.xl),
+            child: _MemberProgress(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Tier ladder beside the points ring, with loading and error states.
+class _MemberProgress extends StatelessWidget {
+  const _MemberProgress();
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MemberBloc, MemberState>(
       builder: (context, state) {
         final member = state.member;
-        if (member != null) return MemberPointsCard(member: member);
+        if (member != null) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: TierLadder(member: member)),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: PointsRing(points: member.loyaltyPoints, progress: member.tierProgress),
+              ),
+            ],
+          );
+        }
         if (state.failure != null) {
           return ErrorView(onRetry: () => context.read<MemberBloc>().add(const MemberStarted()));
         }
@@ -82,4 +116,35 @@ class _MemberSummary extends StatelessWidget {
       },
     );
   }
+}
+
+class _ChallengeList extends StatelessWidget {
+  const _ChallengeList({required this.challenges});
+
+  final List<RewardChallenge> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    if (challenges.isEmpty) return EmptyView(message: context.l10n.rewardsEmpty);
+    return ListView.separated(
+      // Bottom padding includes the floating navigation bar.
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.homeH,
+        AppSpacing.sm,
+        AppSpacing.homeH,
+        AppSpacing.xxl + MediaQuery.paddingOf(context).bottom,
+      ),
+      itemCount: challenges.length,
+      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
+      itemBuilder: (context, index) =>
+          ChallengeCard(challenge: challenges[index], onEarn: () => showComingSoon(context)),
+    );
+  }
+}
+
+class _GiftTab extends StatelessWidget {
+  const _GiftTab();
+
+  @override
+  Widget build(BuildContext context) => ListView(children: const [ComingSoonView()]);
 }

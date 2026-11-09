@@ -36,7 +36,7 @@ void main() {
     });
 
     test('an unknown tier name falls back to bronze', () {
-      expect(_silver.copyWith(tier: 'platinum').toEntity().tier, MemberTier.bronze);
+      expect(_silver.copyWith(tier: 'diamond').toEntity().tier, MemberTier.bronze);
     });
   });
 
