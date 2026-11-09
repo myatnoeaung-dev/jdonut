@@ -31,6 +31,10 @@ abstract final class AppSizes {
   static const double buttonHeight = 52;
   static const double buttonSpinner = 22;
   static const double inlineSpinner = 20;
+  static const double inlineIcon = 16;
+
+  /// Icon above the loading/error/empty messages.
+  static const double stateIcon = 56;
   static const double fieldHeight = 60;
   static const double backButton = 36;
   static const double backIcon = 20;

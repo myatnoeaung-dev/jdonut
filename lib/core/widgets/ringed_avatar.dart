@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_dimens.dart';
 import '../theme/app_palette.dart';
+import 'app_network_image.dart';
 
 /// Member photo with an orange arc around its top-right. Shows [initial]
-/// until the photo at [imagePath] exists.
+/// when there is no photo or it can't be loaded.
 class RingedAvatar extends StatelessWidget {
   const RingedAvatar({super.key, required this.imagePath, required this.initial});
 
-  final String imagePath;
+  /// Bundled asset path or network URL.
+  final String? imagePath;
   final String initial;
 
   static const double size = AppSizes.avatar + 2 * (AppSizes.avatarRingGap + AppSizes.avatarRingStroke);
@@ -19,6 +21,7 @@ class RingedAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final colors = Theme.of(context).colorScheme;
+    final photoPath = imagePath;
     return SizedBox.square(
       dimension: size,
       child: CustomPaint(
@@ -27,8 +30,8 @@ class RingedAvatar extends StatelessWidget {
           child: CircleAvatar(
             radius: AppSizes.avatar / 2,
             backgroundColor: colors.secondary,
-            foregroundImage: AssetImage(imagePath),
-            onForegroundImageError: (_, _) {},
+            foregroundImage: photoPath == null ? null : appImageProvider(photoPath),
+            onForegroundImageError: photoPath == null ? null : (_, _) {},
             child: Text(initial, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: colors.onSecondary)),
           ),
         ),

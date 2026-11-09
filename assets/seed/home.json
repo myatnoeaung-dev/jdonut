@@ -1,0 +1,73 @@
+{
+  "banners": [
+    {
+      "id": "b_central_boulevard",
+      "tag": "New shop",
+      "title": "We are now at Central Boulevard",
+      "imageUrl": "assets/images/banner_new_shop.png",
+      "showsShopIcon": true,
+      "position": 0
+    },
+    {
+      "id": "b_hot_chocolate",
+      "tag": "50% off",
+      "title": "Hot chocolate is back",
+      "imageUrl": "assets/images/donuts/chocolate_biscoff.png",
+      "showsShopIcon": false,
+      "position": 1
+    }
+  ],
+  "sections": [
+    {
+      "id": "seasonal",
+      "productIds": [
+        "p_mistletoe_box",
+        "p_christmas_box"
+      ]
+    },
+    {
+      "id": "popular",
+      "productIds": [
+        "p_strawberry_chocolate",
+        "p_dalgona_coffee"
+      ]
+    },
+    {
+      "id": "orderAgain",
+      "productIds": [
+        "p_santa_cookies",
+        "p_coconut"
+      ]
+    }
+  ],
+  "shops": [
+    {
+      "id": "s_myaynigone",
+      "name": "Myaynigone J'Donut",
+      "address": "2972 Pyay Road, Sanchaung Township, Yangon.",
+      "imageUrl": "assets/images/banner_new_shop.png",
+      "position": 0
+    },
+    {
+      "id": "s_central_boulevard",
+      "name": "Central Boulevard J'Donut",
+      "address": "Central Boulevard Mall, Ground Floor, Yangon.",
+      "imageUrl": "assets/images/banner_new_shop.png",
+      "position": 1
+    },
+    {
+      "id": "s_kamayut",
+      "name": "Kamayut J'Donut",
+      "address": "Insein Road, Kamayut Township, Yangon.",
+      "imageUrl": "assets/images/banner_new_shop.png",
+      "position": 2
+    },
+    {
+      "id": "s_bahan",
+      "name": "Bahan J'Donut",
+      "address": "Shwegondaing Road, Bahan Township, Yangon.",
+      "imageUrl": "assets/images/banner_new_shop.png",
+      "position": 3
+    }
+  ]
+}

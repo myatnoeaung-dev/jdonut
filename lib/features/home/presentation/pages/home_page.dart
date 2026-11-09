@@ -1,76 +1,91 @@
 import 'package:flutter/material.dart';
 
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/extensions/l10n_extension.dart';
-import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/app_dimens.dart';
+import '../../../../core/network/connectivity_cubit.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../../../core/widgets/status_bar_strip.dart';
-import '../../../product/domain/entities/product.dart';
-import '../sample/home_sample_content.dart';
-import '../widgets/home_header_panel.dart';
-import '../widgets/home_section.dart';
-import '../widgets/nearby_shops_banner.dart';
-import '../widgets/offer_card.dart';
-import '../widgets/product_tile_card.dart';
+import '../../../../core/widgets/state_views.dart';
+import '../../../rewards/presentation/bloc/member/member_bloc.dart';
+import '../bloc/home_bloc.dart';
+import '../widgets/home_content_view.dart';
 
-/// Home tab. Content comes from [HomeSampleContent] until the home bloc exists.
-///
-/// Scrolling: the header panel scrolls away, each section title sticks to the
-/// top while its row is visible, and a peach strip stays behind the status bar.
+/// Home tab. Everything comes from the local database, so it works offline;
+/// it refreshes in the background on open, on pull-to-refresh and when the
+/// connection comes back.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   /// Key of a product card, for tests.
-  static Key productCardKey(String productId) => ValueKey('homeProduct_$productId');
+  static Key productCardKey(String productId) => HomeContentView.productCardKey(productId);
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    void openProduct(Product product) => context.push(AppRoutes.productDetail(product.id));
-    ProductTileCard Function(Product, int) tiles(double aspectRatio) =>
-        (product, index) => ProductTileCard(
-          product: product,
-          colorIndex: index,
-          aspectRatio: aspectRatio,
-          onTap: () => openProduct(product),
-        );
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<HomeBloc>()..add(const HomeStarted())),
+        BlocProvider(create: (_) => getIt<MemberBloc>()..add(const MemberStarted())),
+      ],
+      child: const _HomeView(),
+    );
+  }
+}
 
-    return ColoredBox(
-      color: context.palette.pageBackground,
-      child: CustomScrollView(
-        slivers: [
-          const StatusBarStrip(),
-          const SliverToBoxAdapter(
-            child: HomeHeaderPanel(member: HomeSampleContent.member, banners: HomeSampleContent.banners),
-          ),
-          HomeSection(
-            title: l10n.seasonalSpecials,
-            children: _cards(HomeSampleContent.seasonalSpecials, (product, index) {
-              return OfferCard(product: product, colorIndex: index, onTap: () => openProduct(product));
-            }),
-          ),
-          HomeSection(
-            title: l10n.popular,
-            children: _cards(HomeSampleContent.popular, tiles(AppSizes.productTallAspectRatio)),
-          ),
-          HomeSection(
-            title: l10n.orderAgain,
-            children: _cards(HomeSampleContent.orderAgain, tiles(AppSizes.productSquareAspectRatio)),
-          ),
-          // Full width, touching the bottom: the background fills the end of the page.
-          const SliverPadding(
-            padding: EdgeInsets.only(top: AppSpacing.xxl),
-            sliver: SliverToBoxAdapter(child: NearbyShopsBanner(shops: HomeSampleContent.nearbyShops)),
-          ),
-        ],
+class _HomeView extends StatelessWidget {
+  const _HomeView();
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ConnectivityCubit, ConnectivityStatus>(
+          listenWhen: (previous, current) => previous.isOffline && current == ConnectivityStatus.online,
+          listener: (context, _) => context.read<HomeBloc>().add(const HomeRefreshRequested()),
+        ),
+        BlocListener<HomeBloc, HomeState>(
+          listenWhen: (previous, current) =>
+              current.refreshFailure != null && previous.refreshFailure != current.refreshFailure,
+          listener: (context, _) => _showRefreshFailed(context),
+        ),
+      ],
+      child: ColoredBox(
+        color: context.palette.pageBackground,
+        child: BlocBuilder<HomeBloc, HomeState>(
+          buildWhen: (previous, current) =>
+              previous.content != current.content ||
+              previous.isFirstLoad != current.isFirstLoad ||
+              previous.isBlockingError != current.isBlockingError,
+          builder: _buildBody,
+        ),
       ),
     );
   }
 
-  List<Widget> _cards(List<Product> products, Widget Function(Product product, int index) buildCard) => [
-    for (var index = 0; index < products.length; index++)
-      KeyedSubtree(key: productCardKey(products[index].id), child: buildCard(products[index], index)),
-  ];
+  Widget _buildBody(BuildContext context, HomeState state) {
+    final bloc = context.read<HomeBloc>();
+    final content = state.content;
+    if (state.isFirstLoad) return const LoadingView();
+    if (content == null) return ErrorView(onRetry: () => bloc.add(const HomeStarted()));
+    if (content.isEmpty) {
+      return EmptyView(
+        message: context.l10n.homeEmpty,
+        actionLabel: context.l10n.refresh,
+        onAction: () => bloc.add(const HomeRefreshRequested()),
+      );
+    }
+    return HomeContentView(content: content, onRefresh: () => _refresh(bloc));
+  }
+
+  /// Completes when the refresh ends, so the pull-to-refresh spinner hides then.
+  Future<void> _refresh(HomeBloc bloc) {
+    bloc.add(const HomeRefreshRequested());
+    return bloc.stream.firstWhere((state) => !state.isRefreshing);
+  }
+
+  void _showRefreshFailed(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(context.l10n.refreshFailed)));
+  }
 }

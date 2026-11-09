@@ -22,7 +22,9 @@ class SettingsProfileHeader extends StatelessWidget {
 
   /// Already localized, e.g. "Bronze member".
   final String tierLabel;
-  final String avatarPath;
+
+  /// Bundled asset path or network URL; null shows the initial.
+  final String? avatarPath;
   final VoidCallback? onEdit;
 
   @override
@@ -41,7 +43,7 @@ class SettingsProfileHeader extends StatelessWidget {
               const SizedBox(height: AppSpacing.xl),
               Row(
                 children: [
-                  RingedAvatar(imagePath: avatarPath, initial: name.characters.first),
+                  RingedAvatar(imagePath: avatarPath, initial: name.isEmpty ? '' : name.characters.first),
                   const SizedBox(width: AppSpacing.lg),
                   Expanded(
                     child: _Identity(name: name, phoneNumber: phoneNumber, tierLabel: tierLabel),
@@ -73,8 +75,7 @@ class _Identity extends StatelessWidget {
         Text(name, style: textTheme.titleLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
         const SizedBox(height: AppSpacing.xs),
         Text(phoneNumber, style: textTheme.bodyMedium),
-        const SizedBox(height: AppSpacing.sm),
-        _TierPill(label: tierLabel),
+        if (tierLabel.isNotEmpty) ...[const SizedBox(height: AppSpacing.sm), _TierPill(label: tierLabel)],
       ],
     );
   }

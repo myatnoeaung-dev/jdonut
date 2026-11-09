@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/widgets/app_asset_image.dart';
+import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/widgets/app_badge.dart';
 import '../../../product/domain/entities/product.dart';
 
@@ -61,7 +61,7 @@ class ProductTileCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            AppAssetImage(
+            AppNetworkImage(
               path: product.imageUrl,
               borderRadius: BorderRadius.circular(AppRadii.sm),
               placeholderColorIndex: colorIndex,

@@ -6,8 +6,8 @@ import '../../../../core/theme/app_palette.dart';
 
 /// A Home section as slivers: its title sticks to the top while the section's
 /// row is on screen, then scrolls away with it.
-class HomeSection extends StatelessWidget {
-  const HomeSection({super.key, required this.title, required this.children, this.onSeeAll});
+class HomeSectionSliver extends StatelessWidget {
+  const HomeSectionSliver({super.key, required this.title, required this.children, this.onSeeAll});
 
   final String title;
   final List<Widget> children;

@@ -4,7 +4,7 @@ import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/extensions/price_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../../../core/widgets/app_asset_image.dart';
+import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/widgets/app_badge.dart';
 import '../../domain/entities/product.dart';
 import 'quantity_stepper.dart';
@@ -76,7 +76,7 @@ class _CardBody extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           AspectRatio(
             aspectRatio: _imageAspectRatio,
-            child: AppAssetImage(path: product.imageUrl, semanticLabel: product.name),
+            child: AppNetworkImage(path: product.imageUrl, semanticLabel: product.name),
           ),
         ],
       ),

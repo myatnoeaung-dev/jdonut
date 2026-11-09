@@ -1,88 +1,70 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/extensions/l10n_extension.dart';
-import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../domain/entities/product.dart';
-import '../sample/sample_products.dart';
-import '../widgets/add_to_cart_bar.dart';
-import '../widgets/product_description.dart';
-import '../widgets/product_hero_card.dart';
+import '../../../../core/widgets/coming_soon_snack_bar.dart';
+import '../../../../core/widgets/offline_banner.dart';
+import '../../../../core/widgets/state_views.dart';
+import '../bloc/product_detail_bloc.dart';
+import '../widgets/product_details_view.dart';
 
-/// `/product/:id`. Reads [SampleProducts] until the product bloc exists.
-class ProductDetailPage extends StatefulWidget {
+/// `/product/:id`. Reads the product from the local database, so it opens offline too.
+class ProductDetailPage extends StatelessWidget {
   const ProductDetailPage({super.key, required this.productId});
 
   final String productId;
 
   @override
-  State<ProductDetailPage> createState() => _ProductDetailPageState();
-}
-
-class _ProductDetailPageState extends State<ProductDetailPage> {
-  late final Product? _product = SampleProducts.byId(widget.productId);
-  int _quantity = 1;
-
-  @override
   Widget build(BuildContext context) {
-    final product = _product;
-    return Scaffold(
-      backgroundColor: context.palette.pageBackground,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: BackButton(onPressed: () => context.canPop() ? context.pop() : null),
+    return BlocProvider(
+      create: (_) => getIt<ProductDetailBloc>()..add(ProductDetailStarted(productId)),
+      child: Scaffold(
+        backgroundColor: context.palette.pageBackground,
+        body: OfflineBannerOverlay(
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: BackButton(onPressed: () => context.canPop() ? context.pop() : null),
+                ),
+                Expanded(child: _ProductDetailBody(productId: productId)),
+              ],
             ),
-            Expanded(child: product == null ? const _ProductNotFound() : _details(product)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _details(Product product) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-            children: [
-              ProductHeroCard(
-                product: product,
-                quantity: _quantity,
-                onQuantityChanged: (quantity) => setState(() => _quantity = quantity),
-              ),
-              const SizedBox(height: AppSpacing.xxl),
-              ProductDescription(description: product.description),
-              const SizedBox(height: AppSpacing.xxl),
-            ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.sm, AppSpacing.xl, AppSpacing.lg),
-          child: AddToCartBar(totalMmk: product.finalPriceMmk * _quantity, onPressed: () {}),
-        ),
-      ],
+      ),
     );
   }
 }
 
-class _ProductNotFound extends StatelessWidget {
-  const _ProductNotFound();
+class _ProductDetailBody extends StatelessWidget {
+  const _ProductDetailBody({required this.productId});
+
+  final String productId;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xxl),
-        child: Text(context.l10n.productNotFound, textAlign: TextAlign.center),
-      ),
+    return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+      builder: (context, state) {
+        final bloc = context.read<ProductDetailBloc>();
+        final product = state.product;
+        if (state.isLoading) return const LoadingView();
+        if (state.isNotFound) return EmptyView(message: context.l10n.productNotFound);
+        if (product == null) return ErrorView(onRetry: () => bloc.add(ProductDetailStarted(productId)));
+        return ProductDetailsView(
+          product: product,
+          quantity: state.quantity,
+          totalMmk: state.totalMmk,
+          onQuantityChanged: (quantity) => bloc.add(ProductQuantityChanged(quantity)),
+          onAddToCart: () => showComingSoon(context),
+        );
+      },
     );
   }
 }

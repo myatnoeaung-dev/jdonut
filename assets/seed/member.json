@@ -1,0 +1,8 @@
+{
+  "id": "m_current",
+  "tier": "silver",
+  "loyaltyPoints": 500,
+  "nextTierPoints": 1000,
+  "unreadNotifications": 2,
+  "avatarUrl": "assets/images/avatar_sample.png"
+}

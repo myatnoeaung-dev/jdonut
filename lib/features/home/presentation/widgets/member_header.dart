@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/ringed_avatar.dart';
-import '../sample/home_sample_content.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../rewards/domain/entities/member.dart';
 import 'member_tier_label.dart';
 
 /// Ringed avatar, name, tier and the points-to-next-tier pill.
 class MemberHeader extends StatelessWidget {
-  const MemberHeader({super.key, required this.member, this.nameRowEndSpace = 0});
+  const MemberHeader({super.key, required this.firstName, required this.member, this.nameRowEndSpace = 0});
 
-  final HomeMember member;
+  final String firstName;
+
+  /// Null until the loyalty record loads: only the name shows.
+  final Member? member;
 
   /// Room kept free at the end of the name row (for the bell tab).
   final double nameRowEndSpace;
@@ -19,30 +23,43 @@ class MemberHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
+    final loyalty = member;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            RingedAvatar(imagePath: member.avatarPath, initial: member.firstName.characters.first),
+            RingedAvatar(imagePath: loyalty?.avatarUrl, initial: _initialOf(firstName)),
             const SizedBox(width: AppSpacing.lg),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(member.firstName, style: textTheme.headlineMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(l10n.memberTier(memberTierName(l10n, member.tier)), style: textTheme.bodyMedium),
+                  Text(firstName, style: textTheme.headlineMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  if (loyalty != null) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(l10n.memberTier(memberTierName(l10n, loyalty.tier)), style: textTheme.bodyMedium),
+                  ],
                 ],
               ),
             ),
             SizedBox(width: nameRowEndSpace),
           ],
         ),
-        const SizedBox(height: AppSpacing.md),
-        _PointsPill(text: l10n.pointsToNextTier(member.pointsToNextTier, memberTierName(l10n, member.nextTier))),
+        if (loyalty != null) ...[
+          const SizedBox(height: AppSpacing.md),
+          _PointsPill(text: _nextTierText(l10n, loyalty)),
+        ],
       ],
     );
+  }
+
+  static String _initialOf(String name) => name.isEmpty ? '' : name.characters.first.toUpperCase();
+
+  static String _nextTierText(AppLocalizations l10n, Member member) {
+    final nextTier = member.nextTier;
+    if (nextTier == null) return l10n.topTierReached;
+    return l10n.pointsToNextTier(member.pointsToNextTier, memberTierName(l10n, nextTier));
   }
 }
 

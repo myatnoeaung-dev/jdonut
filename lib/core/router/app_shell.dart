@@ -6,6 +6,7 @@ import '../constants/app_icons.dart';
 import '../extensions/l10n_extension.dart';
 import '../theme/app_palette.dart';
 import '../widgets/app_bottom_nav_bar.dart';
+import '../widgets/offline_banner.dart';
 
 /// Bottom navigation around the five main tabs. Order matches the shell
 /// branches in `app_router.dart`: Home, Rewards, Menu, Wallet, Settings.
@@ -20,7 +21,7 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       // Shows behind the bar's rounded corners; matches the tab pages.
       backgroundColor: context.palette.pageBackground,
-      body: navigationShell,
+      body: OfflineBannerOverlay(child: navigationShell),
       extendBody: true, // so the bar's rounded corners show the page behind
       bottomNavigationBar: AppBottomNavBar(
         selectedIndex: navigationShell.currentIndex,

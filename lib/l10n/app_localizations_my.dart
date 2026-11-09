@@ -29,6 +29,30 @@ class AppLocalizationsMy extends AppLocalizations {
   String get emptyGeneric => 'ပြသရန် မရှိသေးပါ။';
 
   @override
+  String get offlineBanner => 'အင်တာနက် မရှိပါ။ သိမ်းထားသော ဒေတာကို ပြသနေသည်။';
+
+  @override
+  String get refreshFailed => 'အသစ် မရယူနိုင်ပါ။ သိမ်းထားသော ဒေတာကို ပြသနေသည်။';
+
+  @override
+  String get refresh => 'ပြန်လည်ရယူရန်';
+
+  @override
+  String get homeEmpty => 'ပြသရန် ဒိုးနတ် မရှိသေးပါ။';
+
+  @override
+  String loyaltyPoints(int points) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString မှတ်';
+  }
+
+  @override
+  String get topTierReached => 'အမြင့်ဆုံးအဆင့်သို့ ရောက်ပါပြီ';
+
+  @override
   String get back => 'နောက်သို့';
 
   @override

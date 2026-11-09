@@ -201,8 +201,277 @@ i1.GeneratedColumn<String> _column_13(String aliasedName) =>
       type: i1.DriftSqlType.string,
       $customConstraints: 'NOT NULL',
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    users,
+    products,
+    banners,
+    homeSectionItems,
+    shops,
+    members,
+  ];
+  late final Shape0 users = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'users',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 products = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'products',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_13,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 banners = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'banners',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_6,
+        _column_14,
+        _column_15,
+        _column_12,
+        _column_16,
+        _column_17,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 homeSectionItems = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'home_section_items',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(section_id, product_id)'],
+      columns: [_column_18, _column_19, _column_17],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 shops = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'shops',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [_column_6, _column_8, _column_20, _column_12, _column_17],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 members = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_6,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape2 extends i0.VersionedTable {
+  Shape2({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tag =>
+      columnsByName['tag']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get title =>
+      columnsByName['title']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get imageUrl =>
+      columnsByName['image_url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get showsShopIcon =>
+      columnsByName['shows_shop_icon']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get position =>
+      columnsByName['position']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_14(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'tag',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_15(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'title',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_16(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'shows_shop_icon',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'NOT NULL DEFAULT 0 CHECK (shows_shop_icon IN (0, 1))',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+i1.GeneratedColumn<int> _column_17(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'position',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+
+class Shape3 extends i0.VersionedTable {
+  Shape3({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get sectionId =>
+      columnsByName['section_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get productId =>
+      columnsByName['product_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get position =>
+      columnsByName['position']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_18(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'section_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_19(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'product_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL REFERENCES products(id)',
+    );
+
+class Shape4 extends i0.VersionedTable {
+  Shape4({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get name =>
+      columnsByName['name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get address =>
+      columnsByName['address']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get imageUrl =>
+      columnsByName['image_url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get position =>
+      columnsByName['position']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_20(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'address',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+
+class Shape5 extends i0.VersionedTable {
+  Shape5({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tier =>
+      columnsByName['tier']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get loyaltyPoints =>
+      columnsByName['loyalty_points']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get nextTierPoints =>
+      columnsByName['next_tier_points']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get unreadNotifications =>
+      columnsByName['unread_notifications']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get avatarUrl =>
+      columnsByName['avatar_url']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_21(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'tier',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_22(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'loyalty_points',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_23(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'next_tier_points',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_24(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'unread_notifications',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+i1.GeneratedColumn<String> _column_25(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'avatar_url',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -211,6 +480,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -219,6 +493,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(from1To2: from1To2, from2To3: from2To3),
 );

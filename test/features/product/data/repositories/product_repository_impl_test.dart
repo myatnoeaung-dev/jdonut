@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:jdonut/core/error/failure.dart';
 import 'package:jdonut/core/network/network_info.dart';
 import 'package:jdonut/features/product/data/datasources/product_local_datasource.dart';
+import 'package:jdonut/features/product/data/datasources/product_remote_datasource.dart';
 import 'package:jdonut/features/product/data/datasources/product_seed_datasource.dart';
 import 'package:jdonut/features/product/data/models/product_model.dart';
 import 'package:jdonut/features/product/data/repositories/product_repository_impl.dart';
@@ -12,6 +13,8 @@ import 'package:jdonut/features/product/data/repositories/product_repository_imp
 class _MockLocal extends Mock implements ProductLocalDatasource {}
 
 class _MockSeed extends Mock implements ProductSeedDatasource {}
+
+class _MockRemote extends Mock implements ProductRemoteDatasource {}
 
 class _MockNetworkInfo extends Mock implements NetworkInfo {}
 
@@ -27,12 +30,16 @@ const _coconut = ProductModel(
 void main() {
   late _MockLocal local;
   late _MockSeed seed;
+  late _MockRemote remote;
+  late _MockNetworkInfo networkInfo;
   late ProductRepositoryImpl repository;
 
   setUp(() {
     local = _MockLocal();
     seed = _MockSeed();
-    repository = ProductRepositoryImpl(local, seed, networkInfo: _MockNetworkInfo());
+    remote = _MockRemote();
+    networkInfo = _MockNetworkInfo();
+    repository = ProductRepositoryImpl(local, seed, remote, networkInfo: networkInfo);
   });
 
   group('seedProductsIfEmpty', () {
@@ -88,5 +95,47 @@ void main() {
     final result = await repository.watchProducts().first;
 
     expect(result.getLeft().toNullable(), isA<CacheFailure>());
+  });
+
+  test('watchProductById turns a missing product into a NotFoundFailure', () async {
+    when(() => local.watchProductById('missing'))
+        .thenAnswer((_) => Stream.error(const NotFoundFailure('Product not found', null)));
+
+    final result = await repository.watchProductById('missing').first;
+
+    expect(result.getLeft().toNullable(), isA<NotFoundFailure>());
+  });
+
+  group('refreshProducts', () {
+    test('does nothing and succeeds while offline', () async {
+      when(() => networkInfo.isConnected).thenAnswer((_) async => false);
+
+      final result = await repository.refreshProducts();
+
+      expect(result.isRight(), isTrue);
+      verifyNever(() => remote.fetchProducts());
+    });
+
+    test('saves the server catalogue locally when online', () async {
+      when(() => networkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => remote.fetchProducts()).thenAnswer((_) async => [_coconut]);
+      when(() => local.upsertProducts(any())).thenAnswer((_) async {});
+
+      final result = await repository.refreshProducts();
+
+      expect(result.isRight(), isTrue);
+      verify(() => local.upsertProducts([_coconut])).called(1);
+    });
+
+    test('returns the server failure and keeps local data when the request fails', () async {
+      const failure = ServerFailure('500', 'Server down');
+      when(() => networkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => remote.fetchProducts()).thenThrow(failure);
+
+      final result = await repository.refreshProducts();
+
+      expect(result.getLeft().toNullable(), failure);
+      verifyNever(() => local.upsertProducts(any()));
+    });
   });
 }

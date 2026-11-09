@@ -9,6 +9,7 @@ import 'generated/schema.dart';
 
 import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
+import 'generated/schema_v3.dart' as v3;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -71,6 +72,49 @@ void main() {
           expectedNewProductsData,
           await newDb.select(newDb.products).get(),
         );
+      },
+    );
+  });
+
+  test('migration from v2 to v3 keeps users and products and adds empty Home tables', () async {
+    const user = v2.UsersData(
+      id: 1,
+      phoneNumber: '+959254135592',
+      firstName: 'Hania',
+      birthDate: '1995-05-01T00:00:00.000',
+      createdAt: '2026-01-01T00:00:00.000',
+    );
+    const product = v2.ProductsData(
+      id: 'p_coconut',
+      code: 'JD022123',
+      name: 'Coconut Donut',
+      priceMmk: 3200,
+      isNew: 1,
+      imageUrl: 'assets/images/donuts/vanilla_caramel.png',
+      description: 'Coconut',
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 2,
+      newVersion: 3,
+      createOld: v2.DatabaseAtV2.new,
+      createNew: v3.DatabaseAtV3.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insertAll(oldDb.users, [user]);
+        batch.insertAll(oldDb.products, [product]);
+      },
+      validateItems: (newDb) async {
+        expect(
+          (await newDb.select(newDb.users).get()).single.phoneNumber,
+          user.phoneNumber,
+        );
+        expect(
+          (await newDb.select(newDb.products).get()).single.name,
+          product.name,
+        );
+        expect(await newDb.select(newDb.banners).get(), isEmpty);
+        expect(await newDb.select(newDb.members).get(), isEmpty);
       },
     );
   });

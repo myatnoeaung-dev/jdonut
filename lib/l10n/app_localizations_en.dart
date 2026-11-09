@@ -28,6 +28,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emptyGeneric => 'Nothing here yet.';
 
   @override
+  String get offlineBanner => 'You\'re offline. Showing saved data.';
+
+  @override
+  String get refreshFailed => 'Couldn\'t refresh. Showing saved data.';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get homeEmpty => 'No donuts to show yet.';
+
+  @override
+  String loyaltyPoints(int points) {
+    final intl.NumberFormat pointsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String pointsString = pointsNumberFormat.format(points);
+
+    return '$pointsString points';
+  }
+
+  @override
+  String get topTierReached => 'You\'re at the top tier';
+
+  @override
   String get back => 'Back';
 
   @override

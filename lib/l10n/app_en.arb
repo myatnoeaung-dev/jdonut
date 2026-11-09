@@ -7,6 +7,13 @@
   "errorGeneric": "Something went wrong.",
   "errorNoConnection": "No internet connection. Showing saved data.",
   "emptyGeneric": "Nothing here yet.",
+  "offlineBanner": "You're offline. Showing saved data.",
+  "refreshFailed": "Couldn't refresh. Showing saved data.",
+  "refresh": "Refresh",
+  "homeEmpty": "No donuts to show yet.",
+  "loyaltyPoints": "{points} points",
+  "@loyaltyPoints": { "placeholders": { "points": { "type": "int", "format": "decimalPattern" } } },
+  "topTierReached": "You're at the top tier",
 
   "back": "Back",
   "continueLabel": "Continue",

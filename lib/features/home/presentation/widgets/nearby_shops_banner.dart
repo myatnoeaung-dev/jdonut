@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
-import '../sample/home_sample_content.dart';
+import '../../domain/entities/home_shop.dart';
 import 'shop_card.dart';
 
 /// Full-width section at the bottom of Home: sky-and-grass background,

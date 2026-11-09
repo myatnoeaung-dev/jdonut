@@ -6,7 +6,7 @@
     "priceMmk": 3200,
     "isNew": true,
     "discountPercent": null,
-    "imageUrl": "assets/images/products/p_coconut.png",
+    "imageUrl": "assets/images/donuts/vanilla_caramel.png",
     "description": "Enjoy our scrumptious donuts topped with toasted coconut flakes and a light vanilla glaze."
   },
   {
@@ -16,7 +16,7 @@
     "priceMmk": 3000,
     "isNew": false,
     "discountPercent": 10,
-    "imageUrl": "assets/images/products/p_chocolate_glazed.png",
+    "imageUrl": "assets/images/donuts/chocolate_biscoff.png",
     "description": "A soft, fluffy ring dipped in rich dark chocolate glaze."
   },
   {
@@ -26,7 +26,7 @@
     "priceMmk": 3200,
     "isNew": false,
     "discountPercent": null,
-    "imageUrl": "assets/images/products/p_strawberry_sprinkle.png",
+    "imageUrl": "assets/images/donuts/marshmallow.png",
     "description": "Pink strawberry icing finished with rainbow sprinkles."
   },
   {
@@ -36,7 +36,7 @@
     "priceMmk": 3800,
     "isNew": true,
     "discountPercent": null,
-    "imageUrl": "assets/images/products/p_matcha_cream.png",
+    "imageUrl": "assets/images/donuts/vanilla_caramel.png",
     "description": "Filled with smooth matcha cream and dusted with green tea powder."
   },
   {
@@ -46,7 +46,7 @@
     "priceMmk": 2500,
     "isNew": false,
     "discountPercent": 20,
-    "imageUrl": "assets/images/products/p_classic_sugar.png",
+    "imageUrl": "assets/images/donuts/marshmallow.png",
     "description": "Our original recipe, tossed in fine sugar while still warm."
   },
   {
@@ -56,7 +56,57 @@
     "priceMmk": 3500,
     "isNew": false,
     "discountPercent": null,
-    "imageUrl": "assets/images/products/p_caramel_crunch.png",
+    "imageUrl": "assets/images/donuts/vanilla_caramel.png",
     "description": "Salted caramel glaze topped with crunchy caramelised nuts."
+  },
+  {
+    "id": "p_strawberry_chocolate",
+    "code": "JD022129",
+    "name": "Strawberry Chocolate Donuts",
+    "priceMmk": 3500,
+    "isNew": false,
+    "discountPercent": null,
+    "imageUrl": "assets/images/donuts/chocolate_biscoff.png",
+    "description": "Chocolate donuts with fresh strawberry glaze and a white chocolate drizzle."
+  },
+  {
+    "id": "p_dalgona_coffee",
+    "code": "JD022130",
+    "name": "Dalgona Creamy Coffee",
+    "priceMmk": 4500,
+    "isNew": true,
+    "discountPercent": null,
+    "imageUrl": "assets/images/donuts/vanilla_caramel.png",
+    "description": "Whipped coffee cream over chilled milk."
+  },
+  {
+    "id": "p_mistletoe_box",
+    "code": "JD022131",
+    "name": "Mistletoe Romance box",
+    "priceMmk": 18000,
+    "isNew": false,
+    "discountPercent": 30,
+    "imageUrl": "assets/images/donuts/marshmallow.png",
+    "description": "A festive box of six assorted donuts."
+  },
+  {
+    "id": "p_christmas_box",
+    "code": "JD022132",
+    "name": "Christmas Mini Family box",
+    "priceMmk": 24000,
+    "isNew": false,
+    "discountPercent": null,
+    "imageUrl": "assets/images/donuts/chocolate_biscoff.png",
+    "description": "Twelve mini donuts to share."
+  },
+  {
+    "id": "p_santa_cookies",
+    "code": "JD022133",
+    "name": "Santa's favorite cookies set",
+    "priceMmk": 9000,
+    "isNew": false,
+    "discountPercent": 30,
+    "imageUrl": "assets/images/donuts/chocolate_biscoff.png",
+    "description": "Chocolate biscoff donuts with cookie crumble."
   }
 ]

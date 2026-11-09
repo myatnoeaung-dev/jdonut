@@ -8,7 +8,7 @@ import 'package:jdonut/core/usecase/usecase.dart';
 import 'package:jdonut/features/product/domain/entities/product.dart';
 import 'package:jdonut/features/product/domain/repositories/product_repository.dart';
 import 'package:jdonut/features/product/domain/usecases/get_product_by_id_use_case.dart';
-import 'package:jdonut/features/product/domain/usecases/seed_products_use_case.dart';
+import 'package:jdonut/features/product/domain/usecases/watch_product_by_id_use_case.dart';
 import 'package:jdonut/features/product/domain/usecases/watch_products_use_case.dart';
 
 class _MockProductRepository extends Mock implements ProductRepository {}
@@ -48,11 +48,9 @@ void main() {
     expect(await GetProductByIdUseCase(repository)('missing'), const Left<Failure, Product>(failure));
   });
 
-  test('SeedProductsUseCase asks the repository to seed when empty', () async {
-    when(() => repository.seedProductsIfEmpty()).thenAnswer((_) async => const Right(null));
+  test('WatchProductByIdUseCase emits the product for the given id', () {
+    when(() => repository.watchProductById('p_coconut')).thenAnswer((_) => Stream.value(const Right(_coconut)));
 
-    await SeedProductsUseCase(repository)(const NoParams());
-
-    verify(() => repository.seedProductsIfEmpty()).called(1);
+    expect(WatchProductByIdUseCase(repository)('p_coconut'), emits(const Right<Failure, Product>(_coconut)));
   });
 }

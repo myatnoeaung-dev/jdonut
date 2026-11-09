@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/extensions/l10n_extension.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../../../core/widgets/app_asset_image.dart';
-import '../sample/home_sample_content.dart';
+import '../../../../core/widgets/app_network_image.dart';
+import '../../domain/entities/home_shop.dart';
 
 /// White card with the shop photo, name, address and an "Order Online" link.
 class ShopCard extends StatelessWidget {
@@ -35,8 +35,8 @@ class ShopCard extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: _photoAspectRatio,
-                  child: AppAssetImage(
-                    path: shop.imagePath,
+                  child: AppNetworkImage(
+                    path: shop.imageUrl,
                     fit: BoxFit.cover,
                     borderRadius: BorderRadius.circular(AppRadii.md),
                     semanticLabel: shop.name,

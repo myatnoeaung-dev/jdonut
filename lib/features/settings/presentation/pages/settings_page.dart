@@ -12,8 +12,8 @@ import '../../../../core/theme/app_palette.dart';
 import '../../../../core/widgets/coming_soon_snack_bar.dart';
 import '../../../../core/widgets/status_bar_strip.dart';
 import '../../../auth/presentation/bloc/auth/auth_bloc.dart';
-import '../../../home/presentation/sample/home_sample_content.dart';
 import '../../../home/presentation/widgets/member_tier_label.dart';
+import '../../../rewards/presentation/bloc/member/member_bloc.dart';
 import '../widgets/language_sheet.dart';
 import '../widgets/log_out_button.dart';
 import '../widgets/settings_profile_header.dart';
@@ -25,40 +25,43 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: context.palette.pageBackground,
-      child: const CustomScrollView(
-        slivers: [
-          StatusBarStrip(),
-          // Floating, not pinned: scrolls away going down and slides back in on any
-          // upward scroll. Sized by its content, so large text and Burmese still fit.
-          SliverFloatingHeader(child: _MemberHeader()),
-          SliverToBoxAdapter(child: _AccountSection()),
-          SliverToBoxAdapter(child: _PreferencesSection()),
-          SliverToBoxAdapter(child: _SupportSection()),
-          SliverToBoxAdapter(child: _Footer()),
-        ],
+    return BlocProvider(
+      create: (_) => getIt<MemberBloc>()..add(const MemberStarted()),
+      child: ColoredBox(
+        color: context.palette.pageBackground,
+        child: const CustomScrollView(
+          slivers: [
+            StatusBarStrip(),
+            // Floating, not pinned: scrolls away going down and slides back in on any
+            // upward scroll. Sized by its content, so large text and Burmese still fit.
+            SliverFloatingHeader(child: _MemberHeader()),
+            SliverToBoxAdapter(child: _AccountSection()),
+            SliverToBoxAdapter(child: _PreferencesSection()),
+            SliverToBoxAdapter(child: _SupportSection()),
+            SliverToBoxAdapter(child: _Footer()),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// The signed-in member's name and phone; the tier is sample data for now.
+/// The signed-in member's name and phone, and the tier from the shared member record.
 class _MemberHeader extends StatelessWidget {
   const _MemberHeader();
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    const sample = HomeSampleContent.member;
     final auth = context.watch<AuthBloc>().state;
+    final member = context.select((MemberBloc bloc) => bloc.state.member);
     final user = auth is Authenticated ? auth.user : null;
-    final fullName = [user?.firstName ?? sample.firstName, ?user?.lastName].join(' ');
+    final fullName = [?user?.firstName, ?user?.lastName].join(' ');
     return SettingsProfileHeader(
       name: fullName,
-      phoneNumber: user?.phoneNumber ?? sample.phoneNumber,
-      tierLabel: l10n.memberTier(memberTierName(l10n, sample.tier)),
-      avatarPath: sample.avatarPath,
+      phoneNumber: user?.phoneNumber ?? '',
+      tierLabel: member == null ? '' : l10n.memberTier(memberTierName(l10n, member.tier)),
+      avatarPath: member?.avatarUrl,
       onEdit: () => showComingSoon(context),
     );
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../../../core/widgets/app_asset_image.dart';
-import '../sample/home_sample_content.dart';
+import '../../../../core/widgets/app_network_image.dart';
+import '../../domain/entities/home_banner.dart';
 
 /// Horizontally scrolling promo cards; the next card peeks in from the right.
 /// Cards have no bottom padding: the Home header panel clips their lower edge.
@@ -44,11 +45,12 @@ class _BannerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)),
-      child: AppAssetImage(
-              path: banner.imagePath,
-              fit: BoxFit.cover,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
-            ),
+      child: AppNetworkImage(
+        path: banner.imageUrl,
+        fit: BoxFit.cover,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
+        semanticLabel: banner.title,
+      ),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../../../../core/widgets/app_asset_image.dart';
+import '../../../../core/widgets/app_network_image.dart';
 
 /// Staggered donut tiles at the top of Welcome. Tiles run off the screen edges
 /// and the bottom fades into the background.
@@ -64,7 +64,7 @@ class _Tile extends StatelessWidget {
       child: FractionallySizedBox(
         widthFactor: 1 - _artworkPadding * 2,
         heightFactor: 1 - _artworkPadding * 2,
-        child: AppAssetImage(path: imagePath),
+        child: AppNetworkImage(path: imagePath),
       ),
     );
   }

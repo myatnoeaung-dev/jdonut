@@ -134,6 +134,42 @@ abstract class AppLocalizations {
   /// **'Nothing here yet.'**
   String get emptyGeneric;
 
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline. Showing saved data.'**
+  String get offlineBanner;
+
+  /// No description provided for @refreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t refresh. Showing saved data.'**
+  String get refreshFailed;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @homeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No donuts to show yet.'**
+  String get homeEmpty;
+
+  /// No description provided for @loyaltyPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} points'**
+  String loyaltyPoints(int points);
+
+  /// No description provided for @topTierReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re at the top tier'**
+  String get topTierReached;
+
   /// No description provided for @back.
   ///
   /// In en, this message translates to:

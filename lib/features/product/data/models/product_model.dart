@@ -24,6 +24,10 @@ abstract class ProductModel with _$ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
+  /// Parses a JSON array of products (seed file or `/v1/products`).
+  static List<ProductModel> listFromJson(Object? json) =>
+      (json! as List<dynamic>).map((item) => ProductModel.fromJson(item as Map<String, dynamic>)).toList();
+
   factory ProductModel.fromRow(ProductRow row) => ProductModel(
     id: row.id,
     code: row.code,

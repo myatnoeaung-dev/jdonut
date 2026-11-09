@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_palette.dart';
-import '../sample/home_sample_content.dart';
+import '../../../rewards/domain/entities/member.dart';
+import '../../domain/entities/home_banner.dart';
 import 'home_banner_carousel.dart';
 import 'member_header.dart';
 import 'notification_button.dart';
@@ -12,9 +13,18 @@ import 'tier_hexagon_badge.dart';
 /// the bell tab on the right edge and the banners, whose lower edge the
 /// panel's rounded bottom corners clip.
 class HomeHeaderPanel extends StatelessWidget {
-  const HomeHeaderPanel({super.key, required this.member, required this.banners, this.onNotificationsTap});
+  const HomeHeaderPanel({
+    super.key,
+    required this.firstName,
+    required this.member,
+    required this.banners,
+    this.onNotificationsTap,
+  });
 
-  final HomeMember member;
+  final String firstName;
+
+  /// Null until the loyalty record loads; the header then shows the name only.
+  final Member? member;
   final List<HomeBanner> banners;
   final VoidCallback? onNotificationsTap;
 
@@ -39,7 +49,7 @@ class HomeHeaderPanel extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(AppSpacing.homeH, AppSpacing.xl, AppSpacing.homeH, 0),
                   // Only the name row keeps clear of the bell; the points pill may run under the hexagon.
-                  child: MemberHeader(member: member, nameRowEndSpace: _bellReservedWidth),
+                  child: MemberHeader(firstName: firstName, member: member, nameRowEndSpace: _bellReservedWidth),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 HomeBannerCarousel(banners: banners),
@@ -48,7 +58,7 @@ class HomeHeaderPanel extends StatelessWidget {
             Positioned(
               top: AppSpacing.xl + AppSpacing.md,
               right: 0,
-              child: NotificationButton(count: member.unreadNotifications, onTap: onNotificationsTap),
+              child: NotificationButton(count: member?.unreadNotifications ?? 0, onTap: onNotificationsTap),
             ),
           ],
         ),
